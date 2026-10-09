@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -118,7 +117,7 @@ class FoodServiceAnalysisResourceTest {
                 .body("lostRecordIds", hasItems("recipe-001", "recipe-011"))
                 .body("rootDelta.recordCount", is(-8))
                 // RestAssured deserializes JSON decimal values as floats by default.
-                .body("relativeDelta.recordCount", closeTo(-2.0 / 3.0, 0.0000001));
+                .body("relativeDelta.recordCount", is(-0.6666667f));
     }
 
     @Test
