@@ -117,7 +117,8 @@ class FoodServiceAnalysisResourceTest {
                 .body("scenarioResult.metrics.recordCount", is(4))
                 .body("lostRecordIds", hasItems("recipe-001", "recipe-011"))
                 .body("rootDelta.recordCount", is(-8))
-                .body("relativeDelta.recordCount", closeTo(-0.6666666667, 0.0000000001));
+                // RestAssured deserializes JSON decimal values as floats by default.
+                .body("relativeDelta.recordCount", closeTo(-2.0 / 3.0, 0.0000001));
     }
 
     @Test
