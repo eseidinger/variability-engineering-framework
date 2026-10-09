@@ -371,7 +371,7 @@ Menu B                42          25          High           7
 Menu C                25          12          Medium         5
 ```
 
-The user can then explore why the portfolios differ using the same variability-analysis tools.
+The user can then explore why the portfolios differ using the same variability-engineering tools.
 
 ---
 

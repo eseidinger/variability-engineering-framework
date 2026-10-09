@@ -1,0 +1,53 @@
+{
+  "apiVersion": "platform.example/v1alpha2",
+  "kind": "Application",
+  "metadata": {
+    "name": "vareng",
+    "project": "vareng",
+    "environment": "default"
+  },
+  "spec": {
+    "components": [
+      {
+        "name": "web",
+        "type": "service",
+        "runtime": {
+          "type": "container",
+          "image": "eseidinger/variability-engineering-framework:latest"
+        },
+        "ports": [
+          {
+            "name": "http",
+            "protocol": "http",
+            "port": 8080
+          }
+        ],
+        "replicas": 1,
+        "exposure": "public",
+        "resources": {
+          "requests": {
+            "cpu": "500m",
+            "memory": "256Mi"
+          },
+          "limits": {
+            "cpu": "500m",
+            "memory": "256Mi"
+          }
+        },
+        "health": {
+          "readiness": {
+            "profile": "status"
+          }
+        }
+      }
+    ],
+    "resources": [
+      {
+        "name": "database",
+        "type": "postgres",
+        "profile": "shared-dev",
+        "deletionPolicy": "retain"
+      }
+    ]
+  }
+}

@@ -1,8 +1,27 @@
 # Prototype Deployment
 
-Status: local container build implemented; platform deployment remains to be verified.
+Status: platform deployment configuration implemented; first successful deployment remains to be verified.
 
 The prototype will be deployed through the existing Developer Platform as one container image containing the UI and API. PostgreSQL is provided separately by the platform.
+
+## Developer Platform declaration and CI
+
+[`application.json`](../../application.json) declares the public `web` service in
+the `vareng` project. With the standard platform domain convention, the public
+endpoint is `https://web-vareng.eseidinger.de`.
+
+The build workflow publishes the image and then deploys the corresponding immutable
+`sha-<commit>` Docker Hub tag. Before enabling deployment, configure the protected
+GitHub `production` environment with:
+
+- repository variable `PLATFORM_API_URL`;
+- repository variable `PLATFORM_TOKEN_ENDPOINT`;
+- environment secrets `PLATFORM_CLIENT_ID` and `PLATFORM_CLIENT_SECRET`; and
+- the existing Docker Hub publishing secrets documented in the deployment assembly.
+
+The platform injects PostgreSQL's `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, and
+`PGPASSWORD` values. The production Quarkus configuration maps them to the
+datasource; no database credential is committed to the repository.
 
 ## Local image
 
