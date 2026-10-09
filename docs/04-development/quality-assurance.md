@@ -1,6 +1,8 @@
 # Quality Assurance and Experiments
 
-Status: proposed verification approach.
+Status: verification catalog. Observed-population, fixture, HTTP, PostgreSQL, UI
+summary/error, and Compose-shell checks are implemented; generative, optimization,
+cross-language, browser end-to-end, and platform checks remain proposed.
 
 | Check | Expectation |
 |---|---|

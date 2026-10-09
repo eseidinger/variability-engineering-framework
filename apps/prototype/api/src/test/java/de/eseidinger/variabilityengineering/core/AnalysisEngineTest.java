@@ -83,8 +83,23 @@ class AnalysisEngineTest {
         assertEquals(2, impact.lostVariants().size());
         assertEquals(Set.of("garlic", "tomato"), impact.lostElementIds());
         assertEquals(new ImpactResult.MetricsDelta(-3, -2, -2), impact.rootDelta());
+        assertEquals(-0.75, impact.relativeDelta().recordCount());
+        assertEquals(-2.0 / 3.0, impact.relativeDelta().variantCount());
+        assertEquals(-0.5, impact.relativeDelta().uniqueElementCount());
         assertTrue(impact.groupDeltas().values().stream()
                 .anyMatch(delta -> delta.equals(new ImpactResult.MetricsDelta(-1, -1, -2))));
+    }
+
+    @Test
+    void returnsNullRelativeDeltasWhenTheBaselineIsEmpty() {
+        var emptyQuery = new AnalysisQuery(
+                Map.of("cuisine", AnalysisQuery.DimensionFilter.including(Set.of("NOT_PRESENT"))),
+                Set.of(), List.of());
+
+        var impact = engine.compareElementUnavailability(
+                population(), emptyQuery, new ElementUnavailabilityScenario(Set.of("garlic")));
+
+        assertEquals(new ImpactResult.RelativeMetricsDelta(null, null, null), impact.relativeDelta());
     }
 
     @Test

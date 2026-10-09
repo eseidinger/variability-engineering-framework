@@ -23,7 +23,10 @@ Status: consolidated target requirements. Acceptance criteria describe intended 
 
 REQ-01 through REQ-06 define the initial analysis capability. REQ-09 and REQ-10 are required before importing the food-service dataset. REQ-11 through REQ-16 are staged framework requirements and are not part of the generative prototype acceptance below. The separate food-service analysis MVP accepts the limited REQ-11 scenario defined in its binding contract.
 
-## Prototype acceptance
+## Generative prototype acceptance
+
+Status: not yet implemented. These criteria apply to the future generative-model slice,
+not to the observed food-service MVP.
 
 1. A small model can be entered or imported and validated.
 2. A valid model can be saved and reloaded without changing its semantics.
@@ -36,7 +39,9 @@ REQ-01 through REQ-06 define the initial analysis capability. REQ-09 and REQ-10 
 
 ## Food-service analysis MVP acceptance
 
-The observed-data MVP additionally requires:
+Status: implemented and locally verified; Developer Platform verification remains open.
+
+The observed-data MVP requires:
 
 1. The versioned [food-service MVP v1 fixture](../../examples/food-service/mvp-v1/README.md) is normalized into records, canonical ingredients, structural variants, and cuisine, dish-type, diet, and allergen dimensions.
 2. Separate recipes remain separately countable when they share the same structural variant.

@@ -36,6 +36,7 @@ trap cleanup EXIT
 
 "${compose[@]}" up --build --detach
 wait_for_url "$base_url/api/populations/food-service-mvp"
+wait_for_url "$base_url/api/status"
 wait_for_url "$base_url/"
 
 ui=$(curl --fail --silent --show-error "$base_url/")
@@ -52,6 +53,7 @@ assert_contains "$summary" '"id":"food-service-mvp"'
 assert_contains "$summary" '"recordCount":12'
 assert_contains "$analysis" '"recordCount":8'
 assert_contains "$impact" '"unavailableElementIds":["garlic"]'
+assert_contains "$impact" '"relativeDelta":{"recordCount":-0.6666666666666666'
 
 peak_memory_bytes=$("${compose[@]}" exec -T app sh -c "cat /sys/fs/cgroup/memory.peak 2>/dev/null || true")
 if [[ "$peak_memory_bytes" =~ ^[0-9]+$ ]]; then

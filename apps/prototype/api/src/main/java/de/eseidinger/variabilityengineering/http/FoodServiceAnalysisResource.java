@@ -171,9 +171,15 @@ public class FoodServiceAnalysisResource {
         }
     }
 
-    public record DimensionDefinitionResponse(String cardinality, String origin) {
-        static DimensionDefinitionResponse from(DimensionDefinition definition) {
-            return new DimensionDefinitionResponse(definition.cardinality().name(), definition.origin().name());
+    public record DimensionDefinitionResponse(String cardinality, String origin, Set<String> observedValues) {
+        static DimensionDefinitionResponse from(DimensionDefinition definition, AnalysisPopulation population) {
+            var observedValues = population.records().stream()
+                    .map(record -> record.dimensions().get(definition.id()))
+                    .filter(value -> value.state() == DimensionValue.State.KNOWN)
+                    .flatMap(value -> value.values().stream())
+                    .collect(Collectors.toCollection(TreeSet::new));
+            return new DimensionDefinitionResponse(
+                    definition.cardinality().name(), definition.origin().name(), Set.copyOf(observedValues));
         }
     }
 
@@ -266,7 +272,7 @@ public class FoodServiceAnalysisResource {
                 AnalysisResult result) {
             var dimensions = new TreeMap<String, DimensionDefinitionResponse>();
             population.dimensionDefinitions().forEach((id, definition) ->
-                    dimensions.put(id, DimensionDefinitionResponse.from(definition)));
+                    dimensions.put(id, DimensionDefinitionResponse.from(definition, population)));
             return new PopulationSummaryResponse(
                     PopulationReference.from(population), dimensions, MetricsResponse.from(result.metrics()),
                     rejectedRecords.stream().map(RejectedRecordResponse::from).toList());
@@ -296,6 +302,13 @@ public class FoodServiceAnalysisResource {
         }
     }
 
+    public record RelativeMetricsDeltaResponse(Double recordCount, Double variantCount, Double uniqueElementCount) {
+        static RelativeMetricsDeltaResponse from(ImpactResult.RelativeMetricsDelta delta) {
+            return new RelativeMetricsDeltaResponse(
+                    delta.recordCount(), delta.variantCount(), delta.uniqueElementCount());
+        }
+    }
+
     public record GroupDeltaResponse(List<GroupKeyResponse> path, MetricsDeltaResponse delta) {
         static GroupDeltaResponse from(Map.Entry<AnalysisResult.GroupPath, ImpactResult.MetricsDelta> entry) {
             return new GroupDeltaResponse(
@@ -314,6 +327,7 @@ public class FoodServiceAnalysisResource {
             Set<Set<String>> lostVariants,
             Set<String> lostElementIds,
             MetricsDeltaResponse rootDelta,
+            RelativeMetricsDeltaResponse relativeDelta,
             List<GroupDeltaResponse> groupDeltas) {
         static ImpactResponse from(ImpactResult impact, PopulationReference population) {
             var lostVariants = impact.lostVariants().stream()
@@ -330,7 +344,8 @@ public class FoodServiceAnalysisResource {
                     AnalysisResponse.from(impact.baseline(), population),
                     AnalysisResponse.from(impact.scenarioResult(), population),
                     impact.lostRecordIds(), lostVariants, impact.lostElementIds(),
-                    MetricsDeltaResponse.from(impact.rootDelta()), groupDeltas);
+                    MetricsDeltaResponse.from(impact.rootDelta()),
+                    RelativeMetricsDeltaResponse.from(impact.relativeDelta()), groupDeltas);
         }
     }
 }

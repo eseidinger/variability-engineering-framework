@@ -24,19 +24,9 @@
         ],
         "replicas": 1,
         "exposure": "public",
-        "resources": {
-          "requests": {
-            "cpu": "500m",
-            "memory": "256Mi"
-          },
-          "limits": {
-            "cpu": "500m",
-            "memory": "256Mi"
-          }
-        },
         "health": {
           "readiness": {
-            "profile": "status"
+            "path": "/api/status"
           }
         }
       }

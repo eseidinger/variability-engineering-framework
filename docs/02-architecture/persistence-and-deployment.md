@@ -1,6 +1,6 @@
 # Persistence and Deployment Architecture
 
-Status: implemented food-service MVP persistence; production deployment and capacity acceptance remain open.
+Status: implemented food-service MVP persistence; production deployment remains open.
 
 The food-service MVP uses PostgreSQL with a normalized relational schema, applied by Flyway at startup. `analysis_population` is keyed by immutable population ID and version. Related tables store artifact provenance, dimension definitions, records, canonical element usages, dimension states and values, and rejected source records. This preserves `KNOWN` versus `UNKNOWN` without serializing an opaque population blob.
 
@@ -11,9 +11,11 @@ The UI and API are packaged in one container image. The Developer Platform suppl
 ## Initial constraints
 
 - One application replica.
-- 0.5 CPU and 256 MiB memory limit.
 - Bounded enumeration with understandable termination behavior.
 - Persistence verified after workload recreation.
 - Runtime and peak memory recorded for representative fixtures.
 
-Model and dataset IDs, versioning, provenance, migration, concurrent changes, backup and recovery procedures beyond the MVP fixture remain open. Additional data stores require a defined workload and reproducible comparison.
+Immutable IDs, versions, and artifact provenance are implemented for the food-service
+fixture population. Generative-model identity, external-dataset lifecycle, concurrent
+changes, migrations beyond the initial schema, and backup and recovery procedures
+remain open. Additional data stores require a defined workload and reproducible comparison.

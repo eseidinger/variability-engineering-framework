@@ -2,23 +2,20 @@
 
 This directory assembles the independently built UI and API into one container image. Quarkus serves the compiled Angular files at `/` and the API at `/api` on the same port.
 
-Build from the repository root so the Docker build can access both projects:
+The application requires PostgreSQL. Build and run the combined image with the
+repository Compose environment:
 
 ```shell
-docker build --file apps/prototype/deployment/Dockerfile --tag variability-engineering-framework .
-docker run --rm --publish 8080:8080 variability-engineering-framework
+docker compose --profile app up --build
 ```
 
 Open <http://localhost:8080>. The UI calls the food-service API on the same origin; the Angular development proxy is not involved in the container.
 
-For local development, use the repository-root [Compose environment](../../../compose.yaml):
+For API and UI hot-reload development, start only the database:
 
 ```shell
 # Start only PostgreSQL for API and UI hot-reload development.
 docker compose up -d db
-
-# Start PostgreSQL and build/run the packaged UI + API at http://localhost:8080.
-docker compose --profile app up --build
 
 # Remove the development database volume when a clean seed is needed.
 docker compose down -v
@@ -40,8 +37,7 @@ Deployment configuration:
 - expose HTTP port 8080;
 - obtain PostgreSQL settings from the platform environment;
 - include the immutable food-service fixture for first-start database seeding;
-- provide application-specific readiness; and
-- operate within the documented CPU and memory limits.
+- expose `/api/status` readiness that verifies the persisted population is available.
 
 ## GitHub Actions and Docker Hub
 

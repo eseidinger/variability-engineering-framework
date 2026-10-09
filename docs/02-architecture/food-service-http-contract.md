@@ -12,7 +12,8 @@ All endpoints produce `application/json` below `/api/populations/{populationId}`
 
 ## Shared response values
 
-Every analytical response includes:
+Analysis responses, including the baseline and scenario results nested in an impact
+response, include:
 
 - `population.id` and `population.version`;
 - `query`, echoing the normalized active filters, required elements, and grouping order; and
@@ -26,7 +27,8 @@ Every analytical response includes:
 
 `GET /api/populations/food-service-mvp`
 
-Returns population identity, complete artifact provenance, dimension definitions, unfiltered summary metrics, and rejected source rows.
+Returns population identity, complete artifact provenance, dimension definitions with
+observed values, unfiltered summary metrics, and rejected source rows.
 
 ### Record detail
 
@@ -71,7 +73,11 @@ Request example:
 }
 ```
 
-`unavailableElementIds` is required and non-empty. The response includes the shared population/query context, the scenario rule, baseline and scenario analysis results, lost record IDs, lost structural variants, lost element IDs, root metric deltas, and grouped deltas. The operation excludes complete records and does not mutate the fixture population.
+`unavailableElementIds` is required and non-empty. The response includes the shared
+population/query context, the scenario rule, baseline and scenario analysis results,
+lost record IDs, lost structural variants, lost element IDs, absolute `rootDelta`,
+relative `relativeDelta`, and absolute grouped deltas. A relative value is `null` when
+its baseline is zero. The operation excludes complete records and does not mutate the fixture population.
 
 ## Compatibility rule
 

@@ -1,6 +1,8 @@
 # Expression and Analysis View
 
-Status: target design with unresolved interaction semantics.
+Status: ordered grouping and filtering are implemented for observed populations;
+portable generative expressions, hiding, dimension combination, and broader
+interaction semantics remain target design.
 
 ## Portable expressions
 
@@ -10,7 +12,11 @@ Rules use a dedicated serializable abstract syntax tree rather than native Java,
 
 The analysis tree is a view of an identified analysis population, not the underlying domain model or imported dataset. Reordering dimensions changes hierarchy but not model constraints, population membership, records, or structural variants.
 
-Each dimension declares its type, origin, allowed or observed values, missing-value behavior, and any derivation or grouping rule. Configuration features, imported attributes, and derived classifications may all provide dimensions without becoming interchangeable in the core model.
+Each dimension declares its cardinality, origin, and observed values for the current
+population. Missing-value and derivation semantics belong to the binding population
+contract and provenance. Future generative dimensions may additionally declare an
+allowed domain. Configuration features, imported attributes, and derived
+classifications may all provide dimensions without becoming interchangeable in the core model.
 
 | Operation | Required invariant |
 |---|---|

@@ -175,6 +175,7 @@ class FoodServiceFixtureConformanceTest {
         assertMetrics(expected.path("baselineMetrics"), impact.baseline().metrics());
         assertMetrics(expected.path("scenarioMetrics"), impact.scenarioResult().metrics());
         assertEquals(metricsDelta(expected.path("absoluteDelta")), impact.rootDelta());
+        assertRelativeMetricsDelta(expected.path("relativeDelta"), impact.relativeDelta());
 
         expected.path("cuisineRecordCountDelta").properties().forEach(entry -> {
             var path = new AnalysisResult.GroupPath(List.of(new AnalysisResult.GroupKey(
@@ -211,6 +212,12 @@ class FoodServiceFixtureConformanceTest {
                 expected.path("recordCount").asLong(),
                 expected.path("variantCount").asLong(),
                 expected.path("uniqueElementCount").asLong());
+    }
+
+    private static void assertRelativeMetricsDelta(JsonNode expected, ImpactResult.RelativeMetricsDelta actual) {
+        assertEquals(expected.path("recordCount").asDouble(), actual.recordCount(), 0.0000000001);
+        assertEquals(expected.path("variantCount").asDouble(), actual.variantCount(), 0.0000000001);
+        assertEquals(expected.path("uniqueElementCount").asDouble(), actual.uniqueElementCount(), 0.0000000001);
     }
 
     private static Set<Variant> variants(JsonNode expected) {

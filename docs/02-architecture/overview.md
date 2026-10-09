@@ -1,6 +1,8 @@
 # Architecture Overview
 
-Status: target architecture; the prototype may initially implement a smaller vertical slice.
+Status: target architecture. The implemented slice currently covers observed-dataset
+adaptation, normalized populations, analysis, element-unavailability impact,
+PostgreSQL persistence, the application API, and visualization.
 
 ```mermaid
 flowchart LR
@@ -38,4 +40,8 @@ flowchart LR
 | Application/API | Coordinate use cases and expose results | Transport remains outside the core |
 | Persistence adapter | Save and load versioned models, mappings, populations, and results | Database details remain replaceable |
 
-The prototype application owns the initial generative-model, normalization, analysis, persistence, and presentation slice. Domain adapters, impact analysis, configuration assistance, and optimization are added in stages. Stable boundaries become reusable framework components only after synthetic fixtures and the food-service reference domain validate them.
+The prototype currently owns the observed-population normalization, analysis, impact,
+persistence, and presentation slice. Generative-model evaluation, configuration
+assistance, and optimization remain target components. Stable boundaries become
+reusable framework components only after synthetic fixtures and the food-service
+reference domain validate them.

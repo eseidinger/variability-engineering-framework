@@ -7,13 +7,14 @@ The prototype is split into independent API and UI projects. Each project owns i
 | Path | Responsibility |
 |---|---|
 | `api/` | Domain validation, analysis, persistence, and HTTP endpoints. |
-| `ui/` | Model input, analysis controls, results, and error presentation. |
+| `ui/` | Observed-population analysis controls, results, and error presentation. |
 | `integration-tests/` | Black-box checks across the built UI, API, and PostgreSQL. |
 | `deployment/` | Assembly of the independently built projects into the deployable image. |
 
 ## Boundaries
 
-- The UI communicates with the API through a versioned HTTP contract.
+- The UI communicates with the API through the documented population HTTP contract;
+  every response identifies the immutable population version it represents.
 - The UI does not implement separate constraint, variant, or counting semantics.
 - The API does not depend on a specific UI framework.
 - PostgreSQL access belongs to the API.

@@ -16,6 +16,6 @@ class StatusResourceTest {
           .then()
              .statusCode(200)
              .contentType("text/plain")
-             .body(is("Variability Engineering API is reachable"));
+             .body(is("Variability Engineering API and population store are ready"));
     }
 }

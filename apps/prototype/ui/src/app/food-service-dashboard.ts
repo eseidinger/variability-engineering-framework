@@ -7,10 +7,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { KeyValuePipe } from '@angular/common';
+import { KeyValuePipe, PercentPipe } from '@angular/common';
 import {
   AnalysisRequest,
   DimensionId,
@@ -30,13 +29,13 @@ const dimensionLabels: Record<DimensionId, string> = {
   selector: 'app-food-service-dashboard',
   imports: [
     KeyValuePipe,
+    PercentPipe,
     DragDropModule,
     MatButtonModule,
     MatCardModule,
     MatChipsModule,
     MatDividerModule,
     MatFormFieldModule,
-    MatIconModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     ReactiveFormsModule,
@@ -58,8 +57,12 @@ export class FoodServiceDashboardComponent {
   protected readonly error = signal<string | null>(null);
   protected readonly groupingDimensions = signal<DimensionId[]>(['cuisine', 'diet', 'dishType']);
   protected readonly dimensionLabels = dimensionLabels;
-  protected readonly cuisineOptions = ['ASIAN', 'ITALIAN', 'MEDITERRANEAN', 'MEXICAN'];
-  protected readonly dietOptions = ['VEGAN', 'VEGETARIAN'];
+  protected readonly cuisineOptions = computed(
+    () => this.summary()?.dimensions.cuisine?.observedValues ?? [],
+  );
+  protected readonly dietOptions = computed(
+    () => this.summary()?.dimensions.diet?.observedValues ?? [],
+  );
   protected readonly elements = computed(() => Object.keys(this.summary()?.metrics.elementRecordCounts ?? {}).sort());
 
   protected readonly filters = this.formBuilder.group({

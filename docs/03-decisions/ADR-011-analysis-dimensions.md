@@ -1,6 +1,7 @@
 # ADR-011 – Separate Analysis Dimensions from Configuration Features
 
-Status: **Documented direction**.
+Status: **Implemented for imported and derived observed-population dimensions**;
+feature-derived dimensions remain documented direction.
 
 ## Context
 

@@ -54,4 +54,8 @@ public class FoodServicePopulationStore {
         population(populationId);
         return rejectedRecords;
     }
+
+    public boolean isReady() {
+        return population != null && repository.contains(population.id(), population.version());
+    }
 }

@@ -67,6 +67,14 @@ public class JdbcPopulationRepository {
         }
     }
 
+    public boolean contains(String populationId, String populationVersion) {
+        try (var connection = dataSource.getConnection()) {
+            return exists(connection, populationId, populationVersion);
+        } catch (SQLException exception) {
+            throw persistenceFailure(exception);
+        }
+    }
+
     private static Optional<PersistedPopulation> load(Connection connection, String populationId, String populationVersion)
             throws SQLException {
         if (!exists(connection, populationId, populationVersion)) {

@@ -1,10 +1,10 @@
 # ADR-005 – UI and API in a Single Container Image
 
-Status: **Documented direction**.
+Status: **Implemented locally; platform verification pending**.
 
 ## Context
 
-The Developer Platform currently provisions one containerized HTTP application per project.
+The prototype needs one public HTTP origin and does not require independent UI and API scaling or release cycles. The Developer Platform supports a service component and a separately managed PostgreSQL resource for this shape.
 
 ## Decision
 

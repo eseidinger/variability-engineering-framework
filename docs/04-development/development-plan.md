@@ -16,7 +16,18 @@ flowchart LR
     Framework --> Experiments[Additional domains and experiments]
 ```
 
-The prototype application is the first integrated deliverable. The synthetic fixture establishes the generative semantics; the food-service demonstration then validates observed records, imported and derived dimensions, provenance, and portfolio needs. Framework components are created later from stable, verified contracts rather than treated as prerequisites.
+The prototype application is the first integrated deliverable. The implemented
+synthetic food-service fixture establishes observed-population semantics. A future
+generative fixture will establish configuration, constraint, and presence-condition
+semantics. Framework components are created later from stable, verified contracts
+rather than treated as prerequisites.
+
+Implementation has deliberately advanced the observed-data path ahead of the
+generative path: the synthetic food-service population, adapter, analysis, impact,
+persistence, UI, and local image verification exist today. Generative evaluation,
+the first successful platform deployment, hiding/combining dimensions, configuration
+assistance, and optimization remain future milestones. The flow above is the target
+dependency model, not a claim that every earlier box is complete.
 
 ## Proposed repository evolution
 

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -29,6 +30,9 @@ class FoodServiceAnalysisResourceTest {
                 .body("metrics.recordCount", is(12))
                 .body("metrics.variantCount", is(11))
                 .body("metrics.uniqueElementCount", is(24))
+                .body("dimensions.cuisine.observedValues", containsInAnyOrder(
+                        "EAST_ASIAN", "EUROPEAN", "INDIAN", "ITALIAN", "LATIN_AMERICAN",
+                        "MEDITERRANEAN", "MIDDLE_EASTERN", "SOUTHEAST_ASIAN"))
                 .body("rejectedRecords.sourceRecordId", contains("recipe-013"));
 
         given()
@@ -112,7 +116,8 @@ class FoodServiceAnalysisResourceTest {
                 .body("baseline.metrics.recordCount", is(12))
                 .body("scenarioResult.metrics.recordCount", is(4))
                 .body("lostRecordIds", hasItems("recipe-001", "recipe-011"))
-                .body("rootDelta.recordCount", is(-8));
+                .body("rootDelta.recordCount", is(-8))
+                .body("relativeDelta.recordCount", closeTo(-0.6666666667, 0.0000000001));
     }
 
     @Test

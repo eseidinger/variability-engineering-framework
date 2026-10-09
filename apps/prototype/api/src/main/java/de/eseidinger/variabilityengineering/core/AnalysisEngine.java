@@ -108,6 +108,7 @@ public final class AnalysisEngine {
                 lostVariants,
                 lostElements,
                 ImpactResult.MetricsDelta.between(baseline.metrics(), scenarioResult.metrics()),
+                ImpactResult.RelativeMetricsDelta.between(baseline.metrics(), scenarioResult.metrics()),
                 groupDeltas(baseline, scenarioResult));
     }
 

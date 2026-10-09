@@ -16,7 +16,7 @@ The verifier builds the combined image, starts it with a fresh PostgreSQL 17 vol
 
 | Field | Result |
 | --- | --- |
-| Source baseline | `802f86d` plus this verification worktree |
+| Source baseline | `802f86d` plus an uncommitted worktree; not exactly reconstructible, so a committed rerun is required before treating this as release evidence |
 | Combined-image build | successful |
 | Runtime verification | successful; cached end-to-end verifier wall time: 14.7 seconds |
 | Peak application memory | 271,429,632 bytes (about 259 MiB), from the container cgroup `memory.peak` during the verifier |
@@ -27,4 +27,7 @@ The verifier builds the combined image, starts it with a fresh PostgreSQL 17 vol
 
 - This is a local Docker Compose observation, not a deployment to a target platform.
 - The memory figure is a single verifier-run cgroup peak and is not a capacity limit or a load-test result.
-- The black-box check confirms the served Angular shell and API contract. Browser-rendered dashboard behavior remains covered by Angular unit tests; a browser end-to-end suite is not yet included.
+- The black-box check confirms the served Angular shell and selected API behavior; it
+  does not render the dashboard in a browser. Angular unit tests cover summary loading
+  and load-error presentation. Filtering, grouping interaction, leverage, and impact
+  still need browser end-to-end coverage.

@@ -10,14 +10,16 @@ The prototype will be deployed through the existing Developer Platform as one co
 the `vareng` project. With the standard platform domain convention, the public
 endpoint is `https://web-vareng.eseidinger.de`.
 
-The build workflow publishes the image and then deploys the corresponding immutable
-`sha-<commit>` Docker Hub tag. Before enabling deployment, configure the protected
-GitHub `production` environment with:
+The build workflow publishes the image, deploys the corresponding immutable
+`sha-<commit>` Docker Hub tag, and checks the public readiness and population endpoints.
+Production deployments are serialized. Before enabling deployment, configure the
+protected GitHub `production` environment with:
 
 - repository variable `PLATFORM_API_URL`;
 - repository variable `PLATFORM_TOKEN_ENDPOINT`;
 - environment secrets `PLATFORM_CLIENT_ID` and `PLATFORM_CLIENT_SECRET`; and
-- the existing Docker Hub publishing secrets documented in the deployment assembly.
+- repository secrets `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN`, as described in
+  the [deployment assembly](../../apps/prototype/deployment/README.md#github-actions-and-docker-hub).
 
 The platform injects PostgreSQL's `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, and
 `PGPASSWORD` values. The production Quarkus configuration maps them to the
@@ -25,11 +27,11 @@ datasource; no database credential is committed to the repository.
 
 ## Local image
 
-Build and run the combined image from the repository root:
+Build and run the combined image with its required PostgreSQL service from the
+repository root:
 
 ```shell
-docker build --file apps/prototype/deployment/Dockerfile --tag variability-engineering-framework .
-docker run --rm --publish 8080:8080 variability-engineering-framework
+docker compose --profile app up --build
 ```
 
 Quarkus serves the compiled Angular UI at <http://localhost:8080> and the API below `/api`. The image runs as a non-root user.
@@ -40,15 +42,16 @@ Quarkus serves the compiled Angular UI at <http://localhost:8080> and the API be
 - Listen on the configured unprivileged HTTP port.
 - Obtain PostgreSQL connection parameters through the platform contract.
 - Keep domain models independent of deployment configuration.
-- Operate within one replica, 0.5 CPU, and 256 MiB memory.
+- Run as one application replica until multi-replica behavior is explicitly verified.
 - Bound enumeration and report rejected work clearly.
 
 ## Deployment acceptance
 
 1. Build a revision-identifiable image.
 2. Deploy it through the Developer Platform.
-3. Verify the intended HTTP entry point and application-specific readiness.
-4. Save and reload the reference model through PostgreSQL.
+3. Verify the intended HTTP entry point and `/api/status` readiness check, including
+   access to the persisted population.
+4. Save and reload the reference population through PostgreSQL.
 5. Recreate the workload and verify persisted data.
 6. Run the reference analysis and compare expected results.
 7. Record runtime, peak memory, revision, environment, and limitations.

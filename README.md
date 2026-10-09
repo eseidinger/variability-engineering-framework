@@ -24,6 +24,18 @@ The normative observed-data example is the [food-service MVP v1 fixture](example
 
 Generative model authoring, configuration assistance, portfolio optimization, external datasets, additional language implementations, reusable UI components, and broader performance or storage experiments follow in later stages.
 
+## Run locally
+
+Run the packaged UI, API, and PostgreSQL together from the repository root:
+
+```shell
+docker compose --profile app up --build
+```
+
+Open <http://localhost:8080>. For a clean database, stop the stack with
+`docker compose down -v`. Component-specific development commands are documented in
+[`apps/prototype/`](apps/prototype/README.md).
+
 ## Documentation
 
 | Area | Documents |

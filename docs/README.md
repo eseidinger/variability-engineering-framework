@@ -1,6 +1,9 @@
 # Variability Engineering Framework Documentation
 
-Updated on October 1, 2026 to incorporate the broader variability-engineering vision, the food-service demonstration use case, and the binding food-service analysis MVP semantics. This documentation covers the product, target architecture, architectural decisions, development sequence, and prototype operations.
+Updated on October 9, 2026 to align the documented food-service MVP, HTTP contract,
+local verification, and Developer Platform configuration with the implementation.
+This documentation covers the product, target architecture, architectural decisions,
+development sequence, and prototype operations.
 
 ## Getting started
 
@@ -26,6 +29,18 @@ The food-service MVP is implemented across the Angular UI, Quarkus API, PostgreS
 - **Verified:** reserved for a recorded, reproducible check.
 
 The repository evidences food-service UI behavior, local container assembly, a domain-independent analysis core, verified fixture import, PostgreSQL round trips, public API behavior, and a Compose-backed black-box workload check. It does not yet evidence generative model evaluation, configuration assistance, optimization, actual Docker Hub publication, or successful deployment to the Developer Platform.
+
+### Capability status
+
+| Capability | Source | Local verification | Platform verification |
+|---|---|---|---|
+| Observed-population normalization and analysis | Implemented | Unit, conformance, HTTP, persistence, and Compose checks | Not yet recorded |
+| Element-unavailability impact | Implemented | Unit, conformance, HTTP, and Compose checks | Not yet recorded |
+| Angular analysis dashboard | Implemented | Build plus summary/error unit tests; packaged shell check | Not yet recorded |
+| PostgreSQL persistence and fixture reload | Implemented | PostgreSQL round trip and container restart | Not yet recorded |
+| Combined UI/API image | Implemented | Compose build and startup | Not yet recorded |
+| Generative models and configuration assistance | Planned | None | None |
+| Portfolio optimization and reusable components | Planned | None | None |
 
 ## Maintenance
 

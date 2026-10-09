@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export type DimensionId = 'cuisine' | 'diet' | 'dishType';
+export type PopulationDimensionId = DimensionId | 'allergen';
 
 export interface Metrics {
   recordCount: number;
@@ -15,14 +16,20 @@ export interface Metrics {
 export interface PopulationReference {
   id: string;
   version: string;
-  provenance: Record<string, string>;
+  provenance: Record<string, { id: string; version: string; sha256: string }>;
+}
+
+export interface DimensionDefinition {
+  cardinality: 'SINGLE' | 'MULTI';
+  origin: 'IMPORTED' | 'DERIVED';
+  observedValues: string[];
 }
 
 export interface PopulationSummary {
   population: PopulationReference;
-  dimensions: Array<{ id: DimensionId; displayName: string }>;
+  dimensions: Record<PopulationDimensionId, DimensionDefinition>;
   metrics: Metrics;
-  rejectedRecords: Array<{ sourceRowId: string; reason: string }>;
+  rejectedRecords: Array<{ sourceRecordId: string; reason: string; detail: string }>;
 }
 
 export interface DimensionFilter {
@@ -66,8 +73,18 @@ export interface UnavailabilityResponse {
   baseline: AnalysisResponse;
   scenarioResult: AnalysisResponse;
   lostRecordIds: string[];
+  lostVariants: string[][];
   lostElementIds: string[];
   rootDelta: Pick<Metrics, 'recordCount' | 'variantCount' | 'uniqueElementCount'>;
+  relativeDelta: {
+    recordCount: number | null;
+    variantCount: number | null;
+    uniqueElementCount: number | null;
+  };
+  groupDeltas: Array<{
+    path: AnalysisGroup['path'];
+    delta: Pick<Metrics, 'recordCount' | 'variantCount' | 'uniqueElementCount'>;
+  }>;
 }
 
 @Injectable({ providedIn: 'root' })

@@ -1,6 +1,7 @@
 # ADR-010 – Normalize Generated and Observed Variant Records
 
-Status: **Documented direction**.
+Status: **Implemented for observed records**; generated-record normalization remains
+documented direction.
 
 ## Context
 

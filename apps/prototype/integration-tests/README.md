@@ -1,15 +1,18 @@
 # Prototype Integration Tests
 
-Black-box tests will verify the built UI and API against PostgreSQL and the reference fixtures.
+The Compose-backed black-box verifier exercises the packaged UI shell and selected
+food-service API behavior against PostgreSQL and the reference fixture.
 
-Initial coverage should include:
+Current coverage includes:
 
-- application and API readiness;
-- model validation and error responses;
-- reference configuration and variant counts;
-- save and reload without semantic changes;
+- API startup and population availability;
+- the unfiltered population summary and record count;
+- a vegan filter query and garlic-unavailability scenario;
 - persistence after workload recreation; and
-- the packaged UI calling the packaged API.
+- delivery of the packaged Angular shell.
+
+The verifier does not render the Angular application in a browser and does not cover
+generative-model validation or configuration counts.
 
 Run the Compose-backed black-box verification from the repository root:
 
@@ -17,4 +20,8 @@ Run the Compose-backed black-box verification from the repository root:
 apps/prototype/integration-tests/verify-compose.sh
 ```
 
-The script builds the combined image, starts PostgreSQL and the packaged application, verifies the rendered UI and fixture-backed API queries, restarts the application to verify persistence, reports the application cgroup peak-memory value when available, and tears down its temporary database volume. It requires Docker Compose and curl. By default it uses host port `18080`; set `APP_PORT` to choose another available port.
+The script builds the combined image, starts PostgreSQL and the packaged application,
+verifies the served UI shell and fixture-backed API queries, restarts the application
+to verify persistence, reports the application cgroup peak-memory value when available,
+and tears down its temporary database volume. It requires Docker Compose and curl. By
+default it uses host port `18080`; set `APP_PORT` to choose another available port.

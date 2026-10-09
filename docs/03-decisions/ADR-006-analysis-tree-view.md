@@ -1,6 +1,7 @@
 # ADR-006 – Analysis Tree as a Derived View
 
-Status: **Proposed**.
+Status: **Partially implemented** for filtering and ordered grouping; hiding,
+combination, and the complete `AnalysisView` contract remain proposed.
 
 ## Context
 

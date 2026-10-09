@@ -33,13 +33,13 @@
             <mat-form-field>
               <mat-label>Cuisines</mat-label>
               <mat-select formControlName="cuisines" multiple>
-                @for (cuisine of cuisineOptions; track cuisine) { <mat-option [value]="cuisine">{{ cuisine }}</mat-option> }
+                @for (cuisine of cuisineOptions(); track cuisine) { <mat-option [value]="cuisine">{{ cuisine }}</mat-option> }
               </mat-select>
             </mat-form-field>
             <mat-form-field>
               <mat-label>Diets</mat-label>
               <mat-select formControlName="diets" multiple>
-                @for (diet of dietOptions; track diet) { <mat-option [value]="diet">{{ diet }}</mat-option> }
+                @for (diet of dietOptions(); track diet) { <mat-option [value]="diet">{{ diet }}</mat-option> }
               </mat-select>
             </mat-form-field>
             <div class="button-row">
@@ -51,7 +51,7 @@
           <p class="field-label">Grouping order</p>
           <div cdkDropList class="grouping-list" (cdkDropListDropped)="reorderGrouping($event)" aria-label="Reorder analysis groups">
             @for (dimension of groupingDimensions(); track dimension) {
-              <div class="grouping-item" cdkDrag><mat-icon aria-hidden="true">drag_indicator</mat-icon>{{ dimensionLabels[dimension] }}</div>
+              <div class="grouping-item" cdkDrag><span aria-hidden="true">↕</span>{{ dimensionLabels[dimension] }}</div>
             }
           </div>
         </mat-card-content>
@@ -102,7 +102,8 @@
           </mat-select></mat-form-field></div>
           <button mat-flat-button type="button" (click)="inspectImpact()">Run impact</button>
           @if (impactResult(); as impact) {
-            <div class="impact-grid"><span>Baseline<strong>{{ impact.baseline.metrics.recordCount }}</strong></span><span>Remaining<strong>{{ impact.scenarioResult.metrics.recordCount }}</strong></span><span>Lost<strong>{{ impact.rootDelta.recordCount }}</strong></span></div>
+            <div class="impact-grid"><span>Baseline<strong>{{ impact.baseline.metrics.recordCount }}</strong></span><span>Remaining<strong>{{ impact.scenarioResult.metrics.recordCount }}</strong></span><span>Lost<strong>{{ impact.lostRecordIds.length }}</strong></span></div>
+            <p class="detail">Relative record-count change: {{ impact.relativeDelta.recordCount | percent:'1.0-1' }}</p>
             <p class="detail">Lost recipes: {{ impact.lostRecordIds.join(', ') || 'none' }}</p>
           }
         </mat-card-content>
