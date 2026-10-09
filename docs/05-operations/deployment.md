@@ -8,7 +8,7 @@ The prototype will be deployed through the existing Developer Platform as one co
 
 [`application.json`](../../application.json) declares the public `web` service in
 the `vareng` project. With the standard platform domain convention, the public
-endpoint is `https://web-vareng.eseidinger.de`.
+endpoint is `https://web-vareng.apps.eseidinger.de`.
 
 The build workflow publishes the image, deploys the corresponding immutable
 `sha-<commit>` Docker Hub tag, and checks the public readiness and population endpoints.
