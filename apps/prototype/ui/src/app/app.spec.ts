@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from "@angular/common
 import { TestBed } from "@angular/core/testing";
 import { FoodServiceDashboardComponent } from "./food-service-dashboard";
 import { platformAuthInterceptor } from "./platform-auth.interceptor";
+import { platformCsrfInterceptor } from "./platform-csrf.interceptor";
 import { PlatformAuthService } from "./platform-auth.service";
 
 const metrics = { recordCount: 12, variantCount: 11, uniqueElementCount: 24, elementRecordCounts: {}, elementRecordFrequencies: {} };
@@ -18,7 +19,7 @@ describe("FoodServiceDashboardComponent", () => {
     localStorage.clear();
     await TestBed.configureTestingModule({
       imports: [FoodServiceDashboardComponent],
-      providers: [provideHttpClient(withInterceptors([platformAuthInterceptor])), provideHttpClientTesting()],
+      providers: [provideHttpClient(withInterceptors([platformCsrfInterceptor, platformAuthInterceptor])), provideHttpClientTesting()],
     }).compileComponents();
   });
 
@@ -59,6 +60,22 @@ describe("FoodServiceDashboardComponent", () => {
       && request.headers.get("X-Platform-Principal-Group-Ids") === "grp_0c98f1205bfe456a8517417a38de98e0").flush("Unavailable", { status: 403, statusText: "Forbidden" });
 
     expect(localStorage.getItem("variability-engineering.platform-group")).toBe("guest");
+    fixture.destroy();
+  });
+
+  it("copies the platform CSRF cookie on writes", () => {
+    document.cookie = "__Host-platform-csrf=test-csrf-token; Secure; Path=/";
+    const fixture = TestBed.createComponent(FoodServiceDashboardComponent);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne((request) => request.url === "/api/populations/food-service-mvp"
+      && request.headers.get("X-Platform-Principal-Group-Ids") === "grp_d8113bc5c0ca4b6092ae13386310268f").flush({
+      population: { id: "food-service-mvp", version: "1.0.0", provenance: {} },
+      dimensions, metrics, rejectedRecords: [],
+    });
+    http.expectOne((request) => request.url === "/api/populations/food-service-mvp/analysis"
+      && request.headers.get("X-Platform-CSRF-Token") === "test-csrf-token").flush({
+      population: { id: "food-service-mvp", version: "1.0.0", provenance: {} }, query: {}, selectedRecordIds: [], metrics, groups: [],
+    });
     fixture.destroy();
   });
 });

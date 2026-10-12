@@ -4,11 +4,15 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { platformAuthInterceptor } from './platform-auth.interceptor';
+import { platformCsrfInterceptor } from './platform-csrf.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(...(isDevMode() ? [withInterceptors([platformAuthInterceptor])] : [])),
+    provideHttpClient(withInterceptors([
+      platformCsrfInterceptor,
+      ...(isDevMode() ? [platformAuthInterceptor] : []),
+    ])),
     provideRouter(routes),
   ],
 };
