@@ -1,5 +1,5 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, inject, isDevMode, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ReactiveFormsModule, NonNullableFormBuilder } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -18,6 +18,7 @@ import {
   PopulationSummary,
   UnavailabilityResponse,
 } from './food-service-api.service';
+import { PlatformAuthService, PlatformGroup } from './platform-auth.service';
 
 const dimensionLabels: Record<DimensionId, string> = {
   cuisine: 'Cuisine',
@@ -48,6 +49,7 @@ export class FoodServiceDashboardComponent {
   private readonly api = inject(FoodServiceApiService);
   private readonly destroyRef = inject(DestroyRef);
   private readonly formBuilder = inject(NonNullableFormBuilder);
+  private readonly platformAuth = inject(PlatformAuthService);
 
   protected readonly summary = signal<PopulationSummary | null>(null);
   protected readonly analysis = signal<import('./food-service-api.service').AnalysisResponse | null>(null);
@@ -64,6 +66,8 @@ export class FoodServiceDashboardComponent {
     () => this.summary()?.dimensions.diet?.observedValues ?? [],
   );
   protected readonly elements = computed(() => Object.keys(this.summary()?.metrics.elementRecordCounts ?? {}).sort());
+  protected readonly platformGroup = this.platformAuth.group;
+  protected readonly developmentAuthControls = isDevMode();
 
   protected readonly filters = this.formBuilder.group({
     cuisines: this.formBuilder.control<string[]>([]),
@@ -109,6 +113,14 @@ export class FoodServiceDashboardComponent {
       next: (result) => this.impactResult.set(result),
       error: () => this.error.set('Ingredient-unavailability impact could not be calculated.'),
     });
+  }
+
+  protected setPlatformGroup(group: PlatformGroup): void {
+    this.platformAuth.setGroup(group);
+    this.error.set(null);
+    this.leverageResult.set(null);
+    this.impactResult.set(null);
+    this.loadSummary();
   }
 
   protected groupLabel(group: { path: Array<{ valueKind: string; value?: string }> }): string {

@@ -15,10 +15,11 @@ import static org.hamcrest.Matchers.is;
 class FoodServiceAnalysisResourceTest {
 
     private static final String POPULATION = "/api/populations/food-service-mvp";
+    private static final String USERS_GROUP = "grp_d8113bc5c0ca4b6092ae13386310268f";
 
     @Test
     void returnsTheFixturePopulationSummaryAndRecordDetail() {
-        given()
+        given().header("X-Platform-Principal-Group-Ids", USERS_GROUP)
                 .when().get(POPULATION)
                 .then()
                 .statusCode(200)
@@ -34,7 +35,7 @@ class FoodServiceAnalysisResourceTest {
                         "MEDITERRANEAN", "MIDDLE_EASTERN", "SOUTHEAST_ASIAN"))
                 .body("rejectedRecords.sourceRecordId", contains("recipe-013"));
 
-        given()
+        given().header("X-Platform-Principal-Group-Ids", USERS_GROUP)
                 .when().get(POPULATION + "/records/recipe-011")
                 .then()
                 .statusCode(200)
@@ -56,7 +57,7 @@ class FoodServiceAnalysisResourceTest {
                 }
                 """;
 
-        given()
+        given().header("X-Platform-Principal-Group-Ids", USERS_GROUP)
                 .contentType("application/json")
                 .body(request)
                 .when().post(POPULATION + "/analysis")
@@ -81,7 +82,7 @@ class FoodServiceAnalysisResourceTest {
         var leverageRequest = """
                 {"query": {}, "dimensionIds": ["cuisine", "diet"]}
                 """;
-        given()
+        given().header("X-Platform-Principal-Group-Ids", USERS_GROUP)
                 .contentType("application/json")
                 .body(leverageRequest)
                 .when().post(POPULATION + "/elements/garlic/leverage")
@@ -102,7 +103,7 @@ class FoodServiceAnalysisResourceTest {
                   "unavailableElementIds": ["garlic"]
                 }
                 """;
-        given()
+        given().header("X-Platform-Principal-Group-Ids", USERS_GROUP)
                 .contentType("application/json")
                 .body(scenarioRequest)
                 .when().post(POPULATION + "/element-unavailability")
@@ -122,7 +123,7 @@ class FoodServiceAnalysisResourceTest {
 
     @Test
     void reportsUnknownPopulationAndInvalidAnalysisInput() {
-        given()
+        given().header("X-Platform-Principal-Group-Ids", USERS_GROUP)
                 .when().get("/api/populations/unknown")
                 .then()
                 .statusCode(404);
@@ -133,5 +134,24 @@ class FoodServiceAnalysisResourceTest {
                 .when().post(POPULATION + "/analysis")
                 .then()
                 .statusCode(400);
+    }
+
+    @Test
+    void grantsGuestsOnlyGetEndpoints() {
+        var guestsGroup = "grp_0c98f1205bfe456a8517417a38de98e0";
+
+        given().header("X-Platform-Principal-Group-Ids", guestsGroup)
+                .when().get(POPULATION)
+                .then().statusCode(200);
+
+        given().header("X-Platform-Principal-Group-Ids", guestsGroup)
+                .contentType("application/json")
+                .body("{}")
+                .when().post(POPULATION + "/analysis")
+                .then().statusCode(403);
+
+        given()
+                .when().get(POPULATION)
+                .then().statusCode(403);
     }
 }
