@@ -11,7 +11,10 @@ the `vareng` project. With the standard platform domain convention, the public
 endpoint is `https://web-vareng.apps.eseidinger.de`.
 
 The build workflow publishes the image, deploys the corresponding immutable
-`sha-<commit>` Docker Hub tag, and checks the public readiness and population endpoints.
+`sha-<commit>` Docker Hub tag, and checks that the public entry point is protected.
+The platform deployment wait verifies workload readiness. Reading the protected
+population requires an approved browser session or service credential; an
+anonymous deployment job must not attempt to supply platform identity headers.
 Production deployments are serialized. Before enabling deployment, configure the
 protected GitHub `production` environment with:
 
@@ -49,8 +52,9 @@ Quarkus serves the compiled Angular UI at <http://localhost:8080> and the API be
 
 1. Build a revision-identifiable image.
 2. Deploy it through the Developer Platform.
-3. Verify the intended HTTP entry point and `/api/status` readiness check, including
-   access to the persisted population.
+3. Verify the intended HTTP entry point is protected and that platform deployment
+   reports the workload ready. Use an approved browser or service identity to
+   inspect the persisted population.
 4. Save and reload the reference population through PostgreSQL.
 5. Recreate the workload and verify persisted data.
 6. Run the reference analysis and compare expected results.

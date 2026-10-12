@@ -123,10 +123,12 @@ jobs:
           PLATFORM_TOKEN_ENDPOINT: ${{ vars.PLATFORM_TOKEN_ENDPOINT }}
           PLATFORM_CLIENT_ID: ${{ secrets.PLATFORM_CLIENT_ID }}
           PLATFORM_CLIENT_SECRET: ${{ secrets.PLATFORM_CLIENT_SECRET }}
-      - name: Verify public readiness and population
+      - name: Verify protected public entry point
         run: |
-          curl --fail --silent --show-error --retry 12 --retry-all-errors --retry-delay 5 \
-            https://web-vareng.apps.eseidinger.de/api/status
-          curl --fail --silent --show-error --retry 12 --retry-all-errors --retry-delay 5 \
-            https://web-vareng.apps.eseidinger.de/api/populations/food-service-mvp \
-            | jq -e '.population.id == "food-service-mvp" and .population.version == "1.0.0"'
+          status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' \
+            --retry 12 --retry-all-errors --retry-delay 5 \
+            https://web-vareng.apps.eseidinger.de/api/status)
+          case "$status" in
+            302|403) echo "Public route is protected (HTTP $status)." ;;
+            *) echo "Expected protected public route, got HTTP $status." >&2; exit 1 ;;
+          esac
