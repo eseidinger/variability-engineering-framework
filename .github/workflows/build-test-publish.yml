@@ -41,6 +41,24 @@ jobs:
       - run: npm test
       - run: npm run build
 
+  energy-contract:
+    name: Pinned energy contract kit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: astral-sh/setup-uv@v7
+        with:
+          version: '0.12.17'
+      - uses: actions/cache@v4
+        with:
+          path: .cache/energy-contract-kit
+          key: energy-contract-${{ runner.os }}-${{ hashFiles('contracts/energy/contract-kit.lock.json') }}
+      - run: python3 -m unittest discover -s scripts -p 'test_*.py'
+      - run: python3 scripts/validate-energy-contract-kit.py
+
   api:
     name: API tests
     runs-on: ubuntu-latest
@@ -49,6 +67,19 @@ jobs:
         working-directory: apps/prototype/api
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/cache@v4
+        with:
+          path: .cache/energy-contract-kit
+          key: energy-contract-${{ runner.os }}-${{ hashFiles('contracts/energy/contract-kit.lock.json') }}
+      - name: Prepare shared fixtures for Java consumer tests
+        working-directory: .
+        run: |
+          python3 scripts/validate-energy-contract-kit.py --prepare-only --output-dir "$RUNNER_TEMP/energy-contract-kit"
+          kit_version=$(jq -r .version contracts/energy/contract-kit.lock.json)
+          echo "ENERGY_CONTRACT_KIT_DIRECTORY=$RUNNER_TEMP/energy-contract-kit/contract-kit-v$kit_version/contract-kit" >> "$GITHUB_ENV"
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -66,7 +97,7 @@ jobs:
 
   publish:
     name: Publish Docker image
-    needs: [docs, ui, api, integration]
+    needs: [docs, ui, api, integration, energy-contract]
     if: >-
       github.event_name == 'push' &&
       (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))

@@ -43,7 +43,7 @@ Open <http://localhost:8080>. For a clean database, stop the stack with
 | Product | [Vision](docs/01-product/vision.md), [use cases](docs/01-product/use-cases.md), [requirements](docs/01-product/requirements.md), [roadmap](docs/01-product/roadmap.md) |
 | Architecture | [Overview](docs/02-architecture/overview.md), [domain model](docs/02-architecture/domain-model.md), [analysis view](docs/02-architecture/analysis-view.md), [food-service MVP semantics](docs/02-architecture/food-service-mvp-semantics.md), [food-service HTTP contract](docs/02-architecture/food-service-http-contract.md), [persistence and deployment](docs/02-architecture/persistence-and-deployment.md) |
 | Decisions | [Architecture decision records](docs/03-decisions/README.md) |
-| Development | [Development plan](docs/04-development/development-plan.md), [MVP implementation plan](docs/04-development/mvp-implementation-plan.md), [quality assurance](docs/04-development/quality-assurance.md), [open decisions](docs/04-development/open-decisions.md) |
+| Development | [Development plan](docs/04-development/development-plan.md), [MVP implementation plan](docs/04-development/mvp-implementation-plan.md), [energy configuration implementation plan](docs/04-development/energy-configuration-implementation-plan.md), [quality assurance](docs/04-development/quality-assurance.md), [open decisions](docs/04-development/open-decisions.md) |
 | Operations | [Prototype deployment](docs/05-operations/deployment.md) |
 | Traceability | [Sources and maintenance](docs/sources.md) |
 

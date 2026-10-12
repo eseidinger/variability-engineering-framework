@@ -1,4 +1,5 @@
 .git
+.cache
 **/.angular
 **/dist
 **/node_modules

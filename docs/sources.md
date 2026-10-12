@@ -14,6 +14,7 @@ The listed website pages were reviewed and aligned with repository evidence on O
 | [Projects](https://www.eseidinger.de/projects/) | Relationship between platform, application, and lab. |
 | [Lab](https://www.eseidinger.de/lab/) | Shared experimental method and investigation status. |
 | [Framework update](source-material/2026-09-28-variability-engineering-framework-update.md) | Archived source for the broader variability-engineering vision, food-service demonstration, impact analysis, configuration assistance, and optimization goals. Canonical documents take precedence. |
+| [Energy configuration contract 0.4](https://github.com/eseidinger/energy-system-configuration/blob/93885442fd503d5bc529a732b6da47f6baffcfd1/energy-configuration-integration-contract.md) and [released kit 0.4.0](https://github.com/eseidinger/energy-system-configuration/releases/tag/contract-kit-v0.4.0) | Reviewed October 12, 2026 against local VEF revision `93793d1aa785a796b3d7fd9d41aa4cb81e1ef1b9`; archive checksum verified. Normative source for the [energy configuration implementation plan](04-development/energy-configuration-implementation-plan.md), including shared schemas/oracles and platform boundaries. Planning evidence only; no consumer conformance or deployed acceptance claimed. |
 
 ## Maintenance
 

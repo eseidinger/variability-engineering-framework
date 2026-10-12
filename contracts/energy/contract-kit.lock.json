@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "version": "0.4.0",
+  "archiveUrl": "https://github.com/eseidinger/energy-system-configuration/releases/download/contract-kit-v0.4.0/contract-kit-v0.4.0.tar.gz",
+  "archiveSha256": "884e3590614328c2adafa457153e11575dc1be09b9f53d7b0f53704fe39d02b0",
+  "contractVersions": {
+    "publication": "dataset-publication/v1",
+    "energyProfile": "urn:portfolio:energy-configuration-input:v1",
+    "request": "energy-optimization-request/v1",
+    "candidate": "energy-candidate/v1",
+    "result": "energy-optimization-result/v1",
+    "error": "error/v1"
+  },
+  "referenceVersions": {
+    "model": "energy-model/1.0.0",
+    "simulation": "energy-simulation/1.0.0",
+    "optimizer": "energy-optimizer/1.0.0"
+  }
+}

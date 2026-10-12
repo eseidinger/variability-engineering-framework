@@ -12,6 +12,13 @@ Run the core and API tests with:
 ./mvnw test
 ```
 
+## Energy contract fixtures
+
+The energy implementation targets the [checksum-pinned shared contract kit](../../../contracts/energy/README.md).
+API CI prepares its schemas, fixtures, and reviewed expected results and sets
+`ENERGY_CONTRACT_KIT_DIRECTORY` for forthcoming Java conformance tests. The kit
+is independently validated in the workflow; energy runtime behavior is not yet
+implemented. Follow the linked instructions to prepare the same release locally.
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 

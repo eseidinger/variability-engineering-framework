@@ -1,2 +1,9 @@
 Variability Engineering Framework
 Copyright 2026 Emanuel Seidinger
+
+The energy integration consumes the external Energy System Configuration
+contract kit by Emanuel Seidinger. Its schemas and software use Apache-2.0;
+authored documentation, examples, fixtures, and expected results use CC BY 4.0.
+PVGIS-derived material retains its source terms and attribution. The complete
+release licenses, NOTICE, and artifact provenance are preserved during extraction.
+See contracts/energy/README.md for the pinned source and usage instructions.

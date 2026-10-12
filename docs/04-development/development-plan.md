@@ -2,6 +2,12 @@
 
 Status: proposed sequence without confirmed dates.
 
+The [energy configuration implementation plan](energy-configuration-implementation-plan.md)
+defines the next cross-project reference slice against the released energy
+contract kit 0.4.0. It sequences quantitative configuration, verified ODIP input,
+simulation, durable optimization runs, platform integration, and AI assistance
+without changing the completed food-service analysis contract.
+
 ```mermaid
 flowchart LR
     Semantics[Semantics and stack] --> Core[Evaluation core]
