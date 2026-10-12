@@ -1,8 +1,9 @@
 # Energy Configuration Implementation Plan
 
 Status: VEF implementation sequence, reviewed against source on October 12,
-2026. Work package 1 is implemented and verified locally; hosted CI and the ODIP
-consumer handoff remain pending. Other implementation items are pending. No
+2026. Work package 1 and the new-equipment portion of work package 2 are implemented
+and verified locally; hosted CI and the ODIP consumer handoff remain pending.
+Existing-equipment semantics and other implementation items are pending. No
 dates or estimates are committed, and no energy runtime/deployment acceptance
 is claimed. Checked items indicate source and local evidence, not hosted CI.
 
@@ -98,10 +99,17 @@ must be evidenced before downstream implementation gates are claimed complete.
 ### 2. Record energy identity and model semantics — VEF-02 foundation
 
 - [ ] Add an energy architecture document and local ADRs for quantitative selections/identity, simulation/economics, and durable run execution. Reference upstream DEC-01 through DEC-06 and the existing domain-independent core and verifiable-model ADRs.
-- [ ] Implement immutable typed catalog, request, configuration, and model-version objects. Use explicit units and reject invalid/non-finite values; the executable schemas require strictly positive annual demand and positive technical capacities/efficiencies.
-- [ ] Match the kit's deterministic configuration IDs and rules: one PV model, one inverter, no battery or 1–4 of one battery model; 1–100 PV modules within roof area; DC/AC ratio `0.8..1.5`; at most 20 catalog models per component type.
+- [x] Implement immutable typed catalog, request, configuration, and independently versioned model. Use explicit units and reject invalid/non-finite values; the executable schemas require strictly positive annual demand and positive technical capacities/efficiencies.
+- [x] Match the kit's deterministic configuration IDs and rules for new equipment: one PV model, one inverter, no battery or 1–4 of one battery model; 1–100 PV modules within roof area; DC/AC ratio `0.8..1.5`; at most 20 catalog models per component type.
 - [ ] Specify existing-equipment resolution, compatibility, quantities, and identity before its implementation. The request exposes unique `existingComponentIds`, while the reference oracle exercises no existing equipment. Obtain shared examples for non-empty inputs instead of inventing repeated-unit semantics locally.
-- [ ] Estimate candidate evaluations with overflow-safe bounds before run creation. Reject more than 100,000 evaluations with `422 search_space_limit_exceeded`. Define structural pruning and count semantics to reproduce the oracle: investment/self-sufficiency failures remain evaluated candidates with diagnostics.
+- [x] Estimate candidate evaluations with overflow-safe bounds before candidate allocation. Reject more than 100,000 evaluations with model code `search_space_limit_exceeded`; a future HTTP adapter will map it to `422` before run creation. Structural pruning/counts reproduce the oracle; investment/self-sufficiency failures remain for subsequent evaluation.
+
+The [energy architecture](../02-architecture/energy-configuration.md) and
+[ADR-014](../03-decisions/ADR-014-energy-configuration-identity.md) document the
+implemented boundary. Simulation/economics and run-execution ADRs remain pending
+with those packages. The [verification record](energy-model-verification.md)
+covers all 252 configurations. Non-empty existing-equipment requests fail with
+`existing_equipment_not_supported`; this package's full exit gate remains open.
 
 Exit: model and identity tests prove quantity/order behavior and the exact
 configuration set, including no-battery and incompatible/unavailable cases.

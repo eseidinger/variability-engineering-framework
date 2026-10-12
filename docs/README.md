@@ -18,7 +18,7 @@ development sequence, and prototype operations.
 
 ## Status and evidence
 
-The food-service MVP is implemented across the Angular UI, Quarkus API, PostgreSQL persistence, and combined local container image. The API contains a domain-independent observed-population analysis core with unit and conformance tests, a verified food-service fixture adapter, and a public HTTP contract. The UI exposes summary metrics, filters, reorderable grouping, ingredient leverage, and ingredient-unavailability impact. Generative model evaluation and the broader framework capabilities remain planned; reusable framework components follow after the observed-population contracts have been validated further.
+The food-service MVP is implemented across the Angular UI, Quarkus API, PostgreSQL persistence, and combined local container image. The API contains a domain-independent observed-population analysis core with unit and conformance tests, a verified food-service fixture adapter, and a public HTTP contract. The UI exposes summary metrics, filters, reorderable grouping, ingredient leverage, and ingredient-unavailability impact. The bounded energy model validates typed inputs and enumerates new-equipment configurations against the released kit; general-purpose generative evaluation and broader framework capabilities remain planned.
 
 - **Requirement:** intended project scope, not implementation evidence.
 - **Documented direction:** an objective recorded in the current project description.
@@ -28,7 +28,7 @@ The food-service MVP is implemented across the Angular UI, Quarkus API, PostgreS
 - **Implemented:** reserved for behavior present in source.
 - **Verified:** reserved for a recorded, reproducible check.
 
-The repository evidences food-service UI behavior, local container assembly, a domain-independent analysis core, verified fixture import, PostgreSQL round trips, public API behavior, and a Compose-backed black-box workload check. It does not yet evidence generative model evaluation, configuration assistance, optimization, actual Docker Hub publication, or successful deployment to the Developer Platform.
+The repository evidences food-service UI behavior, local container assembly, a domain-independent analysis core, verified fixture import, PostgreSQL round trips, public API behavior, a Compose-backed black-box workload check, and bounded energy configuration generation. It does not yet evidence general-purpose generative model evaluation, configuration assistance, completed energy optimization, actual Docker Hub publication, or successful deployment to the Developer Platform.
 
 ### Capability status
 
@@ -40,6 +40,7 @@ The repository evidences food-service UI behavior, local container assembly, a d
 | PostgreSQL persistence and fixture reload | Implemented | PostgreSQL round trip and container restart | Not yet recorded |
 | Combined UI/API image | Implemented | Compose build and startup | Not yet recorded |
 | Generative models and configuration assistance | Planned | None | None |
+| Bounded energy inputs and new-equipment generation | Implemented | Complete reference configuration set and boundary tests | None |
 | Portfolio optimization and reusable components | Planned | None | None |
 
 ## Maintenance

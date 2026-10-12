@@ -6,7 +6,13 @@ A domain-independent framework for modeling, analyzing, configuring, and optimiz
 
 The food-service analysis MVP and combined container image have been validated locally against PostgreSQL. Deployment through the Developer Platform remains to be verified. GitHub Actions build and test the application and are configured to publish the image to Docker Hub, but an actual publication is not yet recorded.
 
-The API contains a domain-independent analysis core for versioned observed populations, a verified food-service fixture adapter, an HTTP analysis contract, and PostgreSQL-backed population storage. The Angular Material dashboard exposes summary metrics, filtering, reorderable grouping, ingredient leverage, and ingredient-unavailability impact. Generative models, configuration assistance, portfolio optimization, and reusable framework components remain later work.
+The API contains a domain-independent analysis core for versioned observed populations, a verified food-service fixture adapter, an HTTP analysis contract, and PostgreSQL-backed population storage. The Angular Material dashboard exposes summary metrics, filtering, reorderable grouping, ingredient leverage, and ingredient-unavailability impact.
+
+The API also includes a locally verified energy model that validates typed inputs
+and generates bounded new-equipment configurations against contract kit 0.4.0.
+Its ODIP retrieval, simulation, run APIs, and UI remain planned. General-purpose
+generative models, configuration assistance, portfolio optimization, and reusable
+framework components remain later work.
 
 ## Implemented MVP
 
@@ -22,7 +28,7 @@ The stack-neutral workspace is documented in [`apps/prototype/`](apps/prototype/
 
 The normative observed-data example is the [food-service MVP v1 fixture](examples/food-service/mvp-v1/README.md).
 
-Generative model authoring, configuration assistance, portfolio optimization, external datasets, additional language implementations, reusable UI components, and broader performance or storage experiments follow in later stages.
+General-purpose generative model authoring, configuration assistance, portfolio optimization, external datasets, additional language implementations, reusable UI components, and broader performance or storage experiments follow in later stages. The bounded [energy configuration slice](docs/02-architecture/energy-configuration.md) is tracked separately.
 
 ## Run locally
 

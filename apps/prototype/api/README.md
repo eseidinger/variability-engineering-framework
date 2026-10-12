@@ -9,16 +9,27 @@ The core is independent of food-service terminology, HTTP, persistence, and UI f
 Run the core and API tests with:
 
 ```shell
+python3 ../../../scripts/validate-energy-contract-kit.py --prepare-only --output-dir /tmp/vef-energy-api-kit
+export ENERGY_CONTRACT_KIT_DIRECTORY=/tmp/vef-energy-api-kit/contract-kit-v0.4.0/contract-kit
 ./mvnw test
 ```
+
+Run from this API directory and choose an extraction directory that does not
+already exist. Preparation requires Python 3.12 or newer and uses the locked
+release checksum. PostgreSQL tests require Docker; a local `.env` can override
+Dev Services, so ensure its database is running or pass explicit test database
+connection properties.
 
 ## Energy contract fixtures
 
 The energy implementation targets the [checksum-pinned shared contract kit](../../../contracts/energy/README.md).
 API CI prepares its schemas, fixtures, and reviewed expected results and sets
-`ENERGY_CONTRACT_KIT_DIRECTORY` for forthcoming Java conformance tests. The kit
-is independently validated in the workflow; energy runtime behavior is not yet
-implemented. Follow the linked instructions to prepare the same release locally.
+`ENERGY_CONTRACT_KIT_DIRECTORY` for Java model conformance tests. The pure Java
+`energy` package validates typed catalog/customer inputs and enumerates bounded
+new-equipment configurations matching all 252 reference choices. Simulation,
+ODIP retrieval, run APIs, and the energy UI remain planned. Non-empty existing
+equipment is explicitly unsupported pending shared examples. See the
+[energy architecture](../../../docs/02-architecture/energy-configuration.md).
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 

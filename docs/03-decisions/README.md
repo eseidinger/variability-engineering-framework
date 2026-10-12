@@ -17,6 +17,7 @@ ADRs separate accepted requirements and documented directions from proposals. Im
 | [011](ADR-011-analysis-dimensions.md) | Separate analysis dimensions from configuration features | Observed path implemented; feature path planned |
 | [012](ADR-012-portfolio-optimization-boundary.md) | Separate portfolio optimization from configuration validity | Documented direction |
 | [013](ADR-013-food-service-analysis-mvp-semantics.md) | Freeze food-service analysis MVP semantics | Accepted |
+| [014](ADR-014-energy-configuration-identity.md) | Quantitative energy identity and bounded generation | Accepted for new equipment; implemented and verified locally |
 
 ## Decision process
 

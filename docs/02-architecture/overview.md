@@ -2,7 +2,9 @@
 
 Status: target architecture. The implemented slice currently covers observed-dataset
 adaptation, normalized populations, analysis, element-unavailability impact,
-PostgreSQL persistence, the application API, and visualization.
+PostgreSQL persistence, the application API, and visualization. A separate
+[bounded energy model](energy-configuration.md) now validates typed inputs and
+generates new-equipment configurations; simulation and run integration remain planned.
 
 ```mermaid
 flowchart LR
@@ -41,7 +43,7 @@ flowchart LR
 | Persistence adapter | Save and load versioned models, mappings, populations, and results | Database details remain replaceable |
 
 The prototype currently owns the observed-population normalization, analysis, impact,
-persistence, and presentation slice. Generative-model evaluation, configuration
+persistence, and presentation slice. General-purpose generative-model evaluation, configuration
 assistance, and optimization remain target components. Stable boundaries become
 reusable framework components only after synthetic fixtures and the food-service
 reference domain validate them.

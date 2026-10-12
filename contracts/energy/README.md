@@ -34,8 +34,9 @@ The command prints `ENERGY_CONTRACT_KIT_DIRECTORY`, the path containing
 `schemas/`, `fixtures/`, and `expected-results/`. `--prepare-only --output-dir`
 verifies and extracts without requiring `uv` or running the upstream tests.
 The API CI job prepares the same checksum-pinned release and supplies this path
-as an environment variable for forthcoming Java consumer conformance tests.
-No Java consumer conformance is claimed by extraction alone.
+as an environment variable for Java model conformance tests. These compare every
+released configuration and quantity, investment, roof use, and electrical ratio
+with the pure Java generator. Extraction alone does not prove consumer conformance.
 
 ## CI and handoff
 
@@ -45,7 +46,8 @@ tests also exercise corrupt downloads/cache entries and rejected extraction.
 
 The VEF consumer pin implements its portion of `SHARED-01`. Closing cross-project
 Gate 1 still requires ODIP's independent pin and successful hosted CI runs.
-Local evidence is recorded in the [implementation plan](../../docs/04-development/energy-configuration-implementation-plan.md).
+Local evidence is recorded in the [implementation plan](../../docs/04-development/energy-configuration-implementation-plan.md)
+and [model verification](../../docs/04-development/energy-model-verification.md).
 
 ## Attribution and updates
 

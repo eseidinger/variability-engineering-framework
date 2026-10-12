@@ -6,7 +6,9 @@ The [energy configuration implementation plan](energy-configuration-implementati
 defines the next cross-project reference slice against the released energy
 contract kit 0.4.0. It sequences quantitative configuration, verified ODIP input,
 simulation, durable optimization runs, platform integration, and AI assistance
-without changing the completed food-service analysis contract.
+without changing the completed food-service analysis contract. The consumer
+kit pin and bounded new-equipment generation are now implemented and verified
+locally; publication retrieval, simulation, run APIs, and the energy UI remain planned.
 
 ```mermaid
 flowchart LR

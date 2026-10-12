@@ -2,6 +2,11 @@
 
 Status: core analysis concepts are requirements; food-service analysis semantics are binding for the MVP; portfolio and quantitative-usage semantics remain documented direction requiring later contracts and conformance cases.
 
+The bounded [energy model](energy-configuration.md) now implements quantitative
+new-equipment selections and configuration generation against a separate released
+contract. It does not change observed binary variant identity or establish
+general-purpose quantity, recipe, or portfolio semantics.
+
 | Term | Meaning |
 |---|---|
 | Feature | Variable describing a configuration. |
