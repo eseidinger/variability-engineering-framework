@@ -4,17 +4,18 @@ set -euo pipefail
 readonly app_port="${APP_PORT:-18080}"
 readonly compose=(docker compose --profile app)
 readonly base_url="${BASE_URL:-http://localhost:${app_port}}"
+readonly platform_group_header='X-Platform-Principal-Group-Ids: grp_d8113bc5c0ca4b6092ae13386310268f'
 export APP_PORT="$app_port"
 readonly retries=30
 
 cleanup() {
-  "${compose[@]}" down -v
+  "${compose[@]}" down --remove-orphans
 }
 
 wait_for_url() {
   local url="$1"
   for ((attempt = 1; attempt <= retries; attempt++)); do
-    if curl --fail --silent --show-error "$url" >/dev/null; then
+    if curl --fail --silent --show-error --header "$platform_group_header" "$url" >/dev/null; then
       return 0
     fi
     sleep 2
@@ -40,11 +41,11 @@ wait_for_url "$base_url/api/status"
 wait_for_url "$base_url/"
 
 ui=$(curl --fail --silent --show-error "$base_url/")
-summary=$(curl --fail --silent --show-error "$base_url/api/populations/food-service-mvp")
-analysis=$(curl --fail --silent --show-error --header 'Content-Type: application/json' \
+summary=$(curl --fail --silent --show-error --header "$platform_group_header" "$base_url/api/populations/food-service-mvp")
+analysis=$(curl --fail --silent --show-error --header "$platform_group_header" --header 'Content-Type: application/json' \
   --data '{"dimensionFilters":{"diet":{"includedValues":["VEGAN"]}},"groupingDimensions":["cuisine"]}' \
   "$base_url/api/populations/food-service-mvp/analysis")
-impact=$(curl --fail --silent --show-error --header 'Content-Type: application/json' \
+impact=$(curl --fail --silent --show-error --header "$platform_group_header" --header 'Content-Type: application/json' \
   --data '{"query":{"groupingDimensions":["cuisine"]},"unavailableElementIds":["garlic"]}' \
   "$base_url/api/populations/food-service-mvp/element-unavailability")
 
@@ -64,7 +65,7 @@ fi
 
 "${compose[@]}" restart app
 wait_for_url "$base_url/api/populations/food-service-mvp"
-reloaded_summary=$(curl --fail --silent --show-error "$base_url/api/populations/food-service-mvp")
+reloaded_summary=$(curl --fail --silent --show-error --header "$platform_group_header" "$base_url/api/populations/food-service-mvp")
 assert_contains "$reloaded_summary" '"recordCount":12'
 
 echo "Compose black-box verification passed."
