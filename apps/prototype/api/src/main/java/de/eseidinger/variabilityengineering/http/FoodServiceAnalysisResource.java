@@ -21,6 +21,8 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.HttpHeaders;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,9 +45,13 @@ public class FoodServiceAnalysisResource {
     @Inject
     FoodServicePopulationStore store;
 
+    @Context
+    HttpHeaders headers;
+
     @GET
     @Path("/{populationId}")
     public PopulationSummaryResponse summary(@PathParam("populationId") String populationId) {
+        authorize("GET");
         var population = store.population(populationId);
         var result = engine.analyze(population, AnalysisQuery.unfiltered());
         return PopulationSummaryResponse.from(population, store.rejectedRecords(populationId), result);
@@ -54,6 +60,7 @@ public class FoodServiceAnalysisResource {
     @GET
     @Path("/{populationId}/records/{recordId}")
     public RecordDetailResponse record(@PathParam("populationId") String populationId, @PathParam("recordId") String recordId) {
+        authorize("GET");
         var population = store.population(populationId);
         var record = population.records().stream()
                 .filter(candidate -> candidate.id().equals(recordId))
@@ -65,6 +72,7 @@ public class FoodServiceAnalysisResource {
     @POST
     @Path("/{populationId}/analysis")
     public AnalysisResponse analyze(@PathParam("populationId") String populationId, AnalysisRequest request) {
+        authorize("POST");
         var population = store.population(populationId);
         var query = query(request);
         try {
@@ -80,6 +88,7 @@ public class FoodServiceAnalysisResource {
             @PathParam("populationId") String populationId,
             @PathParam("elementId") String elementId,
             LeverageRequest request) {
+        authorize("POST");
         var population = store.population(populationId);
         var effectiveRequest = request == null ? new LeverageRequest(null, Set.of()) : request;
         try {
@@ -102,6 +111,7 @@ public class FoodServiceAnalysisResource {
     @POST
     @Path("/{populationId}/element-unavailability")
     public ImpactResponse elementUnavailability(@PathParam("populationId") String populationId, ScenarioRequest request) {
+        authorize("POST");
         var population = store.population(populationId);
         if (request == null || request.unavailableElementIds() == null || request.unavailableElementIds().isEmpty()) {
             throw new BadRequestException("unavailableElementIds must not be empty");
@@ -133,6 +143,10 @@ public class FoodServiceAnalysisResource {
         } catch (IllegalArgumentException | NullPointerException exception) {
             throw new BadRequestException(exception.getMessage(), exception);
         }
+    }
+
+    private void authorize(String method) {
+        PopulationAuthorizationFilter.requireAuthorized(headers, method);
     }
 
     public record AnalysisRequest(

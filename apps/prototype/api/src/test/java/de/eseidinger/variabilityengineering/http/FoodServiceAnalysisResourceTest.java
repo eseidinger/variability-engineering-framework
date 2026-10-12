@@ -128,7 +128,7 @@ class FoodServiceAnalysisResourceTest {
                 .then()
                 .statusCode(404);
 
-        given()
+        given().header("X-Platform-Principal-Group-Ids", USERS_GROUP)
                 .contentType("application/json")
                 .body("{\"requiredElementIds\":[\"unknown\"]}")
                 .when().post(POPULATION + "/analysis")
