@@ -26,10 +26,52 @@ The energy implementation targets the [checksum-pinned shared contract kit](../.
 API CI prepares its schemas, fixtures, and reviewed expected results and sets
 `ENERGY_CONTRACT_KIT_DIRECTORY` for Java model conformance tests. The pure Java
 `energy` package validates typed catalog/customer inputs and enumerates bounded
-new-equipment configurations matching all 252 reference choices. Simulation,
-ODIP retrieval, run APIs, and the energy UI remain planned. Non-empty existing
+new-equipment configurations matching all 252 reference choices. It also
+simulates hourly dispatch and matches the released 194-candidate feasible
+ranking. The ODIP adapter verifies bytes and supports bounded HTTPS retrieval;
+PostgreSQL stores verified immutable publication bytes. `EnergyPublicationImportService`
+uses VEF's managed reader binding, rechecks ODIP on each import, and stores
+only verified bytes. ODIP's publication API is implemented and locally verified
+in its own repository; VEF's authenticated retrieval from a deployed ODIP instance,
+run APIs, and the energy UI remain planned. Non-empty existing
 equipment is explicitly unsupported pending shared examples. See the
 [energy architecture](../../../docs/02-architecture/energy-configuration.md).
+
+For the deployed handoff, `application.json` sets the non-secret
+`ENERGY_ODIP_BINDING_PREFIX` to `ACCESS_209A1DDA331C` for the current `vareng`
+deployment project. The dataset grant must target that resource's stable
+principal ID, reported as `prn_0a3b0952ce0e4c2689bcbdb9331bc185`.
+The platform must inject
+`<prefix>_CLIENT_ID`, `<prefix>_CLIENT_SECRET`, and `<prefix>_TOKEN_URL` into the
+VEF process. `ENERGY_ODIP_ORIGIN` defaults to
+`https://web-odip.apps.eseidinger.de`; override it only with another approved
+HTTPS origin. Do not place the managed secret or token in application config.
+The deployment descriptor allows HTTPS egress to ODIP and
+`identity.eseidinger.de`; its DNS pins must be approved and reapplied after
+address changes.
+
+With an authenticated Developer Platform CLI session, inspect the current
+project's outgoing service access and confirm that the ODIP resource is active
+and reports this prefix and principal:
+
+```shell
+devplat access services list --project vareng --direction outgoing --output json
+```
+
+With the binding variables available to the test process, run the focused
+deployed check from this directory:
+
+```shell
+export ENERGY_ODIP_BINDING_PREFIX="ACCESS_209A1DDA331C"
+./mvnw -Dtest=EnergyPublicationDeployedTest test
+```
+
+The test verifies the energy publication's exact digest and conditional reads,
+then expects `403` for the non-energy control dataset. It is skipped during
+ordinary tests when the prefix is absent. A dataset grant alone does not supply
+VEF's service credential; keep the access resource and stable principal ID in
+the non-secret handoff record. This check does not establish recovery, rotation,
+or deployed VEF run-API acceptance.
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 

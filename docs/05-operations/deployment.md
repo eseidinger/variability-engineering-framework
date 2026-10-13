@@ -1,8 +1,14 @@
 # Prototype Deployment
 
-Status: platform deployment configuration implemented; first successful deployment remains to be verified.
+Status: the earlier food-service revision `2ae2a171a93c52fc57f9b4577398ab43d6a8550e`
+was built, published, and deployed by the
+[October 12, 2026 GitHub Actions run](https://github.com/eseidinger/variability-engineering-framework/actions/runs/38292671777).
+The protected public status route returned HTTP `302` on October 13, 2026.
+The current energy code and ODIP binding configuration have not yet been deployed
+or verified end to end.
 
-The prototype will be deployed through the existing Developer Platform as one container image containing the UI and API. PostgreSQL is provided separately by the platform.
+The prototype deploys through the existing Developer Platform as one container
+image containing the UI and API. PostgreSQL is provided separately by the platform.
 
 ## Developer Platform declaration and CI
 

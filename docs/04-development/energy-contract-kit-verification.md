@@ -47,3 +47,13 @@ not rerun because this change affects dependency validation and CI rather than
 application source. Their existing workflow jobs remain required. ODIP must
 independently adopt the released checksum, and both consumers need successful
 hosted CI evidence before the shared handoff is complete.
+
+## Subsequent ODIP source review
+
+On October 13, 2026, the current ODIP repository was inspected at revision
+`30735909a7189b8fb3036615fd65474c189cdbd4`. ODIP has independently pinned
+kit 0.4.0 with the same archive checksum and configured verification in CI.
+Its publication API and local acceptance harness are implemented. The earlier
+handoff statement above describes the October 12 evidence state; the remaining
+gap is hosted/deployed cross-project acceptance, not ODIP source implementation.
+See the [ODIP handoff review](odip-handoff-review.md).

@@ -1,8 +1,10 @@
 # Energy Configuration Architecture
 
-Status: typed inputs and bounded new-equipment generation implemented;
-publication retrieval, simulation/ranking, run APIs/persistence, UI, and AI
-assistance planned. The dependency is [contract kit 0.4.0](../../contracts/energy/README.md).
+Status: typed new-equipment generation, publication verification/cache, and
+simulation/ranking implemented and verified locally. ODIP's publication API is
+implemented and locally verified; VEF's deployed authenticated retrieval,
+run APIs/persistence, UI, and AI assistance planned. The dependency is
+[contract kit 0.4.0](../../contracts/energy/README.md).
 
 ## Implemented boundary
 
@@ -22,12 +24,15 @@ The pure Java `energy` package owns:
 | `EnergyConfiguration` | Complete quantities/components, reference ID, selections, capacity, area, ratio, and initial investment. |
 | `EnergyFeatureModel` | Independent model version, structural search estimate, limits, and bounded generation. |
 | `EnergyModelException` | Model failure code for a later application/HTTP adapter. |
+| `EnergyProfile` | Aligned hourly yield, load fraction, and tariff values for one immutable publication. |
+| `EnergySimulation` | Binary64 hourly AC dispatch, balance checks, and raw totals. |
+| `EnergyOptimizer` | Exhaustive feasibility and deterministic cost ranking. |
 
 Constructors enforce supported schema majors, region `DE-BY-09187182`, EUR,
 positive demand/technical attributes, bounded fractions, non-negative finite
 price/roof/budget, unique existing IDs, and 20-year/0.04 assumptions. Aggregated
 values must stay finite. Constructing a dataset reference does not prove
-publication availability; that belongs to the planned ODIP consumer.
+publication availability; that belongs to VEF's publication verifier and cache.
 
 The model selects one PV model, one inverter, and either no battery or one
 battery model. Available choices satisfy roof area, at most 100 PV units, and
@@ -37,27 +42,42 @@ long arithmetic and the same pruning rules as generation. More than 100,000
 evaluations fails before candidate allocation. Immutable output is sorted by ID.
 
 Budget/self-sufficiency do not prune the evaluated population; violated customer
-constraints must remain available for diagnostics. Simulation and feasibility
-follow separately. The generator reproduces 252 reference configurations; it
-does not yet calculate the 194 feasible results or choose a recommendation.
+constraints remain available for diagnostics. The generator reproduces 252
+reference configurations. The simulator and optimizer reproduce all released
+hourly cases, 252 candidate results, the 194-candidate feasible ranking, and
+the reference recommendation. Numerical output uses half-even rounding after
+raw binary64 calculation.
+
+The `adapter.odip` verifier admits a publication only after checking its
+manifest and five artifact bytes, digests, roles, units, period, hourly alignment,
+catalog, quality, and provenance. The client builds exact-version URLs from
+validated identifiers, uses a configured HTTPS origin and managed bearer token,
+refuses redirects, caps response sizes, and supports ETags. The V2 PostgreSQL
+cache writes all bytes atomically under dataset ID/version and re-verifies a
+loaded version. `EnergyPublicationImportService` uses the managed reader
+binding to fetch and verify the exact version before storing it; an ODIP denial
+is not replaced with cached bytes. The application descriptor declares HTTPS
+egress to ODIP and the managed token host.
+[ADR-015](../03-decisions/ADR-015-energy-simulation-and-publication.md)
+records these choices.
 
 ## Limits of this slice
 
 - Non-empty existing-equipment requests fail explicitly pending shared quantity/ownership/identity examples.
 - Individually valid component IDs may concatenate into an ID exceeding 128 characters or colliding with another assignment. These cases fail instead of truncating or merging choices.
-- Domain types are not wire DTOs or a JSON Schema validator. Test-only `EnergyFixture` maps known released documents; production parsing and integrity checks belong to the publication consumer.
+- The verifier enforces this profile's required fields and cross-document rules; full generic JSON Schema validation remains open.
 - There are no energy HTTP endpoints or UI yet. The general-purpose Boolean feature-model AST remains planned.
+- ODIP's read API exists and has local acceptance evidence. VEF has not yet
+  verified authenticated access to its deployed endpoint or authorized outage fallback.
 
 ## Planned flow
 
-The application will pin and verify an ODIP profile, construct typed inputs,
-estimate/generate configurations, simulate each against the same versions,
-evaluate constraints, and rank results. Durable runs will identify request,
+The application will connect the verified publication/calculation layer to
+durable runs that identify request,
 dataset/artifact checksums, model/simulation/optimizer versions, execution state,
 candidates, and evidence. DTOs, repositories, and UI stay outside the pure model.
 
-The upstream DEC-02 already approves v1 dispatch and economics. A local
-simulation ADR will record Java numeric parity before simulation implementation.
+The upstream DEC-02 approves v1 dispatch and economics, adopted in ADR-015.
 A run-execution ADR will define queue claims, deadlines, idempotency, ownership,
 and recovery before persistence/API work.
 

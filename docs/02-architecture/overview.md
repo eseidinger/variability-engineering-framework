@@ -3,8 +3,9 @@
 Status: target architecture. The implemented slice currently covers observed-dataset
 adaptation, normalized populations, analysis, element-unavailability impact,
 PostgreSQL persistence, the application API, and visualization. A separate
-[bounded energy model](energy-configuration.md) now validates typed inputs and
-generates new-equipment configurations; simulation and run integration remain planned.
+[bounded energy model](energy-configuration.md) now validates typed inputs,
+generates new-equipment configurations, and evaluates the released hourly
+reference profile; durable run integration remains planned.
 
 ```mermaid
 flowchart LR

@@ -44,8 +44,9 @@ The build workflow validates the lock's released kit independently of applicatio
 tests. Image publication depends on this contract job. Integrity regression
 tests also exercise corrupt downloads/cache entries and rejected extraction.
 
-The VEF consumer pin implements its portion of `SHARED-01`. Closing cross-project
-Gate 1 still requires ODIP's independent pin and successful hosted CI runs.
+The VEF consumer pin implements its portion of `SHARED-01`. ODIP independently
+pins the same 0.4.0 archive and validates it in its CI configuration. Closing
+cross-project Gate 1 still requires recorded hosted CI and handoff evidence.
 Local evidence is recorded in the [implementation plan](../../docs/04-development/energy-configuration-implementation-plan.md)
 and [model verification](../../docs/04-development/energy-model-verification.md).
 

@@ -2,12 +2,16 @@ package de.eseidinger.variabilityengineering.energy;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.eseidinger.variabilityengineering.adapter.odip.EnergyPublicationVerifier;
+import de.eseidinger.variabilityengineering.adapter.odip.VerifiedEnergyPublication;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /** Maps already-validated released test inputs; production publication parsing belongs to VEF-01. */
 final class EnergyFixture {
@@ -17,11 +21,26 @@ final class EnergyFixture {
     }
 
     static JsonNode document(String relativePath) throws IOException {
+        return MAPPER.readTree(kitPath(relativePath).toFile());
+    }
+
+    static Path kitPath(String relativePath) {
         String directory = System.getenv("ENERGY_CONTRACT_KIT_DIRECTORY");
         if (directory == null || directory.isBlank()) {
             throw new IllegalStateException("Prepare the pinned kit and set ENERGY_CONTRACT_KIT_DIRECTORY; see contracts/energy/README.md");
         }
-        return MAPPER.readTree(Path.of(directory).resolve(relativePath).toFile());
+        return Path.of(directory).resolve(relativePath);
+    }
+
+    static VerifiedEnergyPublication publication() throws IOException {
+        var prefix = "fixtures/energy-reference-wasserburg-am-inn-2024/";
+        var manifest = Files.readAllBytes(kitPath(prefix + "manifest.json"));
+        var artifacts = new HashMap<String, byte[]>();
+        for (var descriptor : MAPPER.readTree(manifest).path("artifacts")) {
+            String id = descriptor.path("artifactId").asText();
+            artifacts.put(id, Files.readAllBytes(kitPath(prefix + "artifacts/" + id + ".json")));
+        }
+        return new EnergyPublicationVerifier().verify(manifest, artifacts);
     }
 
     static EnergyCatalog catalog() throws IOException {
@@ -68,4 +87,5 @@ final class EnergyFixture {
                 node.path("objective").asText(), new EnergyOptimizationRequest.Assumptions(
                         assumptions.path("analysisYears").asInt(), assumptions.path("discountRate").asDouble()));
     }
+
 }

@@ -1,9 +1,12 @@
 # Energy Configuration Implementation Plan
 
-Status: VEF implementation sequence, reviewed against source on October 12,
-2026. Work package 1 and the new-equipment portion of work package 2 are implemented
-and verified locally; hosted CI and the ODIP consumer handoff remain pending.
-Existing-equipment semantics and other implementation items are pending. No
+Status: VEF implementation sequence, updated October 13, 2026. Work package 1,
+the new-equipment portion of work package 2, and the local publication/calculation
+subsets of work packages 3–4 are implemented and verified. ODIP has implemented
+and locally verified its publication API and independent contract pin; VEF's
+authenticated deployed handoff and hosted CI evidence remain pending.
+Existing-equipment semantics and other
+implementation items are pending. No
 dates or estimates are committed, and no energy runtime/deployment acceptance
 is claimed. Checked items indicate source and local evidence, not hosted CI.
 
@@ -29,7 +32,8 @@ inspected; the kit test suite was not executed during planning. Consume the
 released archive in implementation and CI, not the mutable default branch.
 
 Upstream Gate 0 decisions and maintainer review are complete. The kit is
-published, but Gate 1 remains open until both ODIP and VEF pin it in CI. Contract
+published. Both repositories now pin kit 0.4.0 and configure kit validation in
+CI. Gate 1 still needs recorded hosted CI and cross-project handoff evidence. Contract
 `1.0.0` acceptance follows the deployed and AI release gates. Adopt the recorded
 decisions rather than reopening the approved demonstration assumptions.
 
@@ -39,7 +43,7 @@ decisions rather than reopening the approved demonstration assumptions.
 | --- | --- | --- |
 | Analysis core | `core/AnalysisEngine.java`, immutable populations and records | Bounded configuration generation, quantitative component selections, feasibility, and deterministic ranking. |
 | Structural identity | `core/Variant.java` compares sets of element IDs | Energy configuration identity must include selected models, quantities, and existing/new equipment semantics. |
-| Data import | Verified food-service fixture adapter | Generic ODIP publication retrieval and independent energy-profile validation. |
+| Data import | VEF's ODIP adapter verifies and caches the released energy fixture; ODIP's generic publication API is locally implemented | VEF authenticated retrieval from deployed ODIP and full schema enforcement. |
 | Persistence | `JdbcPopulationRepository`, Flyway population tables | Immutable imported bytes, model snapshots, durable run queue, ownership, idempotency, candidates, results, and evidence. |
 | Authorization | `PopulationAuthorizationFilter` checks group IDs only | Validate complete boundary-supplied principal context and enforce stable-principal run ownership. |
 | Browser identity | UI group selector and interceptor send identity headers | Use platform browser sessions; remove production client-generated identity headers and retain boundary CSRF handling. |
@@ -84,7 +88,7 @@ energy quantitative identity can initially be a separate type from `Variant`.
 - [x] Add a small dependency lock record containing release version, archive URL, checksum, and target contract/model versions.
 - [x] Add reproducible download/extraction and CI validation. Verify the locked digest before extraction; cache by digest and fail on missing or mismatched content. Keep upstream licenses and attribution with any vendored fixture or schema.
 - [x] Run the released repository-neutral suite using its frozen environment. Make schemas and fixture paths available to Java consumer tests without regenerating expected answers from the Java implementation.
-- [x] Add a VEF contract-kit validation job alongside the existing documentation, API, UI, and Compose jobs. Record the consumer pin for the cross-project handoff; ODIP's independent pin is an external prerequisite for Gate 1 closure.
+- [x] Add a VEF contract-kit validation job alongside the existing documentation, API, UI, and Compose jobs. Record the consumer pin for the cross-project handoff; ODIP now independently pins the same release and configures validation in CI.
 
 Implemented by the [consumer lock and usage documentation](../../contracts/energy/README.md)
 and checksum-verifying [validation script](../../scripts/validate-energy-contract-kit.py).
@@ -104,10 +108,11 @@ must be evidenced before downstream implementation gates are claimed complete.
 - [ ] Specify existing-equipment resolution, compatibility, quantities, and identity before its implementation. The request exposes unique `existingComponentIds`, while the reference oracle exercises no existing equipment. Obtain shared examples for non-empty inputs instead of inventing repeated-unit semantics locally.
 - [x] Estimate candidate evaluations with overflow-safe bounds before candidate allocation. Reject more than 100,000 evaluations with model code `search_space_limit_exceeded`; a future HTTP adapter will map it to `422` before run creation. Structural pruning/counts reproduce the oracle; investment/self-sufficiency failures remain for subsequent evaluation.
 
-The [energy architecture](../02-architecture/energy-configuration.md) and
-[ADR-014](../03-decisions/ADR-014-energy-configuration-identity.md) document the
-implemented boundary. Simulation/economics and run-execution ADRs remain pending
-with those packages. The [verification record](energy-model-verification.md)
+The [energy architecture](../02-architecture/energy-configuration.md),
+[ADR-014](../03-decisions/ADR-014-energy-configuration-identity.md), and
+[ADR-015](../03-decisions/ADR-015-energy-simulation-and-publication.md) document the
+implemented boundary. The run-execution ADR remains pending. The
+[model verification record](energy-model-verification.md)
 covers all 252 configurations. Non-empty existing-equipment requests fail with
 `existing_equipment_not_supported`; this package's full exit gate remains open.
 
@@ -125,6 +130,16 @@ Existing-equipment behavior has shared acceptance examples before that path ship
 - [ ] Atomically persist verified manifest/artifact bytes, checksums, parsed profile version, provenance, warnings, and verification state. A partial or failed import must never become a usable cache entry.
 - [ ] Pin one exact publication before candidate evaluation. Reuse only that verified cached version during temporary ODIP outage; never substitute a newer version. Keep cached authorization subject to the current application/service access policy.
 
+Local progress: the ODIP adapter has an exact-version HTTPS client with bounded
+responses, managed `client_credentials` token provider, ETag revalidation, and
+byte/semantic verification. Flyway V2 and a JDBC repository atomically store
+the exact verified bytes and reject changed bytes for an existing version.
+Fixture-backed client and PostgreSQL tests pass. Full schema validation, a live
+ODIP reader connection, current-policy outage fallback, and deployed evidence
+remain open on VEF's side. ODIP's read API and local publication workflow are
+implemented; see the [ODIP handoff review](odip-handoff-review.md) and
+[calculation verification record](energy-calculation-verification.md).
+
 Exit: shared fixture import and PostgreSQL round trip preserve bytes/digests;
 tampering, wrong units/major versions, missing hours, unpublished data, unsafe
 locations, and oversized responses fail. Verified cached inputs survive restart.
@@ -132,15 +147,19 @@ locations, and oversized responses fail. Verified cached inputs survive restart.
 ### 4. Simulate and rank deterministically — VEF-02 / VEF-03
 
 - [ ] Build pure bounded enumeration and compatibility checks against pinned catalog/model versions. Record exclusions and constraint outcomes without conflating operational failures with engineering infeasibility.
-- [ ] Implement hourly DC generation, inverter efficiency before AC clipping, direct load supply, battery charge/discharge with AC-side power limits and square-root efficiencies, residual export/import, and explicit terminal battery-energy discard.
-- [ ] Start state of charge at zero, prohibit grid charging and simultaneous charge/discharge, enforce capacity bounds and hourly conservation within `1e-6 kWh`, and reject unmet demand.
-- [ ] Calculate initial investment for new equipment only, annualized cost with the capital-recovery factor, annual operations zero, and self-sufficiency from annual grid import/demand. Enforce the v1 request's 20 years and `0.04` rate. Preserve the helper's zero-rate formula for direct mathematical tests.
+- [x] Implement hourly DC generation, inverter efficiency before AC clipping, direct load supply, battery charge/discharge with AC-side power limits and square-root efficiencies, residual export/import, and explicit terminal battery-energy discard.
+- [x] Start state of charge at zero, prohibit grid charging and simultaneous charge/discharge, enforce capacity bounds and hourly conservation within `1e-6 kWh`, and reject unmet demand.
+- [x] Calculate initial investment for new equipment only, annualized cost with the capital-recovery factor, annual operations zero, and self-sufficiency from annual grid import/demand. Enforce the v1 request's 20 years and `0.04` rate. Preserve the helper's zero-rate formula for direct mathematical tests.
 - [ ] Use binary64 without intermediate rounding. Serialize energy to six decimals, money to cents, and dimensionless values consistently with the kit; use half-even rounding. Test Java/Python parity at rounding boundaries rather than relying on default number formatting.
-- [ ] Rank feasible candidates by annualized cost in cents, then investment in cents, then lexical configuration ID. Use `1e-9` dimensionless comparison tolerance. Claim `PROVEN_OPTIMAL` only after exhaustive completion of the stated search space.
+- [x] Rank feasible candidates by annualized cost in cents, then investment in cents, then lexical configuration ID. Use `1e-9` dimensionless comparison tolerance. Claim `PROVEN_OPTIMAL` only after exhaustive completion of the stated search space.
 - [ ] Compare all released simulation cases, every candidate's metrics/constraints, the complete ranking, and the recommendation against the upstream oracle. Include ties, impossible constraints, existing equipment, and boundary counts.
 
 Exit: Java reproduces the shared numerical oracle. All candidates within a run
 use identical dataset, model, simulation, and optimizer versions.
+
+The pure Java calculation meets the released numerical oracle, including all
+252 candidates and 194 feasible ranks. Run-scoped version persistence and
+existing-equipment/shared edge cases remain for later integration.
 
 ### 5. Persist and expose optimization runs — VEF-04 backend
 
@@ -225,8 +244,8 @@ energy within `1e-6 kWh`, and dimensionless calculations within `1e-9`.
 
 | Dependency or question | Owner / completion condition |
 | --- | --- |
-| Both consumers pin kit 0.4.0 | VEF and ODIP; closes shared Gate 1. |
-| Generic publication, energy adapter, reader allow-list | ODIP / ENERGY-01; real authenticated API and fixture publication pass before deployed VEF acceptance. Local client development uses the released fixture stub. |
+| Both consumers pin kit 0.4.0 | Implemented in both repositories with CI jobs; record hosted runs and cross-project acceptance to close shared Gate 1. |
+| Generic publication, energy adapter, reader allow-list | Implemented and locally verified in ODIP; provision deployed reader access and verify VEF's authenticated retrieval, dataset denial, and bytes. |
 | Managed identity, routing, governance, secret binding, egress and recovery | Developer Platform plus application owners; use kit-pinned boundary `b360ddee34444748c95705c597aa7b17491cd05b` or document/retest compatibility of a newer deployment. |
 | Non-empty existing equipment | Shared-kit owner and VEF; approved quantity, compatibility, and canonical-ID examples precede this path's implementation acceptance. |
 | Idempotent replay of a terminal run | Shared-kit owner and VEF; the prose returns the original run, while `RunAccepted` currently fixes status to `QUEUED`. Clarify whether POST returns the original acceptance envelope or amend the schema before claiming conformance. |

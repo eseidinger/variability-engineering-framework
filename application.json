@@ -15,6 +15,16 @@
           "type": "container",
           "image": "eseidinger/variability-engineering-framework:latest"
         },
+        "outbound": [
+          {
+            "dns": "web-odip.apps.eseidinger.de",
+            "port": 443
+          },
+          {
+            "dns": "identity.eseidinger.de",
+            "port": 443
+          }
+        ],
         "ports": [
           {
             "name": "http",
@@ -31,6 +41,12 @@
         }
       }
     ],
+    "configuration": {
+      "values": {
+        "ENERGY_ODIP_ORIGIN": "https://web-odip.apps.eseidinger.de",
+        "ENERGY_ODIP_BINDING_PREFIX": "ACCESS_209A1DDA331C"
+      }
+    },
     "resources": [
       {
         "name": "database",

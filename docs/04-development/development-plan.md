@@ -7,8 +7,11 @@ defines the next cross-project reference slice against the released energy
 contract kit 0.4.0. It sequences quantitative configuration, verified ODIP input,
 simulation, durable optimization runs, platform integration, and AI assistance
 without changing the completed food-service analysis contract. The consumer
-kit pin and bounded new-equipment generation are now implemented and verified
-locally; publication retrieval, simulation, run APIs, and the energy UI remain planned.
+kit pin, bounded new-equipment generation, publication verification/cache, and
+simulation/ranking are now implemented and verified locally. ODIP's publication
+API is implemented and locally verified in its own repository; VEF's deployed
+authenticated retrieval,
+run APIs, and the energy UI remain planned.
 
 ```mermaid
 flowchart LR
