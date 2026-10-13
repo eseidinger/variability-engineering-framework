@@ -4,7 +4,7 @@ A domain-independent framework for modeling, analyzing, configuring, and optimiz
 
 ## Status
 
-The food-service analysis MVP and combined container image have been validated locally against PostgreSQL. The current deterministic energy workflow also passes local API/PostgreSQL and UI tests. Its run API and UI have not yet passed hosted CI or deployed acceptance.
+The food-service analysis MVP and combined container image have been validated locally against PostgreSQL. The deterministic energy workflow passes local API/PostgreSQL and UI tests. [GitHub Actions run 38439829738](https://github.com/eseidinger/variability-engineering-framework/actions/runs/38439829738) passed all build, test, publication, and deployment jobs for the energy workflow. Authenticated deployed energy and ODIP acceptance remain open.
 
 The API contains a domain-independent analysis core for versioned observed populations, a verified food-service fixture adapter, an HTTP analysis contract, and PostgreSQL-backed population storage. The Angular Material dashboard exposes summary metrics, filtering, reorderable grouping, ingredient leverage, and ingredient-unavailability impact.
 
