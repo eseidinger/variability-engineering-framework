@@ -4,16 +4,17 @@ A domain-independent framework for modeling, analyzing, configuring, and optimiz
 
 ## Status
 
-The food-service analysis MVP and combined container image have been validated locally against PostgreSQL. The [October 12, 2026 GitHub Actions run](https://github.com/eseidinger/variability-engineering-framework/actions/runs/38292671777) built, published, and deployed the earlier food-service revision `2ae2a171a93c52fc57f9b4577398ab43d6a8550e`. The current energy changes have not yet passed hosted CI or deployed acceptance.
+The food-service analysis MVP and combined container image have been validated locally against PostgreSQL. The current deterministic energy workflow also passes local API/PostgreSQL and UI tests. Its run API and UI have not yet passed hosted CI or deployed acceptance.
 
 The API contains a domain-independent analysis core for versioned observed populations, a verified food-service fixture adapter, an HTTP analysis contract, and PostgreSQL-backed population storage. The Angular Material dashboard exposes summary metrics, filtering, reorderable grouping, ingredient leverage, and ingredient-unavailability impact.
 
-The API also includes a locally verified energy calculation layer against contract
-kit 0.4.0: typed new-equipment generation, checked publication bytes, hourly
-simulation, exhaustive ranking, and a PostgreSQL verified-publication cache.
-ODIP's publication service is implemented and locally verified in its own repository.
-VEF's authenticated retrieval from a deployed ODIP instance, durable run APIs,
-and the energy UI remain planned. General-purpose
+The API also includes a locally verified energy workflow against contract kit
+0.4.0: typed new-equipment generation, checked publication bytes, hourly
+simulation, exhaustive ranking, durable owned runs, and paged candidates. The
+lazy-loaded `/energy` UI submits requests and displays recommendations and
+evidence. ODIP's publication service is implemented in its own repository;
+VEF's authenticated retrieval from the deployed instance remains to be
+verified. General-purpose
 generative models, configuration assistance, portfolio optimization, and reusable
 framework components remain later work.
 
@@ -41,7 +42,9 @@ Run the packaged UI, API, and PostgreSQL together from the repository root:
 docker compose --profile app up --build
 ```
 
-Open <http://localhost:8080>. For a clean database, stop the stack with
+Open <http://localhost:8080>. The energy workflow needs the platform's browser
+identity boundary and ODIP reader binding; standalone Compose does not provide
+these. For a clean database, stop the stack with
 `docker compose down -v`. Component-specific development commands are documented in
 [`apps/prototype/`](apps/prototype/README.md).
 

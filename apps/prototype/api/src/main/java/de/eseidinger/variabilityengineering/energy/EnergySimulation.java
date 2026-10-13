@@ -98,6 +98,9 @@ public final class EnergySimulation {
         boolean hasTariffs = input.hours().getFirst().importTariffEURPerKWh() != null;
         var resultHours = includeHours ? new ArrayList<HourResult>(input.hours().size()) : new ArrayList<HourResult>(0);
         for (var hour : input.hours()) {
+            if (Thread.currentThread().isInterrupted()) {
+                throw new java.util.concurrent.CancellationException("energy run cancelled");
+            }
             double pvDc = input.pvCapacityKWp() * hour.pvYieldPerKWp();
             double potentialAc = pvDc * input.inverterEfficiencyFraction();
             double pvAc = Math.min(potentialAc, input.inverterAcPowerKW());

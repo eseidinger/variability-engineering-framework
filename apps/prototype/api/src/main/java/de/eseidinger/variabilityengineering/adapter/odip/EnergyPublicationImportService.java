@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-/** Imports an exact ODIP publication only after a fresh authorized read and byte verification. */
+/** Imports an exact publication, with verified-cache fallback only for transient ODIP failures. */
 @ApplicationScoped
 public class EnergyPublicationImportService {
     private final JdbcEnergyPublicationRepository repository;
@@ -38,7 +38,16 @@ public class EnergyPublicationImportService {
             throw new IllegalStateException("VEF ODIP managed reader binding is not configured");
         }
         var previous = repository.find(datasetId, version).orElse(null);
-        var verified = client.fetchExact(datasetId, version, previous);
-        return repository.saveIfAbsent(verified).publication();
+        try {
+            var verified = client.fetchExact(datasetId, version, previous);
+            return repository.saveIfAbsent(verified).publication();
+        } catch (IOException exception) {
+            if (exception instanceof EnergyPublicationClient.HttpStatusException status
+                    && status.status() != 429 && status.status() < 500) {
+                throw exception;
+            }
+            if (previous != null) return previous.publication();
+            throw exception;
+        }
     }
 }

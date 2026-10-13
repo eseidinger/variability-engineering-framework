@@ -1,9 +1,9 @@
 # Energy Configuration Architecture
 
-Status: typed new-equipment generation, publication verification/cache, and
-simulation/ranking implemented and verified locally. ODIP's publication API is
-implemented and locally verified; VEF's deployed authenticated retrieval,
-run APIs/persistence, UI, and AI assistance planned. The dependency is
+Status: typed new-equipment generation, publication verification/cache,
+simulation/ranking, durable run API, and consultant UI implemented and verified
+locally. Deployed ODIP retrieval and platform policy acceptance remain open.
+The dependency is
 [contract kit 0.4.0](../../contracts/energy/README.md).
 
 ## Implemented boundary
@@ -56,7 +56,8 @@ refuses redirects, caps response sizes, and supports ETags. The V2 PostgreSQL
 cache writes all bytes atomically under dataset ID/version and re-verifies a
 loaded version. `EnergyPublicationImportService` uses the managed reader
 binding to fetch and verify the exact version before storing it; an ODIP denial
-is not replaced with cached bytes. The application descriptor declares HTTPS
+is not replaced with cached bytes. Transient outages can reuse previously
+verified cache bytes. The application descriptor declares HTTPS
 egress to ODIP and the managed token host.
 [ADR-015](../03-decisions/ADR-015-energy-simulation-and-publication.md)
 records these choices.
@@ -66,20 +67,21 @@ records these choices.
 - Non-empty existing-equipment requests fail explicitly pending shared quantity/ownership/identity examples.
 - Individually valid component IDs may concatenate into an ID exceeding 128 characters or colliding with another assignment. These cases fail instead of truncating or merging choices.
 - The verifier enforces this profile's required fields and cross-document rules; full generic JSON Schema validation remains open.
-- There are no energy HTTP endpoints or UI yet. The general-purpose Boolean feature-model AST remains planned.
+- The general-purpose Boolean feature-model AST remains planned.
 - ODIP's read API exists and has local acceptance evidence. VEF has not yet
-  verified authenticated access to its deployed endpoint or authorized outage fallback.
+  verified authenticated access to its deployed endpoint or deployed outage fallback.
 
-## Planned flow
+## Durable run flow
 
-The application will connect the verified publication/calculation layer to
-durable runs that identify request,
-dataset/artifact checksums, model/simulation/optimizer versions, execution state,
-candidates, and evidence. DTOs, repositories, and UI stay outside the pure model.
+The HTTP resource validates normalized principal context and reserves a run
+after verifying the exact publication and search bound. V3 tables store the
+request, publication digest, state, result, and ranked candidate pages. A
+single PostgreSQL-backed worker executes the pure optimizer. The `/energy` UI
+submits requests and displays progress, recommendation, candidate pages, and
+dataset/calculation evidence. DTOs, repositories, and UI stay outside the pure
+model. See [ADR-016](../03-decisions/ADR-016-energy-run-execution.md).
 
 The upstream DEC-02 approves v1 dispatch and economics, adopted in ADR-015.
-A run-execution ADR will define queue claims, deadlines, idempotency, ownership,
-and recovery before persistence/API work.
 
 See the [implementation plan](../04-development/energy-configuration-implementation-plan.md)
 and [verification record](../04-development/energy-model-verification.md).

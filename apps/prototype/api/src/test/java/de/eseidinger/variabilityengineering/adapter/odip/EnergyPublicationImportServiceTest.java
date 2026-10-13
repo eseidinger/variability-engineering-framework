@@ -21,7 +21,7 @@ class EnergyPublicationImportServiceTest {
     private static final String VERSION = "1.0.0";
 
     @Test
-    void importsOnceAndRequiresFreshAuthorizationEvenWhenCached() throws Exception {
+    void importsOnceFallsBackOnOutageAndRejectsDeniedAccess() throws Exception {
         var repository = new MemoryRepository();
         var transport = new FixtureTransport();
         var client = new EnergyPublicationClient(URI.create("https://odip.example"), () -> "reader-token", transport);
@@ -36,10 +36,15 @@ class EnergyPublicationImportServiceTest {
         assertEquals(2, repository.saves);
         assertEquals(6, transport.conditionalCalls);
 
+        transport.unavailable = true;
+        assertEquals("252b90b18b594a764a2744ba133a8db56b233e9e375301befc7616e9c18c1715",
+                service.importExact(ID, VERSION).manifestSha256());
+        assertEquals(2, repository.saves);
+        transport.unavailable = false;
+
         transport.denied = true;
         assertThrows(IOException.class, () -> service.importExact(ID, VERSION));
         assertEquals(2, repository.saves);
-        assertEquals(13, transport.calls);
     }
 
     private static final class MemoryRepository extends JdbcEnergyPublicationRepository {
@@ -65,6 +70,7 @@ class EnergyPublicationImportServiceTest {
         private int calls;
         private int conditionalCalls;
         private boolean denied;
+        private boolean unavailable;
 
         private FixtureTransport() throws IOException {
             String kit = System.getenv("ENERGY_CONTRACT_KIT_DIRECTORY");
@@ -83,6 +89,7 @@ class EnergyPublicationImportServiceTest {
             calls++;
             assertEquals("reader-token", token);
             if (denied) return new EnergyPublicationClient.Response(403, null, null);
+            if (unavailable) return new EnergyPublicationClient.Response(503, null, null);
             if (etag != null) {
                 conditionalCalls++;
                 return new EnergyPublicationClient.Response(304, etag, null);

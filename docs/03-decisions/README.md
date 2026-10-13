@@ -19,6 +19,7 @@ ADRs separate accepted requirements and documented directions from proposals. Im
 | [013](ADR-013-food-service-analysis-mvp-semantics.md) | Freeze food-service analysis MVP semantics | Accepted |
 | [014](ADR-014-energy-configuration-identity.md) | Quantitative energy identity and bounded generation | Accepted for new equipment; implemented and verified locally |
 | [015](ADR-015-energy-simulation-and-publication.md) | Verified energy input and deterministic evaluation | Accepted for the local reference slice; implemented and verified locally |
+| [016](ADR-016-energy-run-execution.md) | Durable owned energy run execution | Accepted for the deterministic new-equipment slice; locally tested |
 
 ## Decision process
 

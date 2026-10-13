@@ -58,6 +58,9 @@ public final class EnergyOptimizer {
         double sufficiencyLimit = request.constraints().minSelfSufficiency();
         var candidates = new ArrayList<Candidate>(configurations.size());
         for (var configuration : configurations) {
+            if (Thread.currentThread().isInterrupted()) {
+                throw new java.util.concurrent.CancellationException("energy run cancelled");
+            }
             var battery = configuration.battery();
             var simulationBattery = battery == null ? null : new EnergySimulation.Battery(
                     configuration.batteryQuantity(), battery.usableCapacityKWh(),

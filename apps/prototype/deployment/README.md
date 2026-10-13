@@ -9,7 +9,7 @@ repository Compose environment:
 docker compose --profile app up --build
 ```
 
-Open <http://localhost:8080>. The UI calls the food-service API on the same origin; the Angular development proxy is not involved in the container.
+Open <http://localhost:8080>. The UI calls the APIs on the same origin; the Angular development proxy is not involved in the container. The `/energy` workflow requires a platform browser session with normalized principal headers and an ODIP managed reader binding. The standalone Compose setup provides neither, so it supports the food-service workflow and API packaging checks only.
 
 For API and UI hot-reload development, start only the database:
 
@@ -37,7 +37,7 @@ Deployment configuration:
 - expose HTTP port 8080;
 - obtain PostgreSQL settings from the platform environment;
 - include the immutable food-service fixture for first-start database seeding;
-- expose `/api/status` readiness that verifies the persisted population is available.
+- expose `/api/status` readiness that verifies the persisted population and energy run store are available.
 
 ## GitHub Actions and Docker Hub
 

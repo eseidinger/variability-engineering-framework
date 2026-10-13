@@ -36,6 +36,15 @@ public final class EnergyPublicationClient {
         @Override public byte[] bytes() { return bytes == null ? null : bytes.clone(); }
     }
 
+    public static final class HttpStatusException extends IOException {
+        private final int status;
+        public HttpStatusException(int status) {
+            super("ODIP returned HTTP " + status);
+            this.status = status;
+        }
+        public int status() { return status; }
+    }
+
     public record Cached(VerifiedEnergyPublication publication, String manifestEtag,
                          Map<String, String> artifactEtags) {
         public Cached {
@@ -116,7 +125,7 @@ public final class EnergyPublicationClient {
                 return response;
             }
             if (response.status() != 429 && response.status() < 500 || attempt + 1 == MAX_ATTEMPTS) {
-                throw new IOException("ODIP returned HTTP " + response.status());
+                throw new HttpStatusException(response.status());
             }
         }
         throw new IllegalStateException("retry loop exhausted");

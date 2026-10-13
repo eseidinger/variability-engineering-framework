@@ -1,0 +1,29 @@
+:host { display: block; min-height: 100dvh; background: #f6f8fc; color: #162033; }
+.energy { max-width: 76rem; margin: auto; padding: 2rem; display: grid; gap: 1.25rem; }
+.eyebrow { color: #205b93; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+h1 { margin: .2rem 0; font-size: clamp(2rem, 5vw, 3rem); }
+header p:last-child { max-width: 50rem; line-height: 1.5; }
+section, .notice { background: white; border: 1px solid #cbd6e2; border-radius: .75rem; padding: 1.25rem; }
+.notice { background: #e7f2ff; }
+.notice p { margin-bottom: 0; line-height: 1.5; }
+.fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+label { display: grid; gap: .35rem; font-weight: 600; }
+input { width: 100%; box-sizing: border-box; border: 1px solid #63758a; border-radius: .35rem; padding: .65rem; font: inherit; color: inherit; background: white; }
+input:focus-visible, button:focus-visible, summary:focus-visible { outline: 3px solid #0967ad; outline-offset: 2px; }
+input.ng-invalid.ng-touched { border: 2px solid #a42424; }
+button { border: 0; border-radius: .35rem; padding: .7rem 1rem; background: #164e80; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+button:disabled { background: #536579; cursor: default; }
+.muted { color: #46566a; }
+.error { color: #8b1d1d; background: #ffeaeb; border-radius: .5rem; padding: 1rem; }
+.live { min-height: 1.5rem; }
+.highlight { display: grid; gap: .35rem; padding: 1rem; border-radius: .5rem; background: #e1f4e7; overflow-wrap: anywhere; }
+.highlight strong { font-size: 1.1rem; }
+.evidence { margin-top: 1rem; }
+dl { display: grid; grid-template-columns: 10rem 1fr; gap: .5rem; }
+dt { font-weight: 700; }
+dd { margin: 0; overflow-wrap: anywhere; }
+.candidate-list { display: grid; gap: .75rem; }
+article { border: 1px solid #cbd6e2; border-radius: .5rem; padding: 1rem; overflow-wrap: anywhere; }
+article h3 { margin-top: 0; }
+.pager { display: flex; align-items: center; gap: .75rem; margin-top: 1rem; }
+@media (max-width: 48rem) { .energy { padding: 1rem; }.fields { grid-template-columns: 1fr; } dl { grid-template-columns: 1fr; } }

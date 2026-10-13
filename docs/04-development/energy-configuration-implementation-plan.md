@@ -102,16 +102,17 @@ must be evidenced before downstream implementation gates are claimed complete.
 
 ### 2. Record energy identity and model semantics — VEF-02 foundation
 
-- [ ] Add an energy architecture document and local ADRs for quantitative selections/identity, simulation/economics, and durable run execution. Reference upstream DEC-01 through DEC-06 and the existing domain-independent core and verifiable-model ADRs.
+- [x] Add an energy architecture document and local ADRs for quantitative selections/identity, simulation/economics, and durable run execution. Reference upstream DEC-01 through DEC-06 and the existing domain-independent core and verifiable-model ADRs.
 - [x] Implement immutable typed catalog, request, configuration, and independently versioned model. Use explicit units and reject invalid/non-finite values; the executable schemas require strictly positive annual demand and positive technical capacities/efficiencies.
 - [x] Match the kit's deterministic configuration IDs and rules for new equipment: one PV model, one inverter, no battery or 1–4 of one battery model; 1–100 PV modules within roof area; DC/AC ratio `0.8..1.5`; at most 20 catalog models per component type.
 - [ ] Specify existing-equipment resolution, compatibility, quantities, and identity before its implementation. The request exposes unique `existingComponentIds`, while the reference oracle exercises no existing equipment. Obtain shared examples for non-empty inputs instead of inventing repeated-unit semantics locally.
 - [x] Estimate candidate evaluations with overflow-safe bounds before candidate allocation. Reject more than 100,000 evaluations with model code `search_space_limit_exceeded`; a future HTTP adapter will map it to `422` before run creation. Structural pruning/counts reproduce the oracle; investment/self-sufficiency failures remain for subsequent evaluation.
 
 The [energy architecture](../02-architecture/energy-configuration.md),
-[ADR-014](../03-decisions/ADR-014-energy-configuration-identity.md), and
-[ADR-015](../03-decisions/ADR-015-energy-simulation-and-publication.md) document the
-implemented boundary. The run-execution ADR remains pending. The
+[ADR-014](../03-decisions/ADR-014-energy-configuration-identity.md),
+[ADR-015](../03-decisions/ADR-015-energy-simulation-and-publication.md), and
+[ADR-016](../03-decisions/ADR-016-energy-run-execution.md) document the
+implemented boundary. The
 [model verification record](energy-model-verification.md)
 covers all 252 configurations. Non-empty existing-equipment requests fail with
 `existing_equipment_not_supported`; this package's full exit gate remains open.
@@ -172,6 +173,15 @@ existing-equipment/shared edge cases remain for later integration.
 - [ ] Expose required completed/infeasible result fields, diagnostics, counts, warnings, independent calculation versions, and checksums. Keep original inputs/results immutable and represent changed constraints as a new run.
 - [ ] Build an owned evidence projection linking request fields, artifact digests, versions, configuration, constraints, and metrics. Retain correlation-to-run/dataset associations here rather than in central logs.
 
+Local progress: V3 stores owned requests, publication digest, idempotency,
+state, terminal result, and ranked candidate JSON. The single worker uses
+atomic claims and terminal writes, a 300-second timeout, cooperative
+cancellation, and startup requeue. HTTP exposes the four pinned routes;
+PostgreSQL fixture tests exercise creation, replay, ownership, result, and
+candidate pages. Dedicated evidence/audit projections, concurrency/restart
+proof, full schema conformance, retention, and deployed boundary verification
+remain open.
+
 Exit: HTTP, PostgreSQL, concurrency, ownership, timeout, and restart tests prove
 one durable run per idempotent request, accurate states, immutable history, and
 reproducible evidence. Requests from another principal cannot read runs/candidates.
@@ -183,6 +193,11 @@ reproducible evidence. Requests from another principal cannot read runs/candidat
 - [ ] Present the synthetic/reference-profile warning, terminal discarded energy, and excluded costs. The fixture maps PVGIS 2023 values into a derived 2024 leap-year profile; do not present it as measured customer or observed 2024 data.
 - [ ] Use same-origin platform browser sessions and boundary CSRF token handling. The group selector and client-generated group header have been removed. Handle login redirects, denial, and access-layer failures separately from application errors.
 - [ ] Add browser workload checks for submission, progress/result, changed-constraint new run, candidate pagination, evidence inspection, and error recovery. Follow the UI AGENTS guidance: standalone components, signals, OnPush, reactive forms, AXE and WCAG AA checks.
+
+Local progress: `/energy` provides a lazy-loaded reactive form, bounded
+polling, recommendation, candidate pages, version/digest evidence, and the
+reference-data limitations. The UI test covers submission and completed
+evidence. Browser accessibility and the broader workload remain open.
 
 Exit: the packaged Angular/API/PostgreSQL application completes the fixture
 workflow locally and displays evidence and limitations accessibly. Existing

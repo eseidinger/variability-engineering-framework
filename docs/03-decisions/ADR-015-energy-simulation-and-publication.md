@@ -41,9 +41,9 @@ uses half-even rounding at the contract's precision.
 
 ## Consequences and limits
 
-This establishes a deterministic calculation and verified input layer, not a
-consultant workflow. No run API, durable run state, browser UI, deployed ODIP
-connection, or access-controlled outage fallback exists yet. The verifier
+This ADR established the deterministic calculation and verified input layer.
+[ADR-016](ADR-016-energy-run-execution.md) subsequently added the local run
+workflow and verified-cache outage fallback. Deployed ODIP access remains open. The verifier
 enforces the fields and cross-document invariants used by this profile; full
 generic JSON Schema validation remains part of the publication adapter's exit
 gate. Existing-equipment requests remain explicitly unsupported under ADR-014.

@@ -1,2 +1,6 @@
 :host { display: block; min-height: 100dvh; }
 mat-toolbar { position: relative; z-index: 1; box-shadow: 0 1px 4px rgb(0 0 0 / 18%); }
+nav { display: flex; gap: 1rem; margin-left: auto; }
+nav a { color: inherit; font-size: .9rem; font-weight: 700; }
+nav a:focus-visible { outline: 3px solid #0967ad; outline-offset: 3px; }
+@media (max-width: 40rem) { mat-toolbar { flex-wrap: wrap; height: auto; padding: .5rem; } nav { margin-left: 0; } }
