@@ -2,6 +2,8 @@
 
 The Compose-backed black-box verifier exercises the packaged UI shell and selected
 food-service API behavior against PostgreSQL and the reference fixture.
+It calls the application directly without platform identity headers. The
+Developer Platform access boundary is verified separately after deployment.
 
 Current coverage includes:
 

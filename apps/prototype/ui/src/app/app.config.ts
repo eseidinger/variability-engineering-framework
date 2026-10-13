@@ -1,18 +1,14 @@
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
+import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { platformAuthInterceptor } from './platform-auth.interceptor';
 import { platformCsrfInterceptor } from './platform-csrf.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
-    provideHttpClient(withInterceptors([
-      platformCsrfInterceptor,
-      ...(isDevMode() ? [platformAuthInterceptor] : []),
-    ])),
+    provideHttpClient(withInterceptors([platformCsrfInterceptor])),
     provideRouter(routes),
   ],
 };

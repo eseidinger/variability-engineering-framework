@@ -45,8 +45,8 @@ decisions rather than reopening the approved demonstration assumptions.
 | Structural identity | `core/Variant.java` compares sets of element IDs | Energy configuration identity must include selected models, quantities, and existing/new equipment semantics. |
 | Data import | VEF's ODIP adapter verifies and caches the released energy fixture; ODIP's generic publication API is locally implemented | VEF authenticated retrieval from deployed ODIP and full schema enforcement. |
 | Persistence | `JdbcPopulationRepository`, Flyway population tables | Immutable imported bytes, model snapshots, durable run queue, ownership, idempotency, candidates, results, and evidence. |
-| Authorization | `PopulationAuthorizationFilter` checks group IDs only | Validate complete boundary-supplied principal context and enforce stable-principal run ownership. |
-| Browser identity | UI group selector and interceptor send identity headers | Use platform browser sessions; remove production client-generated identity headers and retain boundary CSRF handling. |
+| Authorization | Food-service routes rely on the Developer Platform access boundary; the API no longer checks group headers | Validate complete boundary-supplied principal context and enforce stable-principal energy run ownership. |
+| Browser identity | UI uses platform browser sessions and forwards the boundary CSRF cookie on writes; it sends no group header | Handle session expiry and access denial in the energy workflow. |
 | Readiness | `/api/status` depends on the food-service store | Energy API/database/model readiness and separate ODIP dependency reporting. |
 | Packaging and CI | Combined UI/API image, PostgreSQL tests, Compose verification | Shared-kit conformance, energy browser/API workload, restricted runtime, deployed integration, and recovery evidence. |
 
@@ -181,7 +181,7 @@ reproducible evidence. Requests from another principal cannot read runs/candidat
 - [ ] Add a lazy-loaded energy route with reactive forms for the supported region, selected immutable dataset version, roof, positive demand, existing equipment, budget, and self-sufficiency. Load supported bounds from capabilities.
 - [ ] Show validation guidance, queued/running state, bounded polling, recommendation, candidate pages, constraint outcomes, failure/infeasibility diagnostics, and version/checksum evidence. Preserve the idempotency key across submission retries.
 - [ ] Present the synthetic/reference-profile warning, terminal discarded energy, and excluded costs. The fixture maps PVGIS 2023 values into a derived 2024 leap-year profile; do not present it as measured customer or observed 2024 data.
-- [ ] Use same-origin platform browser sessions and boundary CSRF token handling. Remove the production group-selector/header mechanism; keep any local identity fixture behind explicit test/dev configuration with a trusted test boundary. Handle login redirects, denial, and access-layer failures separately from application errors.
+- [ ] Use same-origin platform browser sessions and boundary CSRF token handling. The group selector and client-generated group header have been removed. Handle login redirects, denial, and access-layer failures separately from application errors.
 - [ ] Add browser workload checks for submission, progress/result, changed-constraint new run, candidate pagination, evidence inspection, and error recovery. Follow the UI AGENTS guidance: standalone components, signals, OnPush, reactive forms, AXE and WCAG AA checks.
 
 Exit: the packaged Angular/API/PostgreSQL application completes the fixture

@@ -21,6 +21,9 @@ The build workflow publishes the image, deploys the corresponding immutable
 The platform deployment wait verifies workload readiness. Reading the protected
 population requires an approved browser session or service credential; an
 anonymous deployment job must not attempt to supply platform identity headers.
+The food-service API does not perform group or role checks. The public access
+boundary must protect its routes and prevent direct backend access. Local Compose
+tests call the API directly and do not test that boundary.
 Production deployments are serialized. Before enabling deployment, configure the
 protected GitHub `production` environment with:
 
