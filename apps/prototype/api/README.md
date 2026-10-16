@@ -111,10 +111,11 @@ Compose environment is the supported local packaged-image path.
 The API includes Micrometer Prometheus metrics on the Quarkus management interface
 at port 9000 (`/q/metrics`) and OpenTelemetry HTTP tracing. The platform
 deployment descriptor declares the private metrics scrape and enables tracing;
-the platform supplies the OTLP endpoint and sampling rate. Local runs keep the
-OpenTelemetry SDK disabled by default. To test trace export locally, set
-`OTEL_SDK_DISABLED=false` and provide a reachable OTLP HTTP collector through
-the Quarkus exporter endpoint and protocol settings.
+the platform supplies the OTLP endpoint and sampling rate. Development and test
+profiles disable trace export, as does repository Compose through
+`QUARKUS_OTEL_SDK_DISABLED=true`. To test trace export locally, set
+`QUARKUS_OTEL_SDK_DISABLED=false` and provide a reachable OTLP HTTP collector
+through the Quarkus exporter endpoint and protocol settings.
 
 If you want to build an _über-jar_, execute the following command:
 

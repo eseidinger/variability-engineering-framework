@@ -27,6 +27,7 @@ services:
       QUARKUS_DATASOURCE_JDBC_URL: jdbc:postgresql://db:5432/variability
       QUARKUS_DATASOURCE_USERNAME: variability
       QUARKUS_DATASOURCE_PASSWORD: variability
+      QUARKUS_OTEL_SDK_DISABLED: "true"
     ports:
       - "${APP_PORT:-8080}:8080"
     depends_on:
