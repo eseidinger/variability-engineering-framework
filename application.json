@@ -30,8 +30,22 @@
             "name": "http",
             "protocol": "http",
             "port": 8080
+          },
+          {
+            "name": "management",
+            "protocol": "http",
+            "port": 9000
           }
         ],
+        "telemetry": {
+          "metrics": {
+            "port": "management",
+            "path": "/q/metrics"
+          },
+          "tracing": {
+            "enabled": true
+          }
+        },
         "replicas": 1,
         "exposure": "public",
         "health": {
@@ -44,7 +58,8 @@
     "configuration": {
       "values": {
         "ENERGY_ODIP_ORIGIN": "https://web-odip.apps.eseidinger.de",
-        "ENERGY_ODIP_BINDING_PREFIX": "ACCESS_209A1DDA331C"
+        "ENERGY_ODIP_BINDING_PREFIX": "ACCESS_209A1DDA331C",
+        "OTEL_SDK_DISABLED": "false"
       }
     },
     "resources": [
