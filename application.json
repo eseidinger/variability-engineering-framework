@@ -58,8 +58,7 @@
     "configuration": {
       "values": {
         "ENERGY_ODIP_ORIGIN": "https://web-odip.apps.eseidinger.de",
-        "ENERGY_ODIP_BINDING_PREFIX": "ACCESS_209A1DDA331C",
-        "OTEL_SDK_DISABLED": "false"
+        "ENERGY_ODIP_BINDING_PREFIX": "ACCESS_209A1DDA331C"
       }
     },
     "resources": [

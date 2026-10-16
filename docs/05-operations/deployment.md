@@ -40,8 +40,8 @@ datasource; no database credential is committed to the repository.
 The `web` component opts in to platform application metrics and tracing. Quarkus
 serves Prometheus HTTP request metrics at `/q/metrics` on management port 9000;
 the platform scrapes that declared port privately. Public traffic stays on port
-8080. The descriptor enables the OpenTelemetry SDK with `OTEL_SDK_DISABLED=false`.
-The platform injects the local OTLP/HTTP endpoint, service name, and trace sampling
+8080. The descriptor opts in to platform tracing without setting a reserved `OTEL_`
+configuration value. The platform injects the local OTLP/HTTP endpoint, service name, and trace sampling
 rate, and its Pod-local forwarder reads the rotating telemetry token for each
 export batch. Standalone runs leave the SDK disabled unless explicitly enabled
 with an OTLP collector. After deployment, verify the platform's application

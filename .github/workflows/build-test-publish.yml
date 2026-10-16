@@ -146,7 +146,8 @@ jobs:
       - name: Deploy immutable image
         run: |
           jq --arg image "$DOCKERHUB_IMAGE:sha-$GITHUB_SHA" \
-            '.spec.components[0].runtime.image = $image' \
+            '.spec.components[0].runtime.image = $image
+             | del(.spec.configuration.values.OTEL_SDK_DISABLED)' \
             application.json > deployment-application.json
           devplat deploy apply --project vareng --file deployment-application.json --wait --output json
         env:
