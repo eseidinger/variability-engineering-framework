@@ -1,0 +1,66 @@
+# One-time namespace bootstrap for the platform's telemetry reconciliation.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: telemetry-web
+  namespace: project-vareng
+automountServiceAccountToken: false
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: metrics-reader
+  namespace: project-vareng
+rules:
+  - apiGroups: [""]
+    resources: [services/proxy]
+    resourceNames: [web]
+    verbs: [get]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: metrics-reader
+  namespace: project-vareng
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: metrics-reader
+subjects:
+  - kind: ServiceAccount
+    name: workload-metrics-reader
+    namespace: platform-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: vareng-telemetry-provisioner
+  namespace: project-vareng
+rules:
+  - apiGroups: [""]
+    resources: [serviceaccounts]
+    resourceNames: [telemetry-web]
+    verbs: [get, patch, delete]
+  - apiGroups: [rbac.authorization.k8s.io]
+    resources: [roles, rolebindings]
+    resourceNames: [metrics-reader]
+    verbs: [get, patch, delete]
+  # Kubernetes requires the Role author to hold the rule it grants.
+  - apiGroups: [""]
+    resources: [services/proxy]
+    resourceNames: [web]
+    verbs: [get]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: vareng-telemetry-provisioner
+  namespace: project-vareng
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: vareng-telemetry-provisioner
+subjects:
+  - kind: ServiceAccount
+    name: provisioner
+    namespace: platform-system

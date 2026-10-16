@@ -47,7 +47,10 @@ rate. Its Pod-local forwarder reads the rotating telemetry token for each export
 batch. Development, tests, and repository Compose runs disable trace export;
 other standalone production runs need a reachable OTLP collector. After
 deployment, verify the platform's application metrics view and a sampled trace
-before treating telemetry as operationally confirmed.
+before treating telemetry as operationally confirmed. Before the first telemetry
+deployment on an existing project, a cluster administrator applies
+`operations/telemetry-bootstrap.yaml` to the workloads cluster; its permissions
+are limited to vareng's named telemetry objects in `project-vareng`.
 
 ## Local image
 
