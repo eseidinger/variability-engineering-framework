@@ -231,6 +231,22 @@ public class JdbcEnergyRunRepository {
         }
     }
 
+    public Optional<String> recommendedCandidate(String runId, String configurationId) {
+        try (var connection = dataSource.getConnection();
+             var statement = connection.prepareStatement("""
+                     SELECT candidate_json::text FROM energy_optimization_candidate
+                     WHERE run_id = ? AND candidate_json->>'configurationId' = ? LIMIT 1
+                     """)) {
+            statement.setString(1, runId);
+            statement.setString(2, configurationId);
+            try (var rows = statement.executeQuery()) {
+                return rows.next() ? Optional.of(rows.getString(1)) : Optional.empty();
+            }
+        } catch (SQLException error) {
+            throw new IllegalStateException("recommended candidate lookup failed", error);
+        }
+    }
+
     public void requeueInterrupted() {
         try (var connection = dataSource.getConnection();
              var statement = connection.prepareStatement("""

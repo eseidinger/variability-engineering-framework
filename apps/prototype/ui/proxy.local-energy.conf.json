@@ -1,0 +1,15 @@
+{
+  "/api": {
+    "target": "http://127.0.0.1:8080",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "warn",
+    "headers": {
+      "X-Platform-Principal-Id": "prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "X-Platform-Principal-Kind": "user",
+      "X-Platform-Principal-Issuer": "https://identity.example.test",
+      "X-Platform-Principal-Subject": "local-test-user",
+      "X-Platform-Principal-Group-Ids": "grp_11111111111111111111111111111111"
+    }
+  }
+}

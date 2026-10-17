@@ -1,9 +1,11 @@
 # Energy contract-kit dependency
 
-VEF pins the [energy-system-configuration release 0.4.0](https://github.com/eseidinger/energy-system-configuration/releases/tag/contract-kit-v0.4.0)
+VEF pins the [energy-system-configuration release 0.5.0](https://github.com/eseidinger/energy-system-configuration/releases/tag/contract-kit-v0.5.0)
 in [contract-kit.lock.json](contract-kit.lock.json). The lock records the immutable
-archive checksum, target API/profile versions, and numerical reference versions.
-These are implementation targets, not claims that the energy workflow exists.
+archive checksum, target API/profile and AI envelope versions, and numerical reference versions.
+Kit 0.5.0 adds AI assistance contracts; it does not change the accepted energy
+calculation and ODIP publication baseline. The pin establishes availability of
+these contracts, not completion of VEF AI assistance.
 
 ## Validate locally
 
@@ -20,7 +22,7 @@ extracts into a fresh temporary directory, and runs the upstream suite with
 source notices, schemas, fixtures, and reviewed expected results. A missing
 release, checksum mismatch, or failing upstream test fails the command.
 
-To use an already downloaded archive, add `--archive /path/to/contract-kit-v0.4.0.tar.gz`.
+To use an already downloaded archive, add `--archive /path/to/contract-kit-v0.5.0.tar.gz`.
 This skips archive retrieval, but frozen Python dependencies must still be
 available locally or retrievable by `uv`.
 
@@ -45,10 +47,13 @@ tests. Image publication depends on this contract job. Integrity regression
 tests also exercise corrupt downloads/cache entries and rejected extraction.
 
 The VEF consumer pin implements its portion of `SHARED-01`. ODIP independently
-pins the same 0.4.0 archive and validates it in its CI configuration. Closing
-cross-project Gate 1 still requires recorded hosted CI and handoff evidence.
-Local evidence is recorded in the [implementation plan](../../docs/04-development/energy-configuration-implementation-plan.md)
-and [model verification](../../docs/04-development/energy-model-verification.md).
+pins the accepted 0.4.0 archive; it may retain that pin until coordinated
+adoption. Upstream Gate 5 was accepted by maintainer direction on October 17,
+2026. Local 0.5.0 adoption evidence is recorded in the
+[consumer verification](../../docs/04-development/energy-contract-kit-verification.md)
+and [implementation plan](../../docs/04-development/energy-configuration-implementation-plan.md).
+Gate 6 still requires VEF AI implementation, its eleven acceptance cases, and
+the unchanged deployed Gate 5 regression suite.
 
 ## Attribution and updates
 

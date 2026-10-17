@@ -10,6 +10,22 @@ export interface EnergyRequest {
   assumptions: { analysisYears: 20; discountRate: 0.04 };
 }
 
+export interface EnergyRequestProposal {
+  schemaVersion: 'energy-ai-request-proposal/v1';
+  status: 'READY_FOR_REVIEW' | 'NEEDS_CLARIFICATION';
+  requiresConfirmation: true;
+  request: EnergyRequest | null;
+  clarificationQuestions: string[];
+  assumptionsToReview: string[];
+}
+
+export interface EnergyExplanation {
+  schemaVersion: 'energy-ai-explanation/v1';
+  runId: string;
+  claims: Array<{ text: string; category: string; citations: Array<{ source: string; pointer: string; value: unknown }> }>;
+  missingEvidence: string[];
+}
+
 export interface Capabilities {
   maxModelsPerType: number;
   maxPvModules: number;
@@ -69,10 +85,17 @@ export class EnergyApiService {
   private readonly base = '/api/v1';
 
   capabilities() { return this.http.get<Capabilities>(`${this.base}/capabilities`); }
+  propose(description: string) {
+    return this.http.post<EnergyRequestProposal>(`${this.base}/ai/request-proposals`, { description });
+  }
   create(request: EnergyRequest, key: string) {
     return this.http.post<EnergyRun>(`${this.base}/optimization-runs`, request, {
       headers: { 'Idempotency-Key': key },
     });
+  }
+  explain(runId: string) {
+    return this.http.post<EnergyExplanation>(
+      `${this.base}/ai/optimization-runs/${encodeURIComponent(runId)}/explanation`, {});
   }
   run(id: string) { return this.http.get<EnergyRun>(`${this.base}/optimization-runs/${encodeURIComponent(id)}`); }
   candidates(id: string, page: number) {

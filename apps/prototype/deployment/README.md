@@ -49,3 +49,33 @@ Before enabling publishing, add these GitHub Actions repository secrets:
 - `DOCKERHUB_TOKEN`: a Docker Hub access token with permission to push that repository.
 
 The resulting image names are `<username>/variability-engineering-framework:latest` for `main`, semantic-version tags for releases such as `v1.0.0`, and immutable `sha-...` tags.
+
+## Enabling energy AI in the hosted application
+
+The production profile does not activate the development-only fixture importer,
+and the Angular identity proxy is not part of the built UI. The hosted workflow
+needs the active ODIP reader binding and dataset grant, plus the platform's
+browser-session identity and CSRF boundary.
+Before enabling AI, provision `OPENAI_API_KEY` as a managed `vareng` project
+secret injected into the `web` container. Keep the key out of `application.json`.
+The declaration includes HTTPS egress to `api.openai.com`; the platform operator
+must approve its resolved address pins.
+
+Inspect the active route policy with
+`devplat access policy get --project vareng --application vareng --output json`.
+Extend that complete policy with browser-session, application-user rules for
+the exact `POST /api/v1/ai/request-proposals` path and a POST-only
+`/api/v1/ai/optimization-runs/` path prefix for run explanations. The API
+validates the full explanation path and run ownership. Include the platform's
+same-origin and CSRF checks. Preserve existing run, capabilities, UI, asset,
+and health routes. `devplat access policy apply` replaces the entire policy;
+use the current ETag and review the full resulting policy before applying it.
+
+After the secret, egress, and route policy are active, set the non-secret
+`ENERGY_AI_ENABLED` deployment value to `true`. `ENERGY_AI_MODEL` and
+`ENERGY_AI_TIMEOUT` may be set explicitly; the application defaults are
+`gpt-6.1-sol` and `180s`. A push to `main` or a `v*` tag runs CI, publishes an
+immutable image, and deploys it. Verify an authenticated proposal, confirmation,
+ODIP-backed run, and evidence-cited explanation on the hosted route. Run the
+released AI acceptance cases and unchanged deployed Gate 5 regression before
+claiming Gate 6 release acceptance.

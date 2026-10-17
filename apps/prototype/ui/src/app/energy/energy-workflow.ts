@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { JsonPipe } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { EnergyApiService, EnergyRequest, EnergyRun, CandidatePage, Capabilities } from './energy-api.service';
+import { EnergyApiService, EnergyExplanation, EnergyRequest, EnergyRequestProposal, EnergyRun, CandidatePage, Capabilities } from './energy-api.service';
 
 @Component({
   selector: 'app-energy-workflow',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, JsonPipe],
   templateUrl: './energy-workflow.html',
   styleUrl: './energy-workflow.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,6 +20,7 @@ export class EnergyWorkflowComponent {
   private requestFingerprint: string | null = null;
   private idempotencyKey: string | null = null;
   private attempts = 0;
+  private proposalRevision = 0;
 
   protected readonly capabilities = signal<Capabilities | null>(null);
   protected readonly run = signal<EnergyRun | null>(null);
@@ -26,6 +28,15 @@ export class EnergyWorkflowComponent {
   protected readonly busy = signal(false);
   protected readonly error = signal<string | null>(null);
   protected readonly statusMessage = signal('');
+  protected readonly proposal = signal<EnergyRequestProposal | null>(null);
+  protected readonly explanation = signal<EnergyExplanation | null>(null);
+  protected readonly explanationError = signal<string | null>(null);
+  protected readonly explaining = signal(false);
+  protected readonly proposalForm = this.builder.group({
+    description: this.builder.control('', [Validators.required, Validators.maxLength(4000)]),
+    requestJson: this.builder.control(''),
+    confirmed: this.builder.control(false),
+  });
 
   protected readonly form = this.builder.group({
     datasetVersion: this.builder.control('1.0.0', [Validators.required, Validators.pattern(/^\d+\.\d+\.\d+$/)]),
@@ -38,10 +49,67 @@ export class EnergyWorkflowComponent {
 
   constructor() {
     this.destroy.onDestroy(() => this.clearTimer());
+    this.proposalForm.controls.description.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
+      this.proposalRevision++;
+      this.busy.set(false);
+      this.proposal.set(null);
+      this.proposalForm.controls.requestJson.setValue('', { emitEvent: false });
+      this.proposalForm.controls.confirmed.setValue(false, { emitEvent: false });
+    });
+    this.proposalForm.controls.requestJson.valueChanges.pipe(takeUntilDestroyed(this.destroy)).subscribe(() => {
+      this.proposalForm.controls.confirmed.setValue(false, { emitEvent: false });
+    });
     this.api.capabilities().pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: value => this.capabilities.set(value),
       error: error => this.error.set(this.errorMessage(error)),
     });
+  }
+
+  protected prepareProposal(): void {
+    const description = this.proposalForm.controls.description;
+    if (description.invalid) {
+      description.markAsTouched();
+      this.error.set('Describe the site and constraints in 4,000 characters or fewer.');
+      return;
+    }
+    this.proposal.set(null);
+    const revision = ++this.proposalRevision;
+    this.proposalForm.controls.confirmed.setValue(false);
+    this.busy.set(true);
+    this.error.set(null);
+    this.statusMessage.set('Preparing a request for review…');
+    this.api.propose(description.value).pipe(takeUntilDestroyed(this.destroy)).subscribe({
+      next: proposal => {
+        if (revision !== this.proposalRevision) return;
+        this.busy.set(false);
+        this.proposal.set(proposal);
+        this.proposalForm.controls.requestJson.setValue(proposal.request ? JSON.stringify(proposal.request, null, 2) : '');
+        this.statusMessage.set(proposal.status === 'READY_FOR_REVIEW'
+          ? 'Review the complete request and confirm it before evaluation.'
+          : 'More information is needed before a request can be evaluated.');
+      },
+      error: error => {
+        if (revision !== this.proposalRevision) return;
+        this.busy.set(false);
+        this.error.set(this.errorMessage(error));
+      },
+    });
+  }
+
+  protected submitProposal(): void {
+    if (this.proposal()?.status !== 'READY_FOR_REVIEW' || !this.proposalForm.controls.confirmed.value) {
+      this.error.set('Review and confirm the current request before evaluation.');
+      return;
+    }
+    let request: EnergyRequest;
+    try {
+      request = JSON.parse(this.proposalForm.controls.requestJson.value) as EnergyRequest;
+      if (!request || request.schemaVersion !== 'energy-optimization-request/v1') throw new Error('Invalid request');
+    } catch {
+      this.error.set('The edited request must be valid energy request JSON.');
+      return;
+    }
+    this.startRun(request);
   }
 
   protected submit(): void {
@@ -50,10 +118,6 @@ export class EnergyWorkflowComponent {
       this.error.set('Check the highlighted inputs before starting a run.');
       return;
     }
-    this.clearTimer();
-    this.error.set(null);
-    this.page.set(null);
-    this.run.set(null);
     const value = this.form.getRawValue();
     const request: EnergyRequest = {
       schemaVersion: 'energy-optimization-request/v1',
@@ -66,6 +130,17 @@ export class EnergyWorkflowComponent {
       objective: 'MIN_ANNUALIZED_COST',
       assumptions: { analysisYears: 20, discountRate: 0.04 },
     };
+    this.startRun(request);
+  }
+
+  private startRun(request: EnergyRequest): void {
+    this.clearTimer();
+    this.error.set(null);
+    this.page.set(null);
+    this.run.set(null);
+    this.explanation.set(null);
+    this.explanationError.set(null);
+    this.explaining.set(false);
     const fingerprint = JSON.stringify(request);
     if (fingerprint !== this.requestFingerprint) {
       this.requestFingerprint = fingerprint;
@@ -84,6 +159,26 @@ export class EnergyWorkflowComponent {
       error: error => {
         this.busy.set(false);
         this.error.set(this.errorMessage(error));
+      },
+    });
+  }
+
+  protected explainRun(): void {
+    const run = this.run();
+    if (!run || (run.status !== 'SUCCEEDED' && run.status !== 'INFEASIBLE')) return;
+    this.explaining.set(true);
+    this.explanationError.set(null);
+    this.api.explain(run.runId).pipe(takeUntilDestroyed(this.destroy)).subscribe({
+      next: value => {
+        if (this.run()?.runId !== run.runId) return;
+        this.explaining.set(false);
+        this.explanation.set(value);
+      },
+      error: error => {
+        if (this.run()?.runId !== run.runId) return;
+        this.explaining.set(false);
+        this.explanation.set(null);
+        this.explanationError.set(this.errorMessage(error));
       },
     });
   }

@@ -3,15 +3,14 @@
 Status: proposed sequence without confirmed dates.
 
 The [energy configuration implementation plan](energy-configuration-implementation-plan.md)
-defines the next cross-project reference slice against the released energy
-contract kit 0.4.0. It sequences quantitative configuration, verified ODIP input,
-simulation, durable optimization runs, platform integration, and AI assistance
-without changing the completed food-service analysis contract. The consumer
-kit pin, bounded new-equipment generation, publication verification/cache, and
-simulation/ranking are now implemented and verified locally. ODIP's publication
-API is implemented and locally verified in its own repository; VEF's deployed
-authenticated retrieval,
-run APIs, and the energy UI remain planned.
+tracks the accepted deterministic energy workflow and the additive released
+contract kit 0.5.0 AI handoff. Upstream Gate 5 was accepted by maintainer direction
+on October 17, 2026; Gate 6 / VEF-05 is next. The plan now specifies confirmed
+natural-language proposals, bounded approved evidence, validated citations,
+eleven AI consumer acceptance cases, and unchanged deployed Gate 5 regression.
+VEF's consumer lock now pins 0.5.0 and passed local kit and API tests; hosted CI
+remains to be recorded.
+The food-service analysis contract and energy numerical baseline are unchanged.
 
 ```mermaid
 flowchart LR

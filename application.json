@@ -23,6 +23,10 @@
           {
             "dns": "identity.eseidinger.de",
             "port": 443
+          },
+          {
+            "dns": "api.openai.com",
+            "port": 443
           }
         ],
         "ports": [
@@ -58,7 +62,10 @@
     "configuration": {
       "values": {
         "ENERGY_ODIP_ORIGIN": "https://web-odip.apps.eseidinger.de",
-        "ENERGY_ODIP_BINDING_PREFIX": "ACCESS_209A1DDA331C"
+        "ENERGY_ODIP_BINDING_PREFIX": "ACCESS_209A1DDA331C",
+        "ENERGY_AI_ENABLED": "true",
+        "ENERGY_AI_MODEL": "gpt-6.1-sol",
+        "ENERGY_AI_TIMEOUT": "180s"
       }
     },
     "resources": [

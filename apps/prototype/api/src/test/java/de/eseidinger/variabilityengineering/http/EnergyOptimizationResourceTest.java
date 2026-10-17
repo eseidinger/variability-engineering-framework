@@ -1,10 +1,16 @@
 package de.eseidinger.variabilityengineering.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import de.eseidinger.variabilityengineering.energy.ai.ExplanationModel;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
+import io.quarkus.test.InjectMock;
 import io.restassured.specification.RequestSpecification;
+import jakarta.inject.Inject;
+import de.eseidinger.variabilityengineering.persistence.JdbcEnergyRunRepository;
 import org.junit.jupiter.api.Test;
 
 import java.nio.file.Files;
@@ -14,11 +20,16 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 @QuarkusTest
-@TestProfile(FixtureImportProfile.class)
+@TestProfile(FixtureAiProfile.class)
 class EnergyOptimizationResourceTest {
     private final ObjectMapper mapper = new ObjectMapper();
+    @Inject EnergyEvidenceService evidence;
+    @Inject JdbcEnergyRunRepository runs;
+    @InjectMock ExplanationModel explanationModel;
 
     @Test
     void acceptsAndReturnsOwnedFixtureRun() throws Exception {
@@ -66,6 +77,44 @@ class EnergyOptimizationResourceTest {
                 .then().statusCode(200).extract().jsonPath();
         assertEquals(252, page.getInt("total"));
         assertEquals(20, page.getList("items").size());
+        var snapshot = evidence.prepare(runs.findOwned(runId, "prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                .orElseThrow());
+        assertEquals(4, snapshot.size());
+        assertEquals(page.getString("items[0].configurationId"),
+                snapshot.path("candidate").path("document").path("configurationId").asText());
+        when(explanationModel.explain(anyString())).thenAnswer(call ->
+                explanationFor(mapper.readTree((String) call.getArgument(0))));
+        var explanation = identity("prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                .when().post("/api/v1/ai/optimization-runs/" + runId + "/explanation")
+                .then().statusCode(200).extract().jsonPath();
+        assertEquals(runId, explanation.getString("runId"));
+    }
+
+    private String explanationFor(JsonNode sources) throws Exception {
+        ObjectNode output = mapper.createObjectNode();
+        output.put("schemaVersion", "energy-ai-explanation/v1");
+        output.put("runId", sources.path("result").path("document").path("runId").asText());
+        ArrayNode claims = output.putArray("claims");
+        for (String pointer : new String[]{"/runId", "/dataset/datasetId", "/dataset/version",
+                "/modelVersion", "/simulationVersion", "/recommendedConfigurationId",
+                "/optimalityStatus"}) cite(claims, sources, "result", pointer);
+        cite(claims, sources, "candidate", "/metrics/annualizedCostEUR");
+        cite(claims, sources, "candidate", "/metrics/selfSufficiency");
+        for (int i = 0; i < sources.path("candidate").path("document").path("constraints").size(); i++) {
+            cite(claims, sources, "candidate", "/constraints/" + i);
+        }
+        output.putArray("missingEvidence").add("Measured customer consumption is unavailable.");
+        return output.toString();
+    }
+
+    private void cite(ArrayNode claims, JsonNode sources, String source, String pointer) {
+        var claim = claims.addObject();
+        claim.put("text", "Recorded evidence at " + source + pointer + ".");
+        claim.put("category", "CALCULATED_OUTPUT");
+        var citation = claim.putArray("citations").addObject();
+        citation.put("source", source);
+        citation.put("pointer", pointer);
+        citation.set("value", sources.path(source).path("document").at(pointer));
     }
 
     private static RequestSpecification identity(String id) {

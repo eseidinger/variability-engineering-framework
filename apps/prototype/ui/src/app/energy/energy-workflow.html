@@ -10,6 +10,36 @@
     <p>The load shape is synthetic. PVGIS 2023 solar values were mapped into a derived 2024 leap-year profile. Results are estimates, not measured customer or observed 2024 data. Installation, maintenance, tax, financing, and other excluded costs are not included.</p>
   </aside>
 
+  <section aria-labelledby="proposal-title">
+    <h2 id="proposal-title">Describe your energy needs</h2>
+    <p>Include usable roof area, annual demand, budget, minimum self-sufficiency, and the dataset version. The assistant asks when information is missing.</p>
+    <form [formGroup]="proposalForm" (ngSubmit)="prepareProposal()">
+      <label for="proposal-description">Site and constraints</label>
+      <textarea id="proposal-description" formControlName="description" rows="5" maxlength="4000"></textarea>
+      <button type="submit" [disabled]="busy()">Prepare request</button>
+    </form>
+    @if (proposal(); as draft) {
+      @if (draft.clarificationQuestions.length) {
+        <h3>Questions to resolve</h3>
+        <ul>@for (question of draft.clarificationQuestions; track $index) { <li>{{ question }}</li> }</ul>
+      }
+      @if (draft.assumptionsToReview.length) {
+        <h3>Assumptions to review</h3>
+        <ul>@for (assumption of draft.assumptionsToReview; track $index) { <li>{{ assumption }}</li> }</ul>
+      }
+      @if (draft.status === 'READY_FOR_REVIEW') {
+        <form [formGroup]="proposalForm" (ngSubmit)="submitProposal()">
+          <h3>Complete request for review</h3>
+          <p>Check every field. You can edit the JSON. Any edit clears confirmation.</p>
+          <label for="proposal-request">Energy request JSON</label>
+          <textarea id="proposal-request" formControlName="requestJson" rows="18" spellcheck="false"></textarea>
+          <label class="confirmation"><input type="checkbox" formControlName="confirmed" /> I reviewed and confirm this current request.</label>
+          <button type="submit" [disabled]="busy() || !proposalForm.controls.confirmed.value">Confirm and evaluate</button>
+        </form>
+      }
+    }
+  </section>
+
   <section aria-labelledby="inputs-title">
     <h2 id="inputs-title">Site and constraints</h2>
     @if (capabilities(); as bounds) {
@@ -77,6 +107,38 @@
             <p>{{ warning.message }}</p>
           }
         </details>
+      }
+      @if (current.status === 'SUCCEEDED' || current.status === 'INFEASIBLE') {
+        <button type="button" (click)="explainRun()" [disabled]="explaining()">
+          {{ explaining() ? 'Preparing explanation…' : 'Explain this result with AI' }}
+        </button>
+        @if (explanationError(); as message) {
+          <p class="error" role="alert">AI explanation unavailable: {{ message }} The recorded result above remains available.</p>
+        }
+        @if (explanation(); as explained) {
+          <section aria-labelledby="explanation-title">
+            <h3 id="explanation-title">AI explanation of run {{ explained.runId }}</h3>
+            <ol>
+              @for (claim of explained.claims; track $index) {
+                <li>
+                  <p>{{ claim.text }}</p>
+                  <details>
+                    <summary>Evidence references for this claim ({{ claim.category }})</summary>
+                    <ul>
+                      @for (citation of claim.citations; track $index) {
+                        <li><code>{{ citation.source }}{{ citation.pointer }}</code>: <code>{{ citation.value | json }}</code></li>
+                      }
+                    </ul>
+                  </details>
+                </li>
+              }
+            </ol>
+            @if (explained.missingEvidence.length) {
+              <h4>Evidence not available</h4>
+              <ul>@for (gap of explained.missingEvidence; track $index) { <li>{{ gap }}</li> }</ul>
+            }
+          </section>
+        }
       }
     </section>
   }

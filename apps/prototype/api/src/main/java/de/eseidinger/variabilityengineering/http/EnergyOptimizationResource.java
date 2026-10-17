@@ -177,7 +177,7 @@ public class EnergyOptimizationResource {
         return Response.ok(response).build();
     }
 
-    private static String principal(HttpHeaders headers) {
+    static String principal(HttpHeaders headers) {
         String id = headers.getHeaderString("X-Platform-Principal-Id");
         String kind = headers.getHeaderString("X-Platform-Principal-Kind");
         String issuer = headers.getHeaderString("X-Platform-Principal-Issuer");
@@ -193,7 +193,7 @@ public class EnergyOptimizationResource {
         return id;
     }
 
-    private static boolean requestShape(JsonNode root) {
+    static boolean requestShape(JsonNode root) {
         return object(root, Set.of("schemaVersion", "dataset", "site", "constraints", "objective", "assumptions"))
                 && object(root.path("dataset"), Set.of("datasetId", "version", "schemaRef"))
                 && object(root.path("site"), Set.of("regionCode", "usableRoofAreaM2", "annualDemandKWh", "existingComponentIds"))

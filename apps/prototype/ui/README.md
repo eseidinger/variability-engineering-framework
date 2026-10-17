@@ -14,6 +14,14 @@ npm start
 Once the server is running, open `http://localhost:4200/`. The development server
 proxies `/api` to the API at `http://127.0.0.1:8080`, so start the API first.
 
+The API's energy routes require identity headers supplied by the hosting
+platform. For a local-only UI smoke test, start the UI with
+`npm run start:local-energy` and open `http://127.0.0.1:4200/`. This opt-in
+development proxy sends the fixture principal used by the API tests on `/api`
+requests. It binds the UI to loopback and is not part of the production build.
+Restart the UI after changing proxy configuration. A successful
+`GET /api/v1/capabilities` through this proxy returns HTTP 200.
+
 ## Code scaffolding
 
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:

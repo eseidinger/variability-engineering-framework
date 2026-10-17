@@ -17,6 +17,9 @@ flowchart TB
     Pop --> Impact[POST element-unavailability]
     API --> V1[/v1/]
     V1 --> Capabilities[GET capabilities]
+    V1 --> AI[/ai/]
+    AI --> Propose[POST propose]
+    AI --> Explain[POST owned run explanation]
     V1 --> Runs[/optimization-runs/]
     Runs --> Create[POST create]
     Runs --> Get[GET :runId]
@@ -44,6 +47,8 @@ population or record IDs yield `404`; invalid query or scenario input yields
 | Method and path | Request and response contract |
 |---|---|
 | `GET /api/v1/capabilities` | Current search bounds, 300-second timeout, and maximum candidate page size. |
+| `POST /api/v1/ai/request-proposals` | `{ "description": "..." }` (at most 4,000 characters; body at most 8 KiB) returns `energy-ai-request-proposal/v1`. A ready proposal contains the complete optimization request; an incomplete description returns clarification questions and a null request. No run is created. |
+| `POST /api/v1/ai/optimization-runs/{runId}/explanation` | For an owned, completed run, builds bounded approved evidence and returns a validated `energy-ai-explanation/v1` with exact citations. It accepts no client-selected evidence. |
 | `POST /api/v1/optimization-runs` | `energy-optimization-request/v1` body and `Idempotency-Key`; `202` with `runId`, `status: QUEUED`, and `createdAt`. Identical replay returns the original run ID. The acceptance envelope still says `QUEUED` if that run has finished. |
 | `GET /api/v1/optimization-runs/{runId}` | `QUEUED`/`RUNNING` status, terminal `energy-optimization-result/v1`, or `FAILED` with error. A terminal result contains dataset digest, model/simulation/optimizer versions, candidate counts, recommendation, warnings, and timestamps. |
 | `GET /api/v1/optimization-runs/{runId}/candidates?page=&pageSize=` | Ordered `energy-candidate/v1` items for a `SUCCEEDED` or `INFEASIBLE` run, plus `page`, `pageSize`, and `total`. Defaults are page 0 and size 20; maximum size is 100. |
@@ -69,6 +74,21 @@ issuer, subject, and group-ID headers; service principals also need a
 client-ID header. The application validates their shape and uses the
 principal ID for run ownership. Reads of unknown and unowned runs both return
 `404`.
+
+The AI routes are browser-session routes with the same normalized identity
+and platform CSRF checks as run creation. The host must include both in the
+authenticated energy-route access policy before enabling them. The proposal
+route accepts no run ID or arbitrary evidence. The explanation route looks up
+only a run owned by the caller and accepts no evidence from the client. Neither
+route exposes model tools. The proposal route returns `400` for malformed input
+and `413` for an oversized body. The explanation route returns `404` for unknown
+or unowned runs, `409` before completion, and `422` if required evidence is
+missing or exceeds the limit. Both return `401` for invalid identity, `502` for
+invalid model output, and `503` when AI is unavailable. `ENERGY_AI_ENABLED`
+defaults to false; the routes
+must stay disabled until provider credentials, egress, and hosting policy are
+reviewed. The UI requires a separate explicit confirmation of the current
+structured request before calling `POST /api/v1/optimization-runs`.
 
 | Status | Energy API meaning |
 |---|---|

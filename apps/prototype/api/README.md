@@ -10,7 +10,7 @@ Run the core and API tests with:
 
 ```shell
 python3 ../../../scripts/validate-energy-contract-kit.py --prepare-only --output-dir /tmp/vef-energy-api-kit
-export ENERGY_CONTRACT_KIT_DIRECTORY=/tmp/vef-energy-api-kit/contract-kit-v0.4.0/contract-kit
+export ENERGY_CONTRACT_KIT_DIRECTORY=/tmp/vef-energy-api-kit/contract-kit-v0.5.0/contract-kit
 ./mvnw test
 ```
 
@@ -49,6 +49,50 @@ HTTPS origin. Do not place the managed secret or token in application config.
 The deployment descriptor allows HTTPS egress to ODIP and
 `identity.eseidinger.de`; its DNS pins must be approved and reapplied after
 address changes.
+
+For a local optimization run without the managed ODIP reader binding, the
+Quarkus `dev` profile has an explicit fixture importer. First verify/extract the
+pinned 0.5.0 kit as described above. Start the API with
+`ENERGY_CONTRACT_KIT_DIRECTORY` pointing to its `contract-kit` directory and
+`ENERGY_ODIP_LOCAL_FIXTURE=true`:
+
+```shell
+export ENERGY_CONTRACT_KIT_DIRECTORY=/tmp/vef-energy-kit-050-verified/contract-kit-v0.5.0/contract-kit
+export ENERGY_ODIP_LOCAL_FIXTURE=true
+./mvnw quarkus:dev
+```
+
+This imports only the released Wasserburg
+dataset version `1.0.0`, verifies its manifest and artifacts, and persists the
+verified bytes in the local database. The importer is unavailable in production
+and is disabled in development unless explicitly selected.
+
+## AI assistance
+
+The optional AI routes use the Quarkus LangChain4j OpenAI extension to prepare
+validated request proposals and evidence-cited explanations. They are
+disabled by default. Set `ENERGY_AI_ENABLED=true`, inject `OPENAI_API_KEY` from
+the managed secret store, and allow reviewed HTTPS egress to the provider before
+enabling them in a deployment. `ENERGY_AI_MODEL` defaults to `gpt-6.1-sol`.
+`ENERGY_AI_TIMEOUT` controls the OpenAI call timeout and defaults to `180s`;
+the Quarkiverse extension otherwise uses `10s`, which is too short for some
+reasoning-model responses. A local override can be set before starting Quarkus,
+for example `export ENERGY_AI_TIMEOUT=240s`.
+OpenAI JSON mode is enabled for both AI routes. VEF still validates the released
+envelopes and domain rules; a rejected proposal returns a short validation
+reason such as `invalid_ready_shape` without exposing the model's raw response
+or customer input.
+For a `503 ai_unavailable` response, the API log records exception types and
+an upstream HTTP status when available; it does not log the provider response,
+prompt, or API key.
+The routes require the platform's normalized principal context and the same
+browser CSRF policy as run creation. The proposal route never starts a run.
+The UI displays the complete request and requires confirmation after the latest
+edit before using the existing optimization endpoint. The explanation route
+reads only an owned completed run and its recorded recommended candidate,
+checks the 16-source/64-KiB evidence bound, and validates every returned
+citation before display. The owner reports an active managed key in `vareng`,
+but deployed pod adoption and hosted live-provider acceptance are unverified.
 
 With an authenticated Developer Platform CLI session, inspect the current
 project's outgoing service access and confirm that the ODIP resource is active

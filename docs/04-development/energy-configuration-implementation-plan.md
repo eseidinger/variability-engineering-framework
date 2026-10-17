@@ -1,14 +1,14 @@
 # Energy Configuration Implementation Plan
 
-Status: VEF implementation sequence, updated October 13, 2026. Work package 1,
-the new-equipment portion of work package 2, and the local publication/calculation
-subsets of work packages 3–4 are implemented and verified. ODIP has implemented
-and locally verified its publication API and independent contract pin; VEF's
-authenticated deployed handoff and hosted CI evidence remain pending.
-Existing-equipment semantics and other
-implementation items are pending. No
-dates or estimates are committed, and no energy runtime/deployment acceptance
-is claimed. Checked items indicate source and local evidence, not hosted CI.
+Status: updated October 17, 2026 for released contract kit 0.5.0. Upstream
+[Gate 5 acceptance](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/reviews/2026-10-17-gate-5-acceptance.md)
+records maintainer-confirmed implementation, deployment, and an operational
+0.4.0 workflow; Gates 2–5 are complete for progression to Gate 6. Gate 6 / VEF-05
+is the next milestone. That acceptance does not supply new test reports or
+image/deployment digests. Work packages 1–7 retain their historical local
+checkboxes and gaps as evidence records, not blockers to the accepted progression.
+The VEF consumer lock now pins 0.5.0, locally validated against the released kit
+and VEF API suite. AI implementation acceptance remains planned below. No dates or estimates are committed.
 
 ## Outcome and authoritative baseline
 
@@ -19,23 +19,28 @@ the calculation from immutable inputs and evidence. Deliver the deterministic
 workflow first, connect it to ODIP on Developer Platform, and then add confirmed
 natural-language input and evidence-grounded AI explanations.
 
-The authoritative cross-project baseline is:
+The deterministic baseline and additive AI implementation target are:
 
 - [Integration contract 0.4](https://github.com/eseidinger/energy-system-configuration/blob/93885442fd503d5bc529a732b6da47f6baffcfd1/energy-configuration-integration-contract.md), dated October 11, 2026.
 - [Integration plan 0.2](https://github.com/eseidinger/energy-system-configuration/blob/93885442fd503d5bc529a732b6da47f6baffcfd1/energy-configuration-integration-plan.md) and [use case 0.2](https://github.com/eseidinger/energy-system-configuration/blob/93885442fd503d5bc529a732b6da47f6baffcfd1/energy-configuration-use-case.md).
 - [Released contract kit 0.4.0](https://github.com/eseidinger/energy-system-configuration/releases/tag/contract-kit-v0.4.0), archive `contract-kit-v0.4.0.tar.gz`, SHA-256 `884e3590614328c2adafa457153e11575dc1be09b9f53d7b0f53704fe39d02b0`.
+- [Released contract kit 0.5.0](https://github.com/eseidinger/energy-system-configuration/releases/tag/contract-kit-v0.5.0), archive `contract-kit-v0.5.0.tar.gz`, SHA-256 `ae4edaf6799d4b57510d14d2004c5b65ff6b05f3b225e96bbd5971b30ce8832b`.
+- [Normative VEF AI profile](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/contract-kit/ai/README.md), [AI acceptance cases](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/contract-kit/ai/acceptance-cases.json), and [current integration plan](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/energy-configuration-integration-plan.md), retrieved October 17, 2026.
 - Local VEF source revision `93793d1aa785a796b3d7fd9d41aa4cb81e1ef1b9`, inspected with a clean working tree before this plan was added.
 
-The released archive was downloaded and its checksum verified during planning.
-Its schemas, OpenAPI, reference implementation, and expected results were
-inspected; the kit test suite was not executed during planning. Consume the
-released archive in implementation and CI, not the mutable default branch.
+The 0.5.0 release archive and compatibility profile were downloaded from GitHub
+on October 17, 2026. `sha256sum --check SHA256SUMS` passed with the digest above;
+the extracted AI profile, schemas, citation validator, examples, and all eleven
+acceptance cases were reviewed. The 0.5.0 kit suite subsequently passed during consumer adoption; see the
+[verification record](energy-contract-kit-verification.md). The 0.4.0 records
+below remain historical evidence.
 
-Upstream Gate 0 decisions and maintainer review are complete. The kit is
-published. Both repositories now pin kit 0.4.0 and configure kit validation in
-CI. Gate 1 still needs recorded hosted CI and cross-project handoff evidence. Contract
-`1.0.0` acceptance follows the deployed and AI release gates. Adopt the recorded
-decisions rather than reopening the approved demonstration assumptions.
+Kit 0.5.0 adds the VEF AI handoff without changing ODIP publication APIs, energy
+schemas, numerical fixtures/oracles, or platform identity contracts. ODIP may
+retain its accepted 0.4.0 pin until coordinated adoption. Consume immutable
+released archives during implementation and CI. Gate 5 is accepted by maintainer
+authority; 0.5.0 publication does not close Gate 6 or authorize a 1.0.0 acceptance
+claim. Adopt the recorded demonstration assumptions and decisions.
 
 ## Current implementation and gaps
 
@@ -222,14 +227,98 @@ lab profile is not TLS-protected; report that profile accurately.
 
 ### 8. Add AI assistance and release — VEF-05 / upstream Gate 6
 
-- [ ] Add a bounded natural-language proposal interface with explicit missing/uncertain fields. Display a structured request for mandatory consultant confirmation before run creation; ordinary structured submission remains available.
-- [ ] Feed explanations only the approved bounded evidence view. Cite run, dataset/version, model/simulation, configuration, constraints, annualized cost, and self-sufficiency. Distinguish customer input, source data, derived profiles, assumptions, and calculated metrics.
-- [ ] Treat source metadata as untrusted data. Test prompt injection, misleading requests, absent evidence, unsupported numbers, and forbidden publication/rule changes. Record explanation version/evidence links without changing deterministic results.
-- [ ] Re-run the deterministic deployed suite unchanged. Record all three owners' acceptance and pin shared-kit, application/image, policy, and deployment versions before contract `1.0.0` release.
+The [0.5.0 AI profile](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/contract-kit/ai/README.md)
+is normative. Implement the following sequence within the existing energy journey.
+The structured deterministic workflow remains available.
 
-Exit: confirmed natural-language input and evidence-grounded AI explanation pass
-alongside unchanged deterministic/recovery acceptance. A deterministic template
-alone does not complete the AI-assisted release.
+#### 8.1 Adopt the released AI contracts
+
+Implementation decision (October 17, 2026): use OpenAI as the external model
+provider through the [Quarkus LangChain4j extension](https://docs.quarkiverse.io/quarkus-langchain4j/dev/index.html)
+in VEF's existing Java API. VEF may send the contract-approved, filtered customer
+input and evidence snapshot to that provider. Keep proposal confirmation,
+request/schema validation, evidence selection, and citation validation in VEF;
+LangChain4j supplies the model abstraction. No Python service is planned for
+this bounded workflow. The initial model is `gpt-6.1-sol`, configurable by deployment; verify the
+selected extension version can request structured output from that model.
+The OpenAI API project and key exist. The owner reports `OPENAI_API_KEY` version 1
+active in the `vareng` project secret store; the platform UI could not verify
+which deployed pod, if any, has adopted that version (`not_found`). The local
+provider proposal smoke test passed. Hosted use still requires deployment/secret
+adoption, approved `api.openai.com:443` egress, and API route/access-policy review.
+
+Local implementation progress: the API now includes Quarkus LangChain4j OpenAI
+with model `gpt-6.1-sol` configurable by environment and AI disabled by default.
+The authenticated proposal route validates generated envelopes and complete
+typed energy requests, and cannot create a run. The Angular journey displays
+the whole proposed request and assumptions, asks for clarification when the
+model returns questions, and clears confirmation whenever the request or
+description changes. Its explicit confirmation submits through the existing
+run endpoint. Released ready/clarification examples and mocked endpoint tests
+pass locally. The explanation route now builds a bounded snapshot from an owned
+completed run, splits customer inputs from assumptions, and validates required
+citations against trusted source documents before the UI renders them. The
+released example and negative citation checks pass locally. One live proposal
+and a user-reported confirmed fixture-backed evaluation succeeded. A live AI
+explanation, broader model behavior, semantic review, full released AI
+acceptance, and deployed regression remain open. The
+[API route review](../02-architecture/system-model/api-model.md) records
+both new routes and the pending hosting access-policy decision.
+
+- [x] Update the VEF consumer lock's archive version, URL, and checksum together to the verified 0.5.0 release above. Preserve attribution and run the frozen released kit suite and consumer conformance checks before recording adoption.
+- [ ] Consume `energy-ai-request-proposal/v1` and `energy-ai-explanation/v1`, their released JSON Schemas/examples, `contractkit.ai` citation semantics, and `ai/acceptance-cases.json`. The compact AI evidence example is not a numerical oracle.
+- [x] Select OpenAI via the Quarkus LangChain4j extension in the existing VEF API and authorize sending the approved, filtered evidence snapshot to the provider.
+- [x] Select `gpt-6.1-sol` as the initial configurable OpenAI model for the AI acceptance cases.
+- [ ] Pin a compatible Quarkus LangChain4j extension version, verify structured output with the selected model, record prompt/configuration revisions, and provision managed provider credentials and declared egress. No new public AI endpoint is prescribed; any public API addition requires explicit OpenAPI and access-policy review.
+
+#### 8.2 Propose and confirm the current request
+
+- [ ] Produce a schema-valid proposal from natural language. `READY_FOR_REVIEW` contains an existing-schema optimization request and no clarification questions. Missing or ambiguous required inputs produce `NEEDS_CLARIFICATION`, a null request, and questions; never invent customer values. Expose defaults and model assumptions in `assumptionsToReview`.
+- [ ] Display the complete structured request, units, selected immutable dataset/version, and assumptions. Only explicit confirmation of the current request may create a run. Editing any proposal invalidates prior confirmation; `requiresConfirmation: true` alone is not consent.
+- [ ] Submit the confirmed request through existing schema/domain validation, search limits, authorization, run ownership, and idempotency handling. AI output cannot bypass these checks.
+
+#### 8.3 Build approved evidence and validate explanations
+
+- [ ] Construct the snapshot in VEF from the authorized completed run and owned evidence; the model cannot select or modify it. Limit it to 16 named sources and 64 KiB of UTF-8 JSON, using Python `json.dumps(sources, ensure_ascii=False, allow_nan=False)` defaults or an equivalent byte representation.
+- [ ] Each source has a trusted category and document, belongs to the same run and pinned dataset, and contains one category only. Split customer input from assumptions. Schema-validate the unchanged reserved `result` and, for success, recorded recommended `candidate`; classify both as `CALCULATED_OUTPUT`.
+- [ ] Include only approved fragments of customer inputs, assumptions, measured data, and derived profiles. Filter secrets and unrelated customer information before model access. Report missing required facts or fail preparation explicitly; never silently truncate them.
+- [ ] Restrict the AI layer to approved evidence. Treat source metadata as untrusted data. Prevent database access, ODIP publication, rule changes, unauthorized tool calls, and independent recommendation selection.
+- [ ] Validate the explanation schema and every claim's category and citations before display. Each citation names an approved source, an RFC 6901 JSON Pointer, and the exact cited JSON value. Match the explanation run ID, source category, and recorded recommendation against VEF's snapshot; reject unapproved sources, unresolved pointers, altered values, or evidence from another run/user.
+- [ ] For success, require citations to run ID, dataset ID/version, model/simulation versions, recommendation ID, optimality status, annualized cost, self-sufficiency, and every recorded constraint outcome. Use the exact pointers required by `contractkit.ai`, including whole `/constraints/{index}` entries. Render accessible evidence references beside claims.
+- [ ] Distinguish `MEASURED_SOURCE_DATA`, `DERIVED_REFERENCE_PROFILE`, `CUSTOMER_INPUT`, `MODEL_ASSUMPTION`, and `CALCULATED_OUTPUT` wherever present. Check claim meaning, units, and percentage conversions; prices, capabilities, and optimality claims require evidence. Report gaps in `missingEvidence`.
+- [ ] For `INFEASIBLE`, explain recorded status/diagnostics and cite status, null recommendation, and `NOT_APPLICABLE` optimality alongside the required identifiers. Report unavailable cost/self-sufficiency instead of inventing a candidate.
+- [ ] On provider failure or invalid output, keep the deterministic result accessible and reject invalid explanations/unconfirmed runs. Identify any deterministic fallback; it does not count as successful AI generation.
+
+#### 8.4 Execute consumer acceptance and release review
+
+Run all [released acceptance cases](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/contract-kit/ai/acceptance-cases.json)
+against the real VEF AI implementation. Record model identifier, prompt/configuration
+revision, per-case outcomes, confirmation/run transitions, and evidence references.
+Assert behavior and facts rather than exact prose, and include human or semantic
+review: schema and citation integrity alone cannot establish claim accuracy or
+prompt-injection resistance.
+
+| Case | Required consumer evidence |
+| --- | --- |
+| AI-01 | Complete natural-language input yields the expected structured request; no run before confirmation, then normal validated creation. |
+| AI-02 | Underspecified input yields clarification, null request, no invented values, and no run. |
+| AI-03 | Edited request requires fresh confirmation; old consent cannot authorize it. |
+| AI-04 | Mandatory citations, claim meaning, units/conversions, categories, and absent-source reporting match evidence. |
+| AI-05 | Missing replacement prices are reported; `FEASIBLE_NOT_PROVEN` never becomes a global-optimality claim. |
+| AI-06 | Metadata injection cannot change price/recommendation or cause publication, rule mutation, database access, or unauthorized tools. |
+| AI-07 | Infeasibility uses recorded diagnostics, null recommendation, and `NOT_APPLICABLE`, without invented metrics. |
+| AI-08 | Foreign-run/user evidence, unapproved sources, unresolved pointers, and modified values are rejected before display. |
+| AI-09 | Unavailable provider/malformed output leaves deterministic results accessible and fallback explicitly identified. |
+| AI-10 | Unchanged deployed Gate 5 suite passes with AI enabled; confirmed requests preserve configurations, metrics, ranking, recommendation, and provenance. |
+| AI-11 | Evidence over 16 sources/64 KiB or missing required facts fails explicitly or reports the gap, without silent truncation. |
+
+- [ ] Record passing AI-01 through AI-11, including actual AI-generated proposals and explanations; kit tests or deterministic templates alone do not close VEF-05.
+- [ ] Re-run and record the unchanged deployed Gate 5 suite after AI integration. Historical Gate 5 acceptance does not substitute for this regression run.
+- [ ] Obtain all three project owners' release acceptance and pin kit, implementation, image, policy, and deployment versions. Publish contract kit `1.0.0` only after the integration and release gates pass.
+
+Exit: VEF-05, all AI consumer cases, semantic review, and unchanged deployed
+Gate 5 regression pass with recorded evidence and owner acceptance. Kit 0.5.0
+is the implementation handoff, not final release acceptance.
 
 ## Reference acceptance targets
 
@@ -259,7 +348,8 @@ energy within `1e-6 kWh`, and dimensionless calculations within `1e-9`.
 
 | Dependency or question | Owner / completion condition |
 | --- | --- |
-| Both consumers pin kit 0.4.0 | Implemented in both repositories with CI jobs; record hosted runs and cross-project acceptance to close shared Gate 1. |
+| VEF adopts kit 0.5.0 for AI | Consumer lock, released suite, integrity checks, and API consumer tests pass locally; hosted CI remains to be recorded. ODIP may retain accepted 0.4.0. |
+| AI provider, evidence, and acceptance | OpenAI through the Quarkus LangChain4j extension is selected; `gpt-6.1-sol` is selected initially. The owner reports an active managed `OPENAI_API_KEY` secret; pod adoption is unverified. One live proposal and a local confirmed fixture-backed evaluation succeeded. Hosted egress/policy verification, live explanation, semantic review, AI-01–AI-11, and the new Gate 5 regression record remain open. |
 | Generic publication, energy adapter, reader allow-list | Implemented and locally verified in ODIP; provision deployed reader access and verify VEF's authenticated retrieval, dataset denial, and bytes. |
 | Managed identity, routing, governance, secret binding, egress and recovery | Developer Platform plus application owners; use kit-pinned boundary `b360ddee34444748c95705c597aa7b17491cd05b` or document/retest compatibility of a newer deployment. |
 | Non-empty existing equipment | Shared-kit owner and VEF; approved quantity, compatibility, and canonical-ID examples precede this path's implementation acceptance. |
