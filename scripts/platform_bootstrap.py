@@ -105,3 +105,41 @@ def request_odip(cli, project, provider_project, application):
             "binding_prefix": service["spec"].get("secretPrefix") or "ACCESS_" + service["id"][-12:].upper(),
             "provider_url": service["spec"].get("providerUrl")}
 
+
+
+def browser_policy(group):
+    def route(name, match):
+        return {"name": name, "match": match,
+                "authentication": {"mode": "browser-session"},
+                "authorization": {"anyOfGroups": [group]}}
+
+    return {
+        "component": "web", "defaultDecision": "deny",
+        "identityAttributes": {"displayName": True, "email": False},
+        "routes": [
+            route("read", {"pathPrefix": "/", "methods": ["GET"]}),
+            route("food-analysis", {"pathPrefix": "/api/populations", "methods": ["POST"]}),
+            route("energy-runs", {"path": "/api/v1/optimization-runs", "methods": ["POST"]}),
+            route("ai-proposals", {"path": "/api/v1/ai/request-proposals", "methods": ["POST"]}),
+            route("ai-explanations", {"pathPrefix": "/api/v1/ai/optimization-runs", "methods": ["POST"]}),
+        ],
+    }
+
+
+def setup_browser(cli, project, group_name):
+    # A policy requires a deployed public component. Never replace an existing policy.
+    policy = cli.run("access", "policy", "get", "--project", project,
+                     "--application", project, missing_ok=True)
+    if policy is not None:
+        if policy["state"] != "active":
+            raise BootstrapError("Existing browser policy is not active; inspect its access operation before retrying.")
+        return policy
+    groups = cli.run("access", "groups", "list", "--project", project)["items"]
+    group = unique([g for g in groups if g["name"] == group_name], "browser groups")
+    if group is None:
+        group = cli.run("access", "groups", "create", "--project", project,
+                        "--name", group_name, "--display-name", "Application users",
+                        "--idempotency-key", f"{project}-bootstrap-{group_name}")
+    return cli.run("access", "policy", "apply", "--project", project,
+                   "--application", project, "--wait", body=browser_policy(group["id"]))
+

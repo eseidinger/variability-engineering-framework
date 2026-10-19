@@ -62,9 +62,9 @@ for rendering and setup.
 The [bootstrap scripts](../../../docs/05-operations/deployment.md#bootstrap-scripts)
 provision PostgreSQL, update the descriptor's storage binding in place, and deploy
 `latest` in either environment. Access bootstrap requests ODIP access and writes
-its binding prefix into the descriptor in place. Separate options initialize
-browser access, and the credential script captures CI credentials:
-`bootstrap-application.py`, `bootstrap-access.py`, and
+its binding prefix into the descriptor in place. `bootstrap-policy.py` initializes
+the browser application policy and user group. The credential script captures CI
+credentials: `bootstrap-application.py`, `bootstrap-access.py`, `bootstrap-policy.py`, and
 `create-deployment-credential.py` under `scripts/`. Run each with `--help` for options.
 
 To publish the initial `latest` image locally, run `docker login` followed by

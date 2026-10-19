@@ -169,23 +169,29 @@ ODIP setup is the default; `--odip` selects it explicitly. The script selects
 `odip-test` for test and `odip` for production. It updates `application-test.json`
 or `application.json` respectively, without deploying. Rerun application bootstrap
 after access setup to deploy the updated prefix using `latest`. The request is
-reused on subsequent runs. `--browser` alone performs only browser policy setup;
-use `--browser --odip` for both.
+reused on subsequent runs. For compatibility, `--browser` alone performs only
+browser policy setup and `--browser --odip` performs both. New setups can use
+the dedicated policy script below.
 `--provider-project` and `--provider-application` override those defaults for
 standalone access setup.
 
 After deploying the public `web` component, initialize browser access:
 
 ```shell
-python3 scripts/bootstrap-access.py --environment test --profile lab --browser
+python3 scripts/bootstrap-policy.py --environment test --profile lab
+python3 scripts/bootstrap-policy.py --environment production --profile lab
 ```
 
-This creates an `application-users` group and an initial browser-session policy
+`bootstrap-policy.py` creates or reuses an `application-users` group and applies
+an initial browser-session policy, waiting for activation. Its JSON output contains
+the project and resulting application policy. Use `--group NAME` to choose another
+group. The policy defaults to deny and requires membership in that group,
 covering GET routes and the application's food analysis, energy run and AI POST
 routes. The platform enforces its browser session and CSRF checks. Existing active
 policies are preserved; inspect and extend them separately if routes are missing.
 Users must still complete first login and receive administrator approval/group
-membership. Repeat the access commands with `--environment production` for `vareng`.
+membership. Run this script after deploying the public `web` component; it does
+not deploy the application, change descriptors, or request ODIP access.
 
 The descriptors enable AI. Provision its key using the platform secret command
 before using AI routes; the value file must be readable only by its owner:
