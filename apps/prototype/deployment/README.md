@@ -35,7 +35,7 @@ Deployment configuration:
 - preserve the UI/API project boundary;
 - run with the platform-required non-root identity;
 - expose HTTP port 8080;
-- obtain PostgreSQL settings from the platform environment;
+- obtain PostgreSQL settings through an approved named-store binding on `web`;
 - include the immutable food-service fixture for first-start database seeding;
 - expose `/api/status` readiness that verifies the persisted population and energy run store are available.
 
@@ -50,14 +50,37 @@ Before enabling publishing, add these GitHub Actions repository secrets:
 
 The resulting image names are `<username>/variability-engineering-framework:latest` for `main`, semantic-version tags for releases such as `v1.0.0`, and immutable `sha-...` tags.
 
+Deployment uses `developer-platform-cli==0.3.0`. Production CI renders only the
+image tag from the Git release tag; test CI deploys `application-test.json`
+directly with `latest`. Both use the image repository, PostgreSQL binding UUID,
+and ODIP binding prefix saved in the descriptors. Commit bootstrap descriptor
+updates before deploying through CI. Named stores must already exist with active
+bindings for component `web`; application deployment no longer creates a database
+through `spec.resources`. See the [deployment guide](../../../docs/05-operations/deployment.md)
+for rendering and setup.
+
+The [bootstrap scripts](../../../docs/05-operations/deployment.md#bootstrap-scripts)
+provision PostgreSQL, update the descriptor's storage binding in place, and deploy
+`latest` in either environment. Access bootstrap requests ODIP access and writes
+its binding prefix into the descriptor in place. Separate options initialize
+browser access, and the credential script captures CI credentials:
+`bootstrap-application.py`, `bootstrap-access.py`, and
+`create-deployment-credential.py` under `scripts/`. Run each with `--help` for options.
+
+To publish the initial `latest` image locally, run `docker login` followed by
+`python3 scripts/bootstrap-image.py`. It builds the combined UI/API Dockerfile
+and pushes to the image repository in `application.json`, preserving the
+descriptor. `--file application-test.json` selects the test descriptor's repository.
+
 ## Enabling energy AI in the hosted application
 
 The production profile does not activate the development-only fixture importer,
 and the Angular identity proxy is not part of the built UI. The hosted workflow
 needs the active ODIP reader binding and dataset grant, plus the platform's
 browser-session identity and CSRF boundary.
-Before enabling AI, provision `OPENAI_API_KEY` as a managed `vareng` project
-secret injected into the `web` container. Keep the key out of `application.json`.
+Before enabling AI, provision `OPENAI_API_KEY` as a managed secret in each
+project (`vareng` and `vareng-test`), injected into the `web` container. Keep the
+key out of both deployment descriptors.
 The declaration includes HTTPS egress to `api.openai.com`; the platform operator
 must approve its resolved address pins.
 
@@ -74,8 +97,12 @@ use the current ETag and review the full resulting policy before applying it.
 After the secret, egress, and route policy are active, set the non-secret
 `ENERGY_AI_ENABLED` deployment value to `true`. `ENERGY_AI_MODEL` and
 `ENERGY_AI_TIMEOUT` may be set explicitly; the application defaults are
-`gpt-6.1-sol` and `180s`. A push to `main` or a `v*` tag runs CI, publishes an
-immutable image, and deploys it. Verify an authenticated proposal, confirmation,
+`gpt-6.1-sol` and `180s`. A push to `main` runs CI, publishes `latest`, and deploys
+[`application-test.json`](../../../application-test.json) to `vareng-test` with
+`PLATFORM_CLIENT_ID_TEST` and `PLATFORM_CLIENT_SECRET_TEST`. A `v*` release tag
+deploys [`application.json`](../../../application.json) to `vareng` using the
+versioned image and the unsuffixed deployment credentials. Each project needs
+its own secret, egress approval, route policy, and ODIP reader binding. Verify an authenticated proposal, confirmation,
 ODIP-backed run, and evidence-cited explanation on the hosted route. Run the
 released AI acceptance cases and unchanged deployed Gate 5 regression before
 claiming Gate 6 release acceptance.

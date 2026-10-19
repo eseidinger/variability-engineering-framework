@@ -1,2 +1,3 @@
 /.cache/energy-contract-kit/
 /scripts/__pycache__/
+/.local/deployment/

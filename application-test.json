@@ -1,0 +1,78 @@
+{
+  "apiVersion": "platform.example/v1alpha2",
+  "kind": "Application",
+  "metadata": {
+    "name": "vareng-test",
+    "project": "vareng-test",
+    "environment": "default"
+  },
+  "spec": {
+    "components": [
+      {
+        "name": "web",
+        "type": "service",
+        "runtime": {
+          "type": "container",
+          "image": "eseidinger/variability-engineering-framework:latest"
+        },
+        "outbound": [
+          {
+            "dns": "web-odip-test.apps.eseidinger.de",
+            "port": 443
+          },
+          {
+            "dns": "identity.eseidinger.de",
+            "port": 443
+          },
+          {
+            "dns": "api.openai.com",
+            "port": 443
+          }
+        ],
+        "ports": [
+          {
+            "name": "http",
+            "protocol": "http",
+            "port": 8080
+          },
+          {
+            "name": "management",
+            "protocol": "http",
+            "port": 9000
+          }
+        ],
+        "telemetry": {
+          "metrics": {
+            "port": "management",
+            "path": "/q/metrics"
+          },
+          "tracing": {
+            "enabled": true
+          }
+        },
+        "replicas": 1,
+        "exposure": "public",
+        "health": {
+          "readiness": {
+            "path": "/api/status"
+          }
+        },
+        "bindings": [
+          {
+            "bindingId": "7828556f-fa1f-4d01-83e2-66b3f9c31abe",
+            "envPrefix": ""
+          }
+        ]
+      }
+    ],
+    "configuration": {
+      "values": {
+        "ENERGY_ODIP_ORIGIN": "https://web-odip-test.apps.eseidinger.de",
+        "ENERGY_ODIP_BINDING_PREFIX": "ACCESS_BC1CEA2736B5",
+        "ENERGY_AI_ENABLED": "true",
+        "ENERGY_AI_MODEL": "gpt-6.1-sol",
+        "ENERGY_AI_TIMEOUT": "180s"
+      }
+    }
+  }
+}

@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 24
       - run: node scripts/check-docs.mjs
-      - run: jq empty application.json
+      - run: jq empty application.json application-test.json
 
   ui:
     name: UI tests and build
@@ -113,6 +113,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.DOCKERHUB_IMAGE }}
+          flavor: latest=false
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=semver,pattern={{version}}
@@ -127,11 +128,11 @@ jobs:
           labels: ${{ steps.metadata.outputs.labels }}
 
   deploy:
-    name: Deploy to eseidinger.de
+    name: Deploy release to vareng
     needs: publish
     if: >-
       github.event_name == 'push' &&
-      (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
+      startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     environment: production
     concurrency:
@@ -142,12 +143,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: python3 -m pip install developer-platform-cli==0.1.0
-      - name: Deploy immutable image
+      - run: python3 -m pip install developer-platform-cli==0.3.0
+      - name: Deploy versioned image
         run: |
-          jq --arg image "$DOCKERHUB_IMAGE:sha-$GITHUB_SHA" \
-            '.spec.components[0].runtime.image = $image' \
-            application.json > deployment-application.json
+          python3 scripts/render-application.py --tag "$GITHUB_REF_NAME" > deployment-application.json
           devplat deploy apply --project vareng --file deployment-application.json --wait --output json
         env:
           PLATFORM_API_URL: ${{ vars.PLATFORM_API_URL }}
@@ -159,6 +158,41 @@ jobs:
           status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' \
             --retry 12 --retry-all-errors --retry-delay 5 \
             https://web-vareng.apps.eseidinger.de/api/status)
+          case "$status" in
+            302|403) echo "Public route is protected (HTTP $status)." ;;
+            *) echo "Expected protected public route, got HTTP $status." >&2; exit 1 ;;
+          esac
+
+  deploy-test:
+    name: Deploy latest to vareng-test
+    needs: publish
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: test
+    concurrency:
+      group: vareng-test-deployment
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 -m pip install developer-platform-cli==0.3.0
+      - name: Deploy latest image
+        run: |
+          devplat deploy apply --project vareng-test --file application-test.json --wait --output json
+        env:
+          PLATFORM_API_URL: ${{ vars.PLATFORM_API_URL }}
+          PLATFORM_TOKEN_ENDPOINT: ${{ vars.PLATFORM_TOKEN_ENDPOINT }}
+          PLATFORM_CLIENT_ID: ${{ secrets.PLATFORM_CLIENT_ID_TEST }}
+          PLATFORM_CLIENT_SECRET: ${{ secrets.PLATFORM_CLIENT_SECRET_TEST }}
+      - name: Verify protected public entry point
+        run: |
+          status=$(curl --silent --show-error --output /dev/null --write-out '%{http_code}' \
+            --retry 12 --retry-all-errors --retry-delay 5 \
+            https://web-vareng-test.apps.eseidinger.de/api/status)
           case "$status" in
             302|403) echo "Public route is protected (HTTP $status)." ;;
             *) echo "Expected protected public route, got HTTP $status." >&2; exit 1 ;;

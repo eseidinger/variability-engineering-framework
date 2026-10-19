@@ -13,7 +13,7 @@
         "type": "service",
         "runtime": {
           "type": "container",
-          "image": "eseidinger/variability-engineering-framework:latest"
+          "image": "eseidinger/variability-engineering-framework:${VARENG_IMAGE_TAG}"
         },
         "outbound": [
           {
@@ -56,7 +56,13 @@
           "readiness": {
             "path": "/api/status"
           }
-        }
+        },
+        "bindings": [
+          {
+            "bindingId": "cfa9fbca-eb41-4834-a757-e942f5eac0c8",
+            "envPrefix": ""
+          }
+        ]
       }
     ],
     "configuration": {
@@ -67,14 +73,6 @@
         "ENERGY_AI_MODEL": "gpt-6.1-sol",
         "ENERGY_AI_TIMEOUT": "180s"
       }
-    },
-    "resources": [
-      {
-        "name": "database",
-        "type": "postgres",
-        "profile": "shared-dev",
-        "deletionPolicy": "retain"
-      }
-    ]
+    }
   }
 }
