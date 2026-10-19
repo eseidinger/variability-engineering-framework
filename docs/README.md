@@ -18,7 +18,8 @@ development sequence, and prototype operations.
 
 ## Status and evidence
 
-The food-service MVP is implemented across the Angular UI, Quarkus API, PostgreSQL persistence, and combined local container image. The API contains a domain-independent observed-population analysis core with unit and conformance tests, a verified food-service fixture adapter, and a public HTTP contract. The UI exposes summary metrics, filters, reorderable grouping, ingredient leverage, and ingredient-unavailability impact. The energy layer verifies publication bytes, generates new-equipment configurations, simulates hourly dispatch, ranks the released reference candidates, and exposes durable owned runs through an API and UI. Deployed energy acceptance remains open.
+The food-service MVP is implemented across the Angular UI, Quarkus API, PostgreSQL persistence, and combined local container image. The API contains a domain-independent observed-population analysis core with unit and conformance tests, a verified food-service fixture adapter, and a public HTTP contract. The UI exposes summary metrics, filters, reorderable grouping, ingredient leverage, and ingredient-unavailability impact. The energy layer verifies publication bytes, generates new-equipment configurations, simulates hourly dispatch, ranks the released reference candidates, and exposes durable owned runs through an API and UI. The owner confirmed the full deployed energy flow, including AI explanations,
+on October 19, 2026; formal AI acceptance and regression evidence remain open.
 
 - **Requirement:** intended project scope, not implementation evidence.
 - **Documented direction:** an objective recorded in the current project description.

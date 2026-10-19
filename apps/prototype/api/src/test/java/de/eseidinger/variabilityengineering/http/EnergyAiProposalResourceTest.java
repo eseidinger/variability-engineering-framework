@@ -1,6 +1,7 @@
 package de.eseidinger.variabilityengineering.http;
 
 import de.eseidinger.variabilityengineering.energy.ai.ProposalModel;
+import io.agroal.api.AgroalDataSource;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.QuarkusTestProfile;
@@ -23,6 +24,7 @@ import static org.mockito.Mockito.when;
 @TestProfile(EnergyAiProposalResourceTest.AiProfile.class)
 class EnergyAiProposalResourceTest {
     @InjectMock ProposalModel model;
+    @Inject AgroalDataSource dataSource;
     @Inject @ConfigProperty(name = "quarkus.langchain4j.openai.timeout") Duration providerTimeout;
     @Inject @ConfigProperty(name = "quarkus.langchain4j.openai.chat-model.response-format") String responseFormat;
 
@@ -50,6 +52,27 @@ class EnergyAiProposalResourceTest {
         identity().contentType("application/json").body("{\"description\":\"complete inputs\"}")
                 .when().post("/api/v1/ai/request-proposals").then().statusCode(502)
                 .body("message", org.hamcrest.Matchers.containsString("invalid_envelope"));
+    }
+
+    @Test
+    void providerFailureDoesNotCreateRunOrExposeProviderDetails() throws Exception {
+        long before = runCount();
+        when(model.propose(anyString())).thenThrow(new IllegalStateException("private-provider-detail"));
+        var response = identity().contentType("application/json").body("{\"description\":\"complete inputs\"}")
+                .when().post("/api/v1/ai/request-proposals")
+                .then().statusCode(503).extract().jsonPath();
+        assertEquals("ai_unavailable", response.getString("code"));
+        assertEquals("AI proposals are not available now.", response.getString("message"));
+        assertEquals(before, runCount());
+    }
+
+    private long runCount() throws Exception {
+        try (var connection = dataSource.getConnection();
+             var statement = connection.createStatement();
+             var result = statement.executeQuery("SELECT count(*) FROM energy_optimization_run")) {
+            result.next();
+            return result.getLong(1);
+        }
     }
 
     @Test

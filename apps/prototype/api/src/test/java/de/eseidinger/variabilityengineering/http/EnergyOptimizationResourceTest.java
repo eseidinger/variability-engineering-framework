@@ -98,6 +98,16 @@ class EnergyOptimizationResourceTest {
                 .when().get("/api/v1/optimization-runs/" + runId)
                 .then().statusCode(200).extract().jsonPath();
         assertEquals("SUCCEEDED", retained.getString("status"));
+        when(explanationModel.explain(anyString())).thenThrow(new IllegalStateException("private-provider-detail"));
+        var unavailable = identity("prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                .when().post("/api/v1/ai/optimization-runs/" + runId + "/explanation")
+                .then().statusCode(503).extract().jsonPath();
+        assertEquals("ai_unavailable", unavailable.getString("code"));
+        assertEquals("AI explanations are not available now.", unavailable.getString("message"));
+        var afterFailure = identity("prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                .when().get("/api/v1/optimization-runs/" + runId)
+                .then().statusCode(200).extract().jsonPath();
+        assertEquals(retained.getMap("$"), afterFailure.getMap("$"));
     }
 
     private String explanationFor(JsonNode sources) throws Exception {

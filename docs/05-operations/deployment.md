@@ -1,11 +1,10 @@
 # Prototype Deployment
 
-Status: the earlier food-service revision `2ae2a171a93c52fc57f9b4577398ab43d6a8550e`
-was built, published, and deployed by the
-[October 12, 2026 GitHub Actions run](https://github.com/eseidinger/variability-engineering-framework/actions/runs/38292671777).
-The protected public status route returned HTTP `302` on October 13, 2026.
-The current energy code and ODIP binding configuration have not yet been deployed
-or verified end to end.
+Status: on October 19, 2026, the owner confirmed that AI explanations and the
+full deployed energy integration flow work end to end. This records an
+owner-verified operational workflow following release `v0.5.1`. The follow-up
+production walkthrough records run IDs and acceptance checks; deployment digests
+and the complete deployed acceptance-suite report remain open. See the [verification record](../04-development/energy-contract-kit-verification.md#deployed-energy-workflow--owner-confirmation-october-19-2026).
 
 The prototype deploys through the existing Developer Platform as one container
 image containing the UI and API. PostgreSQL is an independently managed named

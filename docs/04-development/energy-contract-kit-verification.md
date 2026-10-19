@@ -155,3 +155,104 @@ The Angular suite passed six tests across two files, and its production build
 succeeded. The documentation link check passed. These are local checks; hosted
 access policy, ODIP retrieval, OpenAI secret adoption, live explanation, and
 telemetry ingestion still require deployed verification.
+
+## Deployed energy workflow — owner confirmation, October 19, 2026
+
+After publication of VEF `v0.5.1`, the owner confirmed that AI explanations now
+work and that the full energy integration flow works end to end. This updates
+the earlier local-only status: the hosted energy journey, including its
+ODIP-backed evaluation and live AI explanation, is operational by owner
+verification.
+
+The initial confirmation did not identify a particular environment, run ID, or
+deployed image digest. The guided production walkthrough and local regression
+results below record the subsequent evidence. Formal
+AI-01–AI-11 evidence, semantic review, the unchanged deployed Gate 5 regression
+suite, recovery evidence, and final cross-project release acceptance remain
+tracked in the implementation plan. Hosted AI trace visibility remains a separate
+observability item; successful explanation generation does not establish trace
+readback.
+
+## Guided production acceptance — October 19, 2026
+
+Evidence source: owner-confirmed manual walkthrough. Environment: production.
+Run: `run-239b5b94-e2c6-4a7f-ae76-1cbe0a7e128e`.
+
+- **AI-01 passed:** the owner confirmed proposal review/confirmation checks,
+  then confirmed the completed run matches the reference values: 252 evaluated
+  candidates, 194 feasible candidates, EUR 8,240.00 initial investment,
+  EUR 360.67 annualized cost, and approximately 88.9509% self-sufficiency.
+- **AI-04 happy-path explanation review passed:** the owner confirmed the
+  explanation matches the recorded recommendation and metrics, includes evidence
+  citations, distinguishes customer inputs from assumptions, and identifies the
+  reference/synthetic profiles appropriately.
+- **AI-02 passed:** for “Find a cheap solar system for my house,” the owner
+  confirmed that the UI asks for clarification, invents no required customer
+  values, offers no ready-to-confirm request, and creates no new optimization run.
+- **AI-03 passed:** the owner confirmed that changing the proposed budget from
+  EUR 18,000 to EUR 15,000 clears confirmation and disables submission until
+  fresh confirmation. The newly confirmed EUR 15,000 request created production
+  run `run-606e759c-1303-498b-a023-e3023ab40444`.
+- **AI-07 passed:** with the reference inputs and a EUR 0 investment cap, the
+  owner confirmed `INFEASIBLE`, zero feasible candidates, no recommendation,
+  `NOT_APPLICABLE` optimality, and a cited explanation reporting unavailable
+  recommendation metrics. Production run:
+  `run-7cd20571-d158-40d0-b0e5-bb26979f29d5`.
+- **AI-08 hosted cross-user check deferred:** no second approved application
+  user is available. This is not a pass or failure; local ownership tests do not
+  substitute for the proposed deployed second-user check.
+- **AI-04 missing-evidence review passed:** the owner supplied the live
+  explanation's missing-evidence section. It identifies absent observed demand
+  and solar time series, reference-profile time series/derivation details, and
+  electricity prices, export tariffs, component-price inputs and cost breakdown.
+  It explains that the calculated cost cannot be independently reconstructed
+  from this bounded snapshot. **AI-05 is partially evidenced** by this price-gap
+  disclosure; battery replacement-price handling and `FEASIBLE_NOT_PROVEN`
+  behavior have not been specifically exercised.
+- **AI-04 detailed citation review passed:** the owner confirmed matching run
+  and dataset identifiers, cited model/simulation/recommendation/optimality,
+  candidate cost and self-sufficiency pointers, whole constraint-object
+  citations, and unconverted ratio values consistent with the displayed results.
+  Together with the prior explanation and missing-evidence reviews, this records
+  the manual successful-run AI-04 checks as passed. Raw response bodies remain
+  uncaptured.
+
+The remaining acceptance scenarios have not been exercised in this walkthrough.
+The deployed image digest, exact provider model/prompt revision, response bodies,
+and citation-by-citation evidence have not been captured here. These confirmations
+do not establish the adversarial, failure, recovery, or complete regression cases.
+
+## Controlled local AI failure and evidence checks — October 19, 2026
+
+Using the checksum-verified contract kit 0.5.0, the focused HTTP suite
+`EnergyAiProposalResourceTest,EnergyOptimizationResourceTest` passed all six tests
+against disposable PostgreSQL with mocked model responses. Added checks cover
+AI-09 application behavior: an unavailable proposal provider returns a generic
+`503 ai_unavailable` without creating a run, provider error details are withheld,
+and an explanation provider failure leaves the complete saved run response
+unchanged and readable. Existing malformed-output rejection also passed. These
+are controlled local checks, not a hosted provider outage or browser failure test.
+
+`EnergyExplanationTest` passed all four tests. Added AI-11 checks reject evidence
+over 64 KiB and evidence missing the required model version before explanation
+generation. The existing successful snapshot contains four sources; no injected
+over-16-source scenario was run. The same suite also checks invalid JSON,
+missing mandatory citations, altered citation values, invalid pointers/categories,
+foreign run IDs, and infeasible explanations. These cover local portions of
+AI-08 while the hosted second-user check remains deferred.
+
+The remaining work includes controlled live-model AI-05/AI-06 scenarios,
+the complete deployed Gate 5 regression for AI-10, and the outstanding hosted
+isolation/recovery and formal release evidence. Manual production success does
+not close those scenarios.
+
+## Full local regression — October 19, 2026
+
+Following the guided production checks and added failure/evidence tests, the
+full API suite passed against disposable PostgreSQL using the verified kit 0.5.0:
+67 tests ran, 66 passed, and one deployed-only ODIP test was skipped. There were
+no failures or errors. The Angular suite passed six tests across two files, all
+27 bootstrap/integrity Python tests passed, and documentation links and whitespace
+checks passed. Model responses in automated AI tests are mocked. This is local
+regression evidence, not the complete deployed Gate 5 suite or live AI-05/AI-06
+acceptance.

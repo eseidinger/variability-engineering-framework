@@ -1,6 +1,6 @@
 # Energy Configuration Implementation Plan
 
-Status: updated October 17, 2026 for released contract kit 0.5.0. Upstream
+Status: updated October 19, 2026 for released contract kit 0.5.0. Upstream
 [Gate 5 acceptance](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/reviews/2026-10-17-gate-5-acceptance.md)
 records maintainer-confirmed implementation, deployment, and an operational
 0.4.0 workflow; Gates 2–5 are complete for progression to Gate 6. Gate 6 / VEF-05
@@ -8,7 +8,10 @@ is the next milestone. That acceptance does not supply new test reports or
 image/deployment digests. Work packages 1–7 retain their historical local
 checkboxes and gaps as evidence records, not blockers to the accepted progression.
 The VEF consumer lock now pins 0.5.0, locally validated against the released kit
-and VEF API suite. AI implementation acceptance remains planned below. No dates or estimates are committed.
+and VEF API suite. On October 19, the owner confirmed that the full deployed
+energy flow, including live AI explanations, works end to end after VEF `v0.5.1`.
+Formal AI acceptance evidence and deployed regression remain tracked below.
+No dates or estimates are committed.
 
 ## Outcome and authoritative baseline
 
@@ -259,9 +262,9 @@ pass locally. The explanation route now builds a bounded snapshot from an owned
 completed run, splits customer inputs from assumptions, and validates required
 citations against trusted source documents before the UI renders them. The
 released example and negative citation checks pass locally. One live proposal
-and a user-reported confirmed fixture-backed evaluation succeeded. A live AI
-explanation, broader model behavior, semantic review, full released AI
-acceptance, and deployed regression remain open. The
+and a user-reported confirmed fixture-backed evaluation succeeded. The owner confirmed a working live AI explanation and the full deployed energy
+flow on October 19 after VEF `v0.5.1`. Broader model behavior, semantic review,
+full released AI acceptance, and deployed regression evidence remain open. The
 [API route review](../02-architecture/system-model/api-model.md) records
 both new routes and the pending hosting access-policy decision.
 
@@ -349,7 +352,7 @@ energy within `1e-6 kWh`, and dimensionless calculations within `1e-9`.
 | Dependency or question | Owner / completion condition |
 | --- | --- |
 | VEF adopts kit 0.5.0 for AI | Consumer lock, released suite, integrity checks, and API consumer tests pass locally; hosted CI remains to be recorded. ODIP may retain accepted 0.4.0. |
-| AI provider, evidence, and acceptance | OpenAI through the Quarkus LangChain4j extension is selected; `gpt-6.1-sol` is selected initially. The owner reports an active managed `OPENAI_API_KEY` secret; pod adoption is unverified. One live proposal and a local confirmed fixture-backed evaluation succeeded. Hosted egress/policy verification, live explanation, semantic review, AI-01–AI-11, and the new Gate 5 regression record remain open. |
+| AI provider, evidence, and acceptance | OpenAI through the Quarkus LangChain4j extension is selected; `gpt-6.1-sol` is selected initially. The owner confirmed the full deployed energy flow, including live AI explanations, on October 19 after VEF `v0.5.1`. Formal AI-01–AI-11 evidence, semantic review, the new Gate 5 regression record, and final release acceptance remain open. |
 | Generic publication, energy adapter, reader allow-list | Implemented and locally verified in ODIP; provision deployed reader access and verify VEF's authenticated retrieval, dataset denial, and bytes. |
 | Managed identity, routing, governance, secret binding, egress and recovery | Developer Platform plus application owners; use kit-pinned boundary `b360ddee34444748c95705c597aa7b17491cd05b` or document/retest compatibility of a newer deployment. |
 | Non-empty existing equipment | Shared-kit owner and VEF; approved quantity, compatibility, and canonical-ID examples precede this path's implementation acceptance. |

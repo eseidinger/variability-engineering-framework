@@ -95,8 +95,10 @@ The UI displays the complete request and requires confirmation after the latest
 edit before using the existing optimization endpoint. The explanation route
 reads only an owned completed run and its recorded recommended candidate,
 checks the 16-source/64-KiB evidence bound, and validates every returned
-citation before display. The owner reports an active managed key in `vareng`,
-but deployed pod adoption and hosted live-provider acceptance are unverified.
+citation before display. On October 19, 2026, the owner confirmed that live AI
+explanations and the full deployed energy integration flow work end to end.
+Formal AI acceptance cases and regression evidence remain tracked in the
+[implementation plan](../../../docs/04-development/energy-configuration-implementation-plan.md).
 
 An explanation rejected with `502 invalid_ai_explanation` includes a safe reason
 in its message, such as `invalid_envelope`, `missing_required_citations`,

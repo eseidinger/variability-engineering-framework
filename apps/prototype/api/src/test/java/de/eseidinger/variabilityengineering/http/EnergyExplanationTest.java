@@ -127,4 +127,32 @@ class EnergyExplanationTest {
         assertEquals("invalid_citation_source_pointer_or_category", assertThrows(ExplanationService.InvalidExplanation.class,
                 () -> explanations.validate(wrongCategory.toString(), sources)).reason());
     }
+
+    @Test
+    void rejectsOversizedAndIncompleteEvidenceBeforeModelAccess() throws Exception {
+        ObjectNode candidate = (ObjectNode) mapper.readTree(example("candidate.json"));
+        ((ObjectNode) candidate.path("constraints").get(0)).put("code", "x".repeat(65536));
+        assertThrows(EnergyEvidenceService.EvidenceTooLarge.class,
+                () -> prepareSnapshot(example("optimization-result.json"), candidate.toString()));
+
+        ObjectNode result = (ObjectNode) mapper.readTree(example("optimization-result.json"));
+        result.remove("modelVersion");
+        assertThrows(EnergyEvidenceService.InvalidEvidence.class,
+                () -> prepareSnapshot(result.toString(), example("candidate.json")));
+    }
+
+    private ObjectNode prepareSnapshot(String resultJson, String candidateJson) throws Exception {
+        var evidence = new EnergyEvidenceService();
+        evidence.mapper = mapper;
+        evidence.runs = new JdbcEnergyRunRepository() {
+            @Override public Optional<String> recommendedCandidate(String runId, String configurationId) {
+                return Optional.of(candidateJson);
+            }
+        };
+        return evidence.prepare(new JdbcEnergyRunRepository.Run("run-example-0001",
+                "prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", example("optimization-request.json"),
+                "energy-reference-wasserburg-am-inn-2024", "1.0.0", "f".repeat(64), "SUCCEEDED",
+                Instant.parse("2026-10-10T10:00:00Z"), null,
+                Instant.parse("2026-10-10T10:00:01Z"), resultJson, null, null));
+    }
 }
