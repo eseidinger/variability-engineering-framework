@@ -85,6 +85,10 @@ or customer input.
 For a `503 ai_unavailable` response, the API log records exception types and
 an upstream HTTP status when available; it does not log the provider response,
 prompt, or API key.
+Console logs use the [Quarkus JSON logging extension](https://quarkus.io/guides/logging#json-logging)
+in all profiles, with one JSON object per line and the startup banner disabled.
+Records contain structured timestamps, levels, logger names, messages, MDC and
+exception details when present. AI request/response logging remains disabled.
 The routes require the platform's normalized principal context and the same
 browser CSRF policy as run creation. The proposal route never starts a run.
 The UI displays the complete request and requires confirmation after the latest
@@ -93,6 +97,14 @@ reads only an owned completed run and its recorded recommended candidate,
 checks the 16-source/64-KiB evidence bound, and validates every returned
 citation before display. The owner reports an active managed key in `vareng`,
 but deployed pod adoption and hosted live-provider acceptance are unverified.
+
+An explanation rejected with `502 invalid_ai_explanation` includes a safe reason
+in its message, such as `invalid_envelope`, `missing_required_citations`,
+`invalid_citation_pointer`, or `citation_value_mismatch`. The explanation prompt
+specifies the exact category names, document-relative pointers, and complete
+constraint-object citations required by validation. Rejected output never replaces
+the saved deterministic result; raw model responses and customer evidence are not
+included in validation errors.
 
 With an authenticated Developer Platform CLI session, inspect the current
 project's outgoing service access and confirm that the ODIP resource is active
@@ -155,11 +167,32 @@ Compose environment is the supported local packaged-image path.
 The API includes Micrometer Prometheus metrics on the Quarkus management interface
 at port 9000 (`/q/metrics`) and OpenTelemetry HTTP tracing. The platform
 deployment descriptor declares the private metrics scrape and enables tracing;
-the platform supplies the OTLP endpoint and sampling rate. Development and test
+the platform supplies the OTLP endpoint and sampling rate. The application uses
+HTTP/protobuf export to the injected `OTEL_EXPORTER_OTLP_ENDPOINT`, defaulting to
+the platform forwarder at `http://127.0.0.1:4318`. Parent-based sampling uses the
+platform's `OTEL_TRACES_SAMPLER_ARG`, with a 100% root fallback. An unsampled
+parent remains unsampled. LangChain4j generates AI-service and model-completion
+spans automatically; prompt, completion, and tool payload capture are explicitly
+disabled. See [LangChain4j tracing](https://docs.quarkiverse.io/quarkus-langchain4j/dev/observability.html#_tracing).
+Development and test
 profiles disable trace export, as does repository Compose through
 `QUARKUS_OTEL_SDK_DISABLED=true`. To test trace export locally, set
 `QUARKUS_OTEL_SDK_DISABLED=false` and provide a reachable OTLP HTTP collector
 through the Quarkus exporter endpoint and protocol settings.
+
+The current Developer Platform telemetry gateway renames every application span
+to `application.span` and removes `gen_ai.*` attributes and AI scope names before
+storage. Consequently, searching the hosted backend for `completion` or
+`langchain4j.aiservices.*` does not find these spans by name. Use the
+`X-Platform-Trace-Id` response header to look up the complete request trace with
+`devplat traces get TRACE_ID --project vareng-test --output json` (or `vareng`).
+Identifiable AI span names, model names and token counts require a reviewed
+platform collector allowlist change. The application cannot override that policy.
+
+A local packaged-production smoke check exported HTTP, AI-service
+(`langchain4j.aiservices.ProposalModel.propose`) and model-completion spans through
+an OTLP/HTTP collector using a fake local model, without prompt/completion capture.
+This verifies application instrumentation/export, not hosted collector readback.
 
 If you want to build an _über-jar_, execute the following command:
 

@@ -236,6 +236,15 @@ other standalone production runs need a reachable OTLP collector. After
 deployment, verify the platform's application metrics view and a sampled trace
 before treating telemetry as operationally confirmed.
 
+VEF explicitly exports HTTP/protobuf and defaults root sampling to 100% when
+`OTEL_TRACES_SAMPLER_ARG` is absent, while respecting the parent sampling decision.
+LangChain4j emits AI-service and completion spans without capturing prompt or
+completion payloads. The current platform gateway stores application spans under
+the generic name `application.span` and strips AI-specific attributes. Inspect the
+request trace using its `X-Platform-Trace-Id` response header rather than searching
+for AI span names. Dedicated AI trace names/attributes require a platform collector
+allowlist change. See the [API tracing notes](../../apps/prototype/api/README.md).
+
 ## Local image
 
 Build and run the combined image with its required PostgreSQL service from the

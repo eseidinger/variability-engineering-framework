@@ -1,6 +1,7 @@
 package de.eseidinger.variabilityengineering.http;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import de.eseidinger.variabilityengineering.persistence.JdbcEnergyRunRepository;
@@ -91,5 +92,39 @@ class EnergyExplanationTest {
 
     private static String example(String file) throws Exception {
         return Files.readString(Path.of(System.getenv("ENERGY_CONTRACT_KIT_DIRECTORY"), "examples", file));
+    }
+
+    @Test
+    void reportsSafeReasonsForInvalidModelOutput() throws Exception {
+        var explanations = new ExplanationService();
+        explanations.mapper = mapper;
+        JsonNode sources = mapper.readTree(Files.readString(Path.of(
+                System.getenv("ENERGY_CONTRACT_KIT_DIRECTORY"), "ai/example-evidence.json")));
+        assertEquals("invalid_json", assertThrows(ExplanationService.InvalidExplanation.class,
+                () -> explanations.validate("not JSON", sources)).reason());
+        assertEquals("invalid_envelope", assertThrows(ExplanationService.InvalidExplanation.class,
+                () -> explanations.validate(" ", sources)).reason());
+
+        ObjectNode missing = (ObjectNode) mapper.readTree(example("ai-explanation.json"));
+        ((ArrayNode) missing.path("claims").get(0).path("citations")).remove(0);
+        assertEquals("missing_required_citations", assertThrows(ExplanationService.InvalidExplanation.class,
+                () -> explanations.validate(missing.toString(), sources)).reason());
+
+        ObjectNode incorrectValue = (ObjectNode) mapper.readTree(example("ai-explanation.json"));
+        ((ObjectNode) incorrectValue.path("claims").get(0).path("citations").get(0))
+                .put("value", "a-different-run");
+        assertEquals("citation_value_mismatch", assertThrows(ExplanationService.InvalidExplanation.class,
+                () -> explanations.validate(incorrectValue.toString(), sources)).reason());
+
+        ObjectNode wrongPointer = (ObjectNode) mapper.readTree(example("ai-explanation.json"));
+        ((ObjectNode) wrongPointer.path("claims").get(0).path("citations").get(0))
+                .put("pointer", "/document/runId");
+        assertEquals("invalid_citation_pointer", assertThrows(ExplanationService.InvalidExplanation.class,
+                () -> explanations.validate(wrongPointer.toString(), sources)).reason());
+
+        ObjectNode wrongCategory = (ObjectNode) mapper.readTree(example("ai-explanation.json"));
+        ((ObjectNode) wrongCategory.path("claims").get(0)).put("category", "MODEL_ASSUMPTION");
+        assertEquals("invalid_citation_source_pointer_or_category", assertThrows(ExplanationService.InvalidExplanation.class,
+                () -> explanations.validate(wrongCategory.toString(), sources)).reason());
     }
 }

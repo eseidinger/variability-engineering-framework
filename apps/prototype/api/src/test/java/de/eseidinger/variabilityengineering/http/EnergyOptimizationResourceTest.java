@@ -88,6 +88,16 @@ class EnergyOptimizationResourceTest {
                 .when().post("/api/v1/ai/optimization-runs/" + runId + "/explanation")
                 .then().statusCode(200).extract().jsonPath();
         assertEquals(runId, explanation.getString("runId"));
+        when(explanationModel.explain(anyString())).thenReturn("{}");
+        var rejected = identity("prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                .when().post("/api/v1/ai/optimization-runs/" + runId + "/explanation")
+                .then().statusCode(502).extract().jsonPath();
+        assertEquals("invalid_ai_explanation", rejected.getString("code"));
+        assertEquals("The AI explanation could not be validated (invalid_envelope).", rejected.getString("message"));
+        var retained = identity("prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                .when().get("/api/v1/optimization-runs/" + runId)
+                .then().statusCode(200).extract().jsonPath();
+        assertEquals("SUCCEEDED", retained.getString("status"));
     }
 
     private String explanationFor(JsonNode sources) throws Exception {

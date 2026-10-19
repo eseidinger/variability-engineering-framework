@@ -62,7 +62,15 @@
             "bindingId": "7828556f-fa1f-4d01-83e2-66b3f9c31abe",
             "envPrefix": ""
           }
-        ]
+        ],
+        "resources": {
+          "requests": {
+            "memory": "256Mi"
+          },
+          "limits": {
+            "memory": "512Mi"
+          }
+        }
       }
     ],
     "configuration": {

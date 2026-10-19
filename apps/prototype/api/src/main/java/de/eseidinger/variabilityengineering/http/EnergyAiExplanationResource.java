@@ -40,7 +40,7 @@ public class EnergyAiExplanationResource {
         } catch (EnergyEvidenceService.EvidenceTooLarge | EnergyEvidenceService.InvalidEvidence exception) {
             return error(422, "evidence_unavailable", "Approved run evidence is unavailable or exceeds its limit.");
         } catch (ExplanationService.InvalidExplanation exception) {
-            return error(502, "invalid_ai_explanation", "The AI explanation could not be validated.");
+            return error(502, "invalid_ai_explanation", "The AI explanation could not be validated (" + exception.reason() + ").");
         } catch (RuntimeException exception) {
             return error(503, "ai_unavailable", "AI explanations are not available now.");
         }
