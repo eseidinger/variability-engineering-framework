@@ -1,7 +1,7 @@
 # Variability Engineering Framework Documentation
 
-Updated on October 9, 2026 to align the documented food-service MVP, HTTP contract,
-local verification, and Developer Platform configuration with the implementation.
+Updated on October 19, 2026 to align the documented food-service MVP, energy and
+AI workflow, persistence, and Developer Platform configuration with the implementation.
 This documentation covers the product, target architecture, architectural decisions,
 development sequence, and prototype operations.
 
@@ -29,7 +29,7 @@ on October 19, 2026; formal AI acceptance and regression evidence remain open.
 - **Implemented:** reserved for behavior present in source.
 - **Verified:** reserved for a recorded, reproducible check.
 
-The repository evidences food-service UI behavior, local container assembly, a domain-independent analysis core, verified fixture import, PostgreSQL round trips, public API behavior, a Compose-backed black-box workload check, bounded energy calculation, and a locally tested energy run workflow. It does not yet evidence general-purpose generative model evaluation or deployed energy acceptance.
+The repository evidences food-service UI behavior, local container assembly, a domain-independent analysis core, verified fixture import, PostgreSQL round trips, public API behavior, a Compose-backed black-box workload check, bounded energy calculation, durable owned runs, and AI proposal/explanation validation. The [October 19 verification record](04-development/energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026) includes owner-confirmed production checks. It does not establish complete AI acceptance, the full deployed regression/recovery suite, or general-purpose generative-model evaluation.
 
 ### Capability status
 
@@ -39,10 +39,12 @@ The repository evidences food-service UI behavior, local container assembly, a d
 | Element-unavailability impact | Implemented | Unit, conformance, HTTP, and Compose checks | Not yet recorded |
 | Angular analysis dashboard | Implemented | Build plus summary/error unit tests; packaged shell check | Not yet recorded |
 | PostgreSQL persistence and fixture reload | Implemented | PostgreSQL round trip and container restart | Not yet recorded |
-| Combined UI/API image | Implemented | Compose build and startup | Not yet recorded |
-| Generative models and configuration assistance | Planned | None | None |
-| Bounded energy inputs and new-equipment generation | Implemented | Complete reference configuration set and boundary tests | None |
-| Verified energy publication and deterministic optimization | Implemented locally | Exact reference simulation/ranking and PostgreSQL byte round trip | None |
+| Combined UI/API image | Implemented | Compose build and startup | CI deployment recorded; production energy journey confirmed by owner |
+| General-purpose generative models and configuration completion | Planned | None | None |
+| Bounded energy inputs and new-equipment generation | Implemented | Complete reference configuration set and boundary tests | Owner-confirmed production reference result |
+| Verified energy publication and deterministic optimization | Implemented | Exact reference simulation/ranking and PostgreSQL byte round trip | Owner-confirmed ODIP-backed production runs; full regression/recovery open |
+| Durable owned energy runs and candidate pages | Implemented | HTTP and PostgreSQL creation, replay, ownership, result, and page tests | Production runs recorded; hosted cross-user and recovery checks open |
+| Energy AI proposals, confirmation, and explanations | Implemented | Mocked provider, confirmation, citation, evidence-bound, and failure checks | Guided AI-01/02/03/04/07 checks passed; AI-05 partial; remaining cases open |
 | Portfolio optimization and reusable components | Planned | None | None |
 
 ## Maintenance

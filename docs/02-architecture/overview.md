@@ -1,11 +1,16 @@
 # Architecture Overview
 
-Status: target architecture. The implemented slice currently covers observed-dataset
+Status: target framework architecture with implemented observed-population and
+bounded energy slices. The prototype covers observed-dataset
 adaptation, normalized populations, analysis, element-unavailability impact,
 PostgreSQL persistence, the application API, and visualization. A separate
 [bounded energy model](energy-configuration.md) now validates typed inputs,
 generates new-equipment configurations, and evaluates the released hourly
-reference profile; durable run integration remains planned.
+reference profile. Verified publication storage, durable owned runs, a scheduled
+worker, candidate pages, and the consultant UI are implemented. AI assistance
+adds reviewed natural-language proposals and validated explanations of owned
+completed runs. The [runtime model](system-model/runtime-model.md) describes
+the current execution paths; the diagram below shows the broader framework target.
 
 ```mermaid
 flowchart LR
@@ -43,8 +48,9 @@ flowchart LR
 | Application/API | Coordinate use cases and expose results | Transport remains outside the core |
 | Persistence adapter | Save and load versioned models, mappings, populations, and results | Database details remain replaceable |
 
-The prototype currently owns the observed-population normalization, analysis, impact,
-persistence, and presentation slice. General-purpose generative-model evaluation, configuration
-assistance, and optimization remain target components. Stable boundaries become
+The prototype owns observed-population normalization, analysis, impact, persistence,
+and presentation, plus the separate energy configuration and AI workflow.
+General-purpose generative-model evaluation, portable configuration completion,
+and portfolio optimization remain target components. Stable boundaries become
 reusable framework components only after synthetic fixtures and the food-service
 reference domain validate them.

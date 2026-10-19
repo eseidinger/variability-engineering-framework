@@ -1,8 +1,26 @@
 # Quality Assurance and Experiments
 
-Status: verification catalog. Observed-population, fixture, HTTP, PostgreSQL, UI
-summary/error, and Compose-shell checks are implemented; generative, optimization,
-cross-language, browser end-to-end, and platform checks remain proposed.
+Status: verification catalog with implemented observed-population, fixture, HTTP,
+PostgreSQL, UI, Compose-shell, energy conformance, and AI validation checks.
+General-purpose generative-model and portfolio checks, cross-language framework
+conformance, automated browser end-to-end coverage, and the full deployed
+security/regression/recovery suite remain open.
+
+The energy suite checks the released configuration set, hourly simulation,
+every reference candidate and ranking, verified publication bytes, owned durable
+runs, idempotent submission, and candidate pages. AI tests use mocked responses
+for proposal/explanation validation, citation rejection, evidence limits, and
+provider failures; UI tests cover proposal confirmation and run presentation.
+The [October 19 regression record](energy-contract-kit-verification.md#full-local-regression--october-19-2026)
+reports 67 API tests (66 passed, one deployed-only ODIP check skipped), six UI
+tests, and 27 Python bootstrap/integrity tests. These are recorded results, not
+a new test run or proof of hosted behavior.
+
+The [guided production record](energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026)
+contains owner-confirmed AI-01/02/03/04/07 checks, partial AI-05 evidence, and the
+deferred cross-user check. Local failure/evidence tests cover parts of AI-09/11;
+they do not close hosted acceptance. The catalog below also includes future
+framework expectations; a listed expectation alone does not imply test coverage.
 
 | Check | Expectation |
 |---|---|

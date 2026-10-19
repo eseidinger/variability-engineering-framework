@@ -8,8 +8,11 @@ contract kit 0.5.0 AI handoff. Upstream Gate 5 was accepted by maintainer direct
 on October 17, 2026; Gate 6 / VEF-05 is next. The plan now specifies confirmed
 natural-language proposals, bounded approved evidence, validated citations,
 eleven AI consumer acceptance cases, and unchanged deployed Gate 5 regression.
-VEF's consumer lock now pins 0.5.0 and passed local kit and API tests; hosted CI
-remains to be recorded.
+VEF's consumer lock pins 0.5.0 and passed local kit and API tests. AI proposals,
+confirmation, and validated explanations are implemented. The owner confirmed
+the production energy journey and several guided AI acceptance cases on
+October 19, 2026; the [verification record](energy-contract-kit-verification.md)
+separates those results from remaining acceptance and hosted CI evidence.
 The food-service analysis contract and energy numerical baseline are unchanged.
 
 ```mermaid
@@ -32,12 +35,16 @@ generative fixture will establish configuration, constraint, and presence-condit
 semantics. Framework components are created later from stable, verified contracts
 rather than treated as prerequisites.
 
-Implementation has deliberately advanced the observed-data path ahead of the
-generative path: the synthetic food-service population, adapter, analysis, impact,
-persistence, UI, and local image verification exist today. Generative evaluation,
-the first successful platform deployment, hiding/combining dimensions, configuration
-assistance, and optimization remain future milestones. The flow above is the target
-dependency model, not a claim that every earlier box is complete.
+The observed-data path includes the synthetic food-service population, adapter,
+analysis, impact, persistence, UI, and local image verification. The separate
+energy path adds verified ODIP publications, bounded generation, hourly simulation,
+exhaustive optimization, durable owned runs, and AI-assisted requests and
+explanations. CI deployment and owner-confirmed production runs are recorded.
+General-purpose generative evaluation and configuration completion,
+hiding/combining dimensions, portfolio optimization, and complete deployed
+regression/recovery evidence remain future work. The flow above is the target
+dependency model; the energy slice has advanced independently of the broader
+framework sequence.
 
 ## Proposed repository evolution
 

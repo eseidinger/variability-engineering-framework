@@ -52,8 +52,10 @@ adoption. Upstream Gate 5 was accepted by maintainer direction on October 17,
 2026. Local 0.5.0 adoption evidence is recorded in the
 [consumer verification](../../docs/04-development/energy-contract-kit-verification.md)
 and [implementation plan](../../docs/04-development/energy-configuration-implementation-plan.md).
-Gate 6 still requires VEF AI implementation, its eleven acceptance cases, and
-the unchanged deployed Gate 5 regression suite.
+The VEF AI implementation is present, and owner-confirmed production checks
+are recorded in the verification record. Gate 6 still requires completion of
+all eleven acceptance cases, semantic review, the unchanged deployed Gate 5
+regression suite, and final release acceptance.
 
 ## Attribution and updates
 

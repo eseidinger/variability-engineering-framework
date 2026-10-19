@@ -86,8 +86,13 @@ or unowned runs, `409` before completion, and `422` if required evidence is
 missing or exceeds the limit. Both return `401` for invalid identity, `502` for
 invalid model output, and `503` when AI is unavailable. `ENERGY_AI_ENABLED`
 defaults to false; the routes
-must stay disabled until provider credentials, egress, and hosting policy are
-reviewed. The UI requires a separate explicit confirmation of the current
+require provider credentials, declared egress, and a reviewed hosting policy
+before enabling them. Both platform descriptors currently enable AI and declare
+provider egress. `bootstrap-policy.py` creates an initial browser policy with
+both AI routes; it preserves an existing active policy, so existing policy
+coverage needs separate review. The owner-confirmed production walkthrough
+records successful calls, while complete deployed boundary acceptance remains
+open. The UI requires a separate explicit confirmation of the current
 structured request before calling `POST /api/v1/optimization-runs`.
 
 | Status | Energy API meaning |

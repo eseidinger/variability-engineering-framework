@@ -1,22 +1,22 @@
 # Variability Engineering Framework
 
-A domain-independent framework for modeling, analyzing, configuring, and optimizing systems with many possible variants. Variability analysis is the first planned framework capability and remains the semantic foundation for the broader framework.
+A domain-independent framework for modeling, analyzing, configuring, and optimizing systems with many possible variants. Implemented observed-population analysis provides the semantic foundation for the broader framework.
 
 ## Status
 
-The food-service analysis MVP and combined container image have been validated locally against PostgreSQL. The deterministic energy workflow passes local API/PostgreSQL and UI tests. [GitHub Actions run 38439829738](https://github.com/eseidinger/variability-engineering-framework/actions/runs/38439829738) passed all build, test, publication, and deployment jobs for the energy workflow. Authenticated deployed energy and ODIP acceptance remain open.
+The food-service analysis MVP and combined container image have been validated locally against PostgreSQL. The energy workflow passes local API/PostgreSQL and UI tests. [GitHub Actions run 38439829738](https://github.com/eseidinger/variability-engineering-framework/actions/runs/38439829738) passed all build, test, publication, and deployment jobs for the energy workflow. On October 19, 2026, the owner confirmed the production ODIP-backed energy workflow, including live AI proposals and explanations. The [acceptance record](docs/04-development/energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026) distinguishes passed manual checks from the remaining AI, deployed regression, recovery, and release acceptance work.
 
 The API contains a domain-independent analysis core for versioned observed populations, a verified food-service fixture adapter, an HTTP analysis contract, and PostgreSQL-backed population storage. The Angular Material dashboard exposes summary metrics, filtering, reorderable grouping, ingredient leverage, and ingredient-unavailability impact.
 
-The API also includes a locally verified energy workflow against contract kit
-0.4.0: typed new-equipment generation, checked publication bytes, hourly
+The API also includes an energy workflow against contract kit
+0.5.0: typed new-equipment generation, checked publication bytes, hourly
 simulation, exhaustive ranking, durable owned runs, and paged candidates. The
-lazy-loaded `/energy` UI submits requests and displays recommendations and
-evidence. ODIP's publication service is implemented in its own repository;
-VEF's authenticated retrieval from the deployed instance remains to be
-verified. General-purpose
-generative models, configuration assistance, portfolio optimization, and reusable
-framework components remain later work.
+lazy-loaded `/energy` UI supports natural-language proposals, requires explicit
+confirmation of the current structured request, and displays recommendations,
+evidence, and validated AI explanations. ODIP's publication service is maintained
+in its own repository. General-purpose generative-model evaluation, portable
+configuration completion, portfolio optimization, and reusable framework
+components remain later work.
 
 ## Implemented MVP
 
@@ -32,7 +32,7 @@ The stack-neutral workspace is documented in [`apps/prototype/`](apps/prototype/
 
 The normative observed-data example is the [food-service MVP v1 fixture](examples/food-service/mvp-v1/README.md).
 
-General-purpose generative model authoring, configuration assistance, portfolio optimization, external datasets, additional language implementations, reusable UI components, and broader performance or storage experiments follow in later stages. The bounded [energy configuration slice](docs/02-architecture/energy-configuration.md) is tracked separately.
+General-purpose generative model authoring and configuration completion, portfolio optimization, an external food-service dataset, additional language implementations, reusable UI components, and broader performance or storage experiments follow in later stages. The implemented bounded [energy configuration slice](docs/02-architecture/energy-configuration.md) is tracked separately.
 
 ## Run locally
 

@@ -19,6 +19,9 @@ flowchart LR
     Platform --> UI[Angular UI]
     Platform --> API[Quarkus HTTP API]
     UI --> API
+    API --> Assistance[AI proposal and explanation validation]
+    Assistance --> Provider[OpenAI via LangChain4j]
+    Assistance --> Runs
     API --> Food[Food-service adapter and analysis core]
     API --> Import[ODIP import and verification adapter]
     API --> Runs[Run repository]
@@ -87,6 +90,21 @@ replica. Terminal states are `SUCCEEDED`, `INFEASIBLE`, and `FAILED`.
 
 The readiness resource requires the persisted food-service population and a
 queryable energy run table. It does not depend on current ODIP availability.
+
+AI assistance is synchronous and separate from the durable worker. A proposal
+request sends the user's description to the model and validates the returned
+proposal or clarification envelope. It does not reserve a run. The UI requires
+explicit confirmation of the current structured request before calling the
+normal run endpoint; edits clear that confirmation.
+
+An explanation request first resolves a completed run owned by the caller.
+VEF builds a bounded snapshot of customer inputs, assumptions, the saved result,
+and the recommended candidate for success, then validates the model's categories,
+JSON Pointer citations, exact values, and required result facts. Neither model
+interface has tools. A provider failure or rejected explanation leaves the saved
+deterministic result readable. See the [API model](api-model.md) and
+[energy architecture](../energy-configuration.md) for limits and remaining
+acceptance evidence.
 
 Implementation references: [energy worker](../../../apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyRunWorker.java),
 [deployment declaration](../../../application.json).
