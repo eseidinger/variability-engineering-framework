@@ -31,10 +31,13 @@ simulates hourly dispatch and matches the released 194-candidate feasible
 ranking. The ODIP adapter verifies bytes and supports bounded HTTPS retrieval;
 PostgreSQL stores verified immutable publication bytes. `EnergyPublicationImportService`
 uses VEF's managed reader binding, rechecks ODIP on each import, and stores
-only verified bytes. ODIP's publication API is implemented and locally verified
-in its own repository; VEF's authenticated retrieval from a deployed ODIP instance,
-run APIs, and the energy UI remain planned. Non-empty existing
-equipment is explicitly unsupported pending shared examples. See the
+only verified bytes. The owned run APIs, durable worker, candidate pages, and
+energy UI are implemented. The owner confirmed authenticated ODIP-backed
+production runs and live AI assistance on October 19, 2026; the
+[guided production record](../../../docs/04-development/energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026)
+distinguishes those checks from the remaining AI, deployed regression, and
+recovery acceptance work. Non-empty existing equipment is explicitly unsupported
+pending shared examples. See the
 [energy architecture](../../../docs/02-architecture/energy-configuration.md).
 
 For the deployed handoff, `application.json` sets the non-secret

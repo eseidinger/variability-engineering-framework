@@ -2,6 +2,8 @@
 
 Status: **Accepted for the local reference slice** on October 13, 2026.
 Implementation and test evidence are in the [calculation verification record](../04-development/energy-calculation-verification.md).
+The decision and local validation below retain their historical October 13
+scope; later operational evidence is recorded in the verification update below.
 
 ## Context
 
@@ -43,7 +45,8 @@ uses half-even rounding at the contract's precision.
 
 This ADR established the deterministic calculation and verified input layer.
 [ADR-016](ADR-016-energy-run-execution.md) subsequently added the local run
-workflow and verified-cache outage fallback. Deployed ODIP access remains open. The verifier
+workflow and verified-cache outage fallback. Deployed ODIP access was still open
+in this October 13 evidence record. The verifier
 enforces the fields and cross-document invariants used by this profile; full
 generic JSON Schema validation remains part of the publication adapter's exit
 gate. Existing-equipment requests remain explicitly unsupported under ADR-014.
@@ -55,5 +58,15 @@ all 252 candidate metrics and statuses, the complete 194-candidate feasible
 ranking, and the recommendation. Negative tests cover tampering, missing
 artifacts/hours, unsafe paths, wrong units/status, invalid series, and byte
 limits. A PostgreSQL round trip preserves raw bytes and rejects immutable
-version changes. The full API suite passes against a disposable PostgreSQL 17
-instance; deployment behavior remains unverified.
+version changes. At the October 13 validation step, the full API suite passed
+against a disposable PostgreSQL 17 instance; deployment behavior had not yet
+been verified.
+
+## Verification update — October 19, 2026
+
+The owner confirmed the production ODIP-backed energy workflow, including live
+AI assistance. The [guided production record](../04-development/energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026)
+records run IDs, matching reference values, and the passed manual checks. This
+supersedes the historical deployed-access gap above. Complete deployed denial,
+outage-fallback, restart, recovery, and remaining AI acceptance evidence is still
+open; the original decision and its October 13 scope are unchanged.
