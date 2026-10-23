@@ -5,6 +5,12 @@ of production and test Java sources. The same check runs automatically before
 Maven tests and packaging, including in CI. Rules are in `checkstyle.xml`;
 repository linting and logging guidelines are in [AGENTS.md](../../../AGENTS.md).
 
+The ODIP publication and managed-token HTTP clients honor the platform's
+`SSL_CERT_FILE` PEM bundle in addition to JVM trusted roots. This supports local
+platform HTTPS without disabling certificate or hostname verification. An invalid
+configured bundle fails initialization; deployments without the variable retain
+normal JVM trust. Redeploy after a platform CA bundle rotation.
+
 ## Implemented domain-independent core
 
 The API contains a pure Java core in `de.eseidinger.variabilityengineering.core`. It provides immutable versioned analysis populations, structural variants, record and dimension validation, explicit filters, selected-record IDs, ordered grouping trees, metrics, element leverage, and whole-record element-unavailability impact scenarios.

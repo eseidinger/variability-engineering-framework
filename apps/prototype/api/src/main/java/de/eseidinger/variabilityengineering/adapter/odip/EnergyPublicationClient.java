@@ -165,8 +165,7 @@ public final class EnergyPublicationClient {
         private final HttpClient client;
 
         public JdkTransport() {
-            client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5))
-                    .followRedirects(HttpClient.Redirect.NEVER).build();
+            client = PlatformHttpClientFactory.create(System.getenv());
         }
 
         @Override

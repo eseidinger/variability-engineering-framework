@@ -342,8 +342,10 @@ The descriptor already declares the local ODIP origin and outbound HTTPS to
 `web-odip-test.apps.localhost`, `identity.localhost`, and `api.openai.com`.
 Names must resolve to loopback on the host. Browser clients must trust the local
 platform CA. Inside workloads, local application HTTPS supplies private routing
-and a public CA bundle; the JVM must also trust that CA for ODIP and identity
-HTTPS calls. Host CLI trust alone does not configure Java trust in the container.
+and a public CA bundle through `SSL_CERT_FILE`. The ODIP publication and managed
+token clients load that bundle alongside the JVM's existing trusted roots.
+Certificate and hostname verification remain enabled. Deploy an image containing
+this support; host CLI trust alone does not configure TLS in an older container.
 
 ### CLI installation, CA trust, and login
 

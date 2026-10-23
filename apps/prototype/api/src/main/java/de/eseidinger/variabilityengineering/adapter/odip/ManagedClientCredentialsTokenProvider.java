@@ -37,8 +37,7 @@ public final class ManagedClientCredentialsTokenProvider implements EnergyPublic
                 || tokenUri.getRawUserInfo() != null || tokenUri.getRawFragment() != null) {
             throw new IllegalArgumentException("managed token URL must use HTTPS");
         }
-        client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5))
-                .followRedirects(HttpClient.Redirect.NEVER).build();
+        client = PlatformHttpClientFactory.create(environment);
     }
 
     @Override
