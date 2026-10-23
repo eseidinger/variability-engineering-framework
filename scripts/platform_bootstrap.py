@@ -7,8 +7,10 @@ import sys
 import time
 
 
-PROJECTS = {"production": "vareng", "test": "vareng-test"}
-ODIP_PROJECTS = {"production": "odip", "test": "odip-test"}
+PROJECTS = {"production": "vareng", "test": "vareng-test", "test-local": "vareng-test"}
+DESCRIPTORS = {"production": "application.json", "test": "application-test.json",
+               "test-local": "application-test-local.json"}
+ODIP_PROJECTS = {"production": "odip", "test": "odip-test", "test-local": "odip-test"}
 
 
 class BootstrapError(RuntimeError):
@@ -37,7 +39,7 @@ class Devplat:
                     and "profile does not exist or is invalid" in result.stderr):
                 profile = shlex.quote(self.profile)
                 message += (
-                    f"\nCheck the profile with: devplat profiles show {profile}"
+                    f"\nCheck the profile with: devplat profiles show --name {profile}"
                     f"\nIf it is missing, create it with your platform connection settings:"
                     f"\n  devplat profiles create {profile} --api-url PLATFORM_API_URL --issuer OIDC_ISSUER_URL"
                     f"\nThen sign in: devplat --profile {profile} auth login"

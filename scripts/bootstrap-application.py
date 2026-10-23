@@ -8,7 +8,7 @@ from pathlib import Path
 import sys
 
 from platform_bootstrap import (
-    BootstrapError, Devplat, PROJECTS, add_environment_arguments,
+    BootstrapError, Devplat, PROJECTS, DESCRIPTORS, add_environment_arguments,
     run_main, unique, wait_active,
 )
 
@@ -63,6 +63,8 @@ def provision(cli, project, resource_name, quota_bytes, timeout, poll_interval):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     add_environment_arguments(parser)
+    parser.add_argument("--deploy-only", action="store_true",
+                        help="Deploy latest using saved bindings without provisioning or editing the descriptor")
     parser.add_argument("--resource-name", default="primary")
     parser.add_argument("--quota-bytes", type=int, default=1073741824, help="Quota for a NEW store; existing quotas are preserved")
     parser.add_argument("--timeout", type=float, default=300)
@@ -73,7 +75,7 @@ def main():
     if not 1048576 <= args.quota_bytes <= 1099511627776:
         parser.error("quota must be between 1 MiB and 1 TiB")
     project = PROJECTS[args.environment]
-    path = ROOT / ("application.json" if args.environment == "production" else "application-test.json")
+    path = ROOT / DESCRIPTORS[args.environment]
     descriptor = json.loads(path.read_text())
     if descriptor["metadata"]["name"] != project or descriptor["metadata"].get("project", project) != project:
         raise BootstrapError("Descriptor project does not match the selected environment.")
@@ -81,11 +83,16 @@ def main():
     # Validate image references before any remote mutation.
     latest_deployment(descriptor)
     cli = Devplat(args.profile)
-    binding_id = provision(
-        cli, project, args.resource_name, args.quota_bytes, args.timeout, args.poll_interval,
-    )
-    binding["bindingId"] = binding_id
-    path.write_text(json.dumps(descriptor, indent=2) + "\n")
+    if args.deploy_only:
+        binding_id = binding.get("bindingId")
+        if not isinstance(binding_id, str) or not binding_id.strip():
+            raise BootstrapError("Deploy-only requires a saved PostgreSQL binding ID; run bootstrap without --deploy-only first.")
+    else:
+        binding_id = provision(
+            cli, project, args.resource_name, args.quota_bytes, args.timeout, args.poll_interval,
+        )
+        binding["bindingId"] = binding_id
+        path.write_text(json.dumps(descriptor, indent=2) + "\n")
     deployment = latest_deployment(descriptor)
     print(f"Deploying {project} and waiting for readiness.", file=sys.stderr)
     cli.run("deploy", "apply", "--project", project,

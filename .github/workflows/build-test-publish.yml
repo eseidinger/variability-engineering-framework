@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: 24
       - run: node scripts/check-docs.mjs
-      - run: jq empty application.json application-test.json
+      - run: jq empty application.json application-test.json application-test-local.json
 
   ui:
     name: UI tests and build

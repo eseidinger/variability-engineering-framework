@@ -30,7 +30,7 @@ def main():
         output.write("\n")
         output.flush()
         os.fsync(output.fileno())
-    suffix = "_TEST" if args.environment == "test" else ""
+    suffix = "" if args.environment == "production" else "_" + args.environment.upper().replace("-", "_")
     print(f"Saved one-time credential to {args.output_file}. Set PLATFORM_CLIENT_ID{suffix} and PLATFORM_CLIENT_SECRET{suffix} from that file.", file=sys.stderr)
 
 

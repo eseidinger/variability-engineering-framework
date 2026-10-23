@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 from platform_bootstrap import (
-    BootstrapError, Devplat, PROJECTS, add_environment_arguments, run_main, request_odip, ODIP_PROJECTS, setup_browser,
+    BootstrapError, Devplat, PROJECTS, DESCRIPTORS, add_environment_arguments, run_main, request_odip, ODIP_PROJECTS, setup_browser,
 )
 
 
@@ -19,14 +19,14 @@ def main():
     parser.add_argument("--browser", action="store_true", help="Create an initial browser policy after first deployment")
     parser.add_argument("--odip", action="store_true", help="Request ODIP access and update its prefix in place (default unless --browser is selected)")
     parser.add_argument("--group", default="application-users")
-    parser.add_argument("--provider-project", help="Default: odip for production, odip-test for test")
+    parser.add_argument("--provider-project", help="Default: odip for production, odip-test for test and test-local")
     parser.add_argument("--provider-application", help="Default: provider project name")
     args = parser.parse_args()
     if not args.browser and not args.odip:
         args.odip = True
     project = PROJECTS[args.environment]
     if args.odip:
-        path = ROOT / ("application.json" if args.environment == "production" else "application-test.json")
+        path = ROOT / DESCRIPTORS[args.environment]
         descriptor = json.loads(path.read_text())
         if descriptor["metadata"]["name"] != project or descriptor["metadata"].get("project", project) != project:
             raise BootstrapError("Descriptor project does not match the selected environment.")

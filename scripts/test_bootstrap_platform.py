@@ -74,7 +74,7 @@ class BootstrapTest(unittest.TestCase):
         directory = tempfile.TemporaryDirectory()
         self.addCleanup(directory.cleanup)
         self.root = Path(directory.name)
-        for name in ["application.json", "application-test.json"]:
+        for name in bootstrap.DESCRIPTORS.values():
             (self.root / name).write_text((bootstrap.ROOT / name).read_text())
         patcher = patch.object(bootstrap, "ROOT", self.root)
         patcher.start()
@@ -89,7 +89,7 @@ class BootstrapTest(unittest.TestCase):
             with self.assertRaises(BootstrapError) as raised:
                 Devplat("lab").run("projects", "list")
         message = str(raised.exception)
-        self.assertIn("devplat profiles show lab", message)
+        self.assertIn("devplat profiles show --name lab", message)
         self.assertIn("devplat profiles create lab", message)
         self.assertIn("devplat --profile lab auth login", message)
         self.assertNotIn("sensitive-output", message)
@@ -127,11 +127,11 @@ class BootstrapTest(unittest.TestCase):
                 wait_active(lambda: {"state": "active", "observed_state": "pending"}, "store", 1, 0.1)
 
     def test_bootstrap_updates_only_storage_in_place_and_deploys_latest(self):
-        for environment, project in [("production", "vareng"), ("test", "vareng-test")]:
+        for environment, project in bootstrap.PROJECTS.items():
             with self.subTest(environment=environment):
                 cli = PlatformFixture()
                 output = io.StringIO()
-                path = self.root / ("application.json" if environment == "production" else "application-test.json")
+                path = self.root / bootstrap.DESCRIPTORS[environment]
                 before = json.loads(path.read_text())
                 argv = ["bootstrap-application.py", "--environment", environment, "--profile", "lab"]
                 with patch.object(sys, "argv", argv), patch.object(bootstrap, "Devplat", return_value=cli), redirect_stdout(output):
@@ -170,6 +170,41 @@ class BootstrapTest(unittest.TestCase):
                 bootstrap.main()
         self.assertEqual(output.getvalue(), "")
 
+    def test_deploy_only_uses_saved_bindings_and_never_provisions_or_edits(self):
+        path = self.root / "application-test.json"
+        descriptor = json.loads(path.read_text())
+        descriptor["spec"]["components"][0]["runtime"]["image"] = "registry.example:5000/app@sha256:" + "a" * 64
+        descriptor["spec"]["components"].append({"name": "worker", "runtime": {"image": "example/worker:1.2.3"}})
+        path.write_text(json.dumps(descriptor))
+        original = path.read_bytes()
+        cli = Mock()
+        output = io.StringIO()
+        argv = ["bootstrap-application.py", "--environment", "test", "--profile", "lab", "--deploy-only"]
+        with patch.object(sys, "argv", argv), patch.object(bootstrap, "Devplat", return_value=cli) as factory, \
+                patch.object(bootstrap, "provision") as provision, redirect_stdout(output):
+            bootstrap.main()
+        factory.assert_called_once_with("lab")
+        provision.assert_not_called()
+        cli.run.assert_called_once()
+        self.assertEqual(cli.run.call_args.args[:4], ("deploy", "apply", "--project", "vareng-test"))
+        expected = json.loads(original)
+        expected["spec"]["components"][0]["runtime"]["image"] = "registry.example:5000/app:latest"
+        expected["spec"]["components"][1]["runtime"]["image"] = "example/worker:latest"
+        self.assertEqual(cli.run.call_args.kwargs["body"], expected)
+        self.assertEqual(path.read_bytes(), original)
+        self.assertEqual(output.getvalue().strip(), bootstrap.storage_binding(descriptor)["bindingId"])
+
+    def test_deploy_only_rejects_missing_binding_before_deployment(self):
+        path = self.root / "application-test.json"
+        descriptor = json.loads(path.read_text())
+        bootstrap.storage_binding(descriptor).pop("bindingId")
+        path.write_text(json.dumps(descriptor))
+        argv = ["bootstrap-application.py", "--environment", "test", "--deploy-only"]
+        with patch.object(sys, "argv", argv), patch.object(bootstrap, "Devplat") as cli:
+            with self.assertRaisesRegex(BootstrapError, "saved PostgreSQL binding"):
+                bootstrap.main()
+        cli.return_value.run.assert_not_called()
+
     def test_existing_browser_policy_is_preserved(self):
         cli = Mock()
         cli.run.return_value = {"state": "active", "spec": {"routes": ["existing"]}}
@@ -191,6 +226,7 @@ class BootstrapTest(unittest.TestCase):
         for environment, provider, filename in [
             ("production", "odip", "application.json"),
             ("test", "odip-test", "application-test.json"),
+            ("test-local", "odip-test", "application-test-local.json"),
         ]:
             with self.subTest(environment=environment):
                 cli = PlatformFixture()

@@ -26,7 +26,8 @@ class BootstrapPolicyTest(unittest.TestCase):
         return json.loads(output.getvalue())
 
     def test_creates_group_and_policy_for_each_environment(self):
-        for environment, project in [("production", "vareng"), ("test", "vareng-test")]:
+        for environment, project in [("production", "vareng"), ("test", "vareng-test"),
+                                     ("test-local", "vareng-test")]:
             with self.subTest(environment=environment):
                 cli = Mock()
                 policy = {"id": "pol_example", "state": "active"}
