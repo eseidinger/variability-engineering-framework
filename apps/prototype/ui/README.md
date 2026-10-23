@@ -38,6 +38,10 @@ npm exec ng generate --help
 
 ## Building
 
+Run `npm run lint` to check TypeScript and Angular templates, including template
+accessibility. CI rejects lint warnings. `npm run lint:fix` applies available
+automatic fixes. Prettier remains configured separately for formatting.
+
 To build the project run:
 
 ```bash

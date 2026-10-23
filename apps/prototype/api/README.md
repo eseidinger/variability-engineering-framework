@@ -1,5 +1,10 @@
 # Variability Engineering API
 
+Run `./mvnw --batch-mode --no-transfer-progress validate` for Checkstyle linting
+of production and test Java sources. The same check runs automatically before
+Maven tests and packaging, including in CI. Rules are in `checkstyle.xml`;
+repository linting and logging guidelines are in [AGENTS.md](../../../AGENTS.md).
+
 ## Implemented domain-independent core
 
 The API contains a pure Java core in `de.eseidinger.variabilityengineering.core`. It provides immutable versioned analysis populations, structural variants, record and dimension validation, explicit filters, selected-record IDs, ordered grouping trees, metrics, element leverage, and whole-record element-unavailability impact scenarios.
