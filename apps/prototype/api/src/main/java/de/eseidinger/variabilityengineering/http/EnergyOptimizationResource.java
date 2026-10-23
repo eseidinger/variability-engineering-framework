@@ -3,7 +3,6 @@ package de.eseidinger.variabilityengineering.http;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.eseidinger.variabilityengineering.adapter.odip.EnergyPublicationClient;
 import de.eseidinger.variabilityengineering.adapter.odip.EnergyPublicationImportService;
 import de.eseidinger.variabilityengineering.energy.EnergyFeatureModel;
@@ -23,6 +22,7 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.jboss.logging.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -34,6 +34,7 @@ import java.util.Set;
 @Path("/api/v1")
 @Produces(MediaType.APPLICATION_JSON)
 public class EnergyOptimizationResource {
+    private static final Logger LOG = Logger.getLogger(EnergyOptimizationResource.class);
     private static final String RUN_ID = "^[a-zA-Z0-9][a-zA-Z0-9_-]{7,127}$";
     private static final String PRINCIPAL_ID = "^prn_[0-9a-f]{32}$";
     private static final String GROUPS = "^grp_[0-9a-f]{32}( grp_[0-9a-f]{32})*$";
@@ -106,13 +107,33 @@ public class EnergyOptimizationResource {
             if (exception.status() == 404) {
                 return error(422, "publication_not_found", "The requested publication version was not found.");
             }
+            logPublicationFailure(exception);
             return error(503, "publication_unavailable", "The energy publication could not be verified now.");
         } catch (InterruptedException exception) {
             Thread.currentThread().interrupt();
+            logPublicationFailure(exception);
             return error(503, "publication_unavailable", "The energy publication could not be verified now.");
         } catch (java.io.IOException | IllegalStateException | java.security.NoSuchAlgorithmException exception) {
+            logPublicationFailure(exception);
             return error(503, "publication_unavailable", "The energy publication could not be verified now.");
         }
+    }
+
+    private static void logPublicationFailure(Throwable failure) {
+        LOG.warnf("Energy publication unavailable while creating optimization run: %s", publicationFailureSummary(failure));
+    }
+
+    static String publicationFailureSummary(Throwable failure) {
+        // Exception messages may contain URLs, response bodies, or credentials.
+        StringBuilder summary = new StringBuilder();
+        for (int depth = 0; failure != null && depth < 8; depth++, failure = failure.getCause()) {
+            if (depth > 0) summary.append(" caused by ");
+            summary.append(failure.getClass().getName());
+            if (failure instanceof EnergyPublicationClient.HttpStatusException http) {
+                summary.append(" (HTTP ").append(http.status()).append(')');
+            }
+        }
+        return summary.toString();
     }
 
     @GET
