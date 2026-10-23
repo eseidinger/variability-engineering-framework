@@ -14,6 +14,7 @@ FROM maven:3.9.16-eclipse-temurin-25 AS api-build
 WORKDIR /workspace/api
 
 COPY apps/prototype/api/pom.xml ./
+COPY apps/prototype/api/checkstyle.xml ./
 RUN mvn --batch-mode --no-transfer-progress dependency:go-offline
 
 COPY apps/prototype/api/src/ src/
