@@ -50,7 +50,12 @@ Before enabling publishing, add these GitHub Actions repository secrets:
 
 The resulting image names are `<username>/variability-engineering-framework:latest` for `main`, semantic-version tags for releases such as `v1.0.0`, and immutable `sha-...` tags.
 
-Deployment uses `developer-platform-cli==0.3.0`. Production CI renders only the
+Deployment uses `developer-platform-cli==0.3.0` with Python 3.12 or newer (latest
+published CLI checked October 23, 2026). The
+[bootstrap prerequisites](../../../docs/05-operations/deployment.md#bootstrap-scripts)
+cover upgrading the CLI, checking its version and contract, and authenticating an
+administrator profile, including environment overrides and keyring requirements.
+Production CI renders only the
 image tag from the Git release tag; test CI deploys `application-test.json`
 directly with `latest`. Both use the image repository, PostgreSQL binding UUID,
 and ODIP binding prefix saved in the descriptors. Commit bootstrap descriptor
@@ -66,6 +71,19 @@ its binding prefix into the descriptor in place. `bootstrap-policy.py` initializ
 the browser application policy and user group. The credential script captures CI
 credentials: `bootstrap-application.py`, `bootstrap-access.py`, `bootstrap-policy.py`, and
 `create-deployment-credential.py` under `scripts/`. Run each with `--help` for options.
+
+To deploy published `latest` images to the hosted test project from your machine,
+run `python3 scripts/bootstrap-application.py --environment test --profile lab --deploy-only`.
+This reuses the saved bindings, waits for readiness, and preserves descriptors.
+For first-time provisioning, omit `--deploy-only`. See the
+[local-shell test deployment instructions](../../../docs/05-operations/deployment.md#deploy-latest-to-the-test-platform-from-a-local-shell)
+for prerequisites and optional local image publishing.
+
+For deployment to the local Developer Platform, use `--environment test-local` with
+[`application-test-local.json`](../../../application-test-local.json). See the
+[test-local setup](../../../docs/05-operations/deployment.md#separate-test-local-descriptor)
+for the localhost endpoints, required local CA bundle, and provisioning its own
+bindings and access to the local `odip-test` provider.
 
 To publish the initial `latest` image locally, run `docker login` followed by
 `python3 scripts/bootstrap-image.py`. It builds the combined UI/API Dockerfile

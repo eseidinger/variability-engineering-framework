@@ -79,18 +79,42 @@ datasource; no database credential is committed to the repository.
 
 ## Bootstrap scripts
 
-Install the pinned CLI and authenticate with a human administrator profile:
+Use Python 3.12 or newer. The latest published CLI checked on October 23, 2026
+is `0.3.0`; local bootstrap and CI use the same pinned version. Install or upgrade
+it, then verify the installed version and packaged API command coverage:
 
 ```shell
-python3 -m pip install developer-platform-cli==0.3.0
+python3 -m pip install --upgrade developer-platform-cli==0.3.0
+devplat --version
+devplat contract check --output json
+```
+
+The version command should print `0.3.0`. The contract check validates the CLI's
+packaged command registry; it does not verify the deployed platform or your access.
+
+Authenticate with a human administrator profile. Environment authentication takes
+precedence over the profile session, so clear these variables in the bootstrap
+shell before signing in:
+
+```shell
+unset PLATFORM_ACCESS_TOKEN PLATFORM_TOKEN_ENDPOINT PLATFORM_CLIENT_ID PLATFORM_CLIENT_SECRET
 devplat profiles create lab --api-url https://platform.example \
   --issuer https://identity.example/realms/platform
 devplat --profile lab auth login
+devplat --profile lab auth status --output json
 ```
 
 Use your actual platform URL and issuer. If the profile already exists, reuse it.
-Clear environment authentication variables when using a human profile, as
-described by the platform CLI. Project creation requires platform administrator
+Inspect it with `devplat profiles show --name lab --output json`. The default
+OIDC public client is `platform-cli`; profiles contain connection settings, not
+administrator grants. `PLATFORM_API_URL` and `PLATFORM_CA_BUNDLE` can override
+profile settings; clear unintended overrides or set them for your platform.
+
+Login uses OIDC Device Authorization with PKCE: follow the printed verification
+URL and user code. Renewable sessions require a secure OS keyring. If one is
+unavailable, use an externally obtained short-lived administrator token through
+`PLATFORM_ACCESS_TOKEN`. Check the selected authentication source with `auth status`
+before provisioning. Project creation requires platform administrator
 authority; subsequent provisioning can use a project administrator. CI deployment
 credentials cannot bootstrap stores or access policies.
 
@@ -243,6 +267,196 @@ the generic name `application.span` and strips AI-specific attributes. Inspect t
 request trace using its `X-Platform-Trace-Id` response header rather than searching
 for AI span names. Dedicated AI trace names/attributes require a platform collector
 allowlist change. See the [API tracing notes](../../apps/prototype/api/README.md).
+
+## Deploy latest to the test platform from a local shell
+
+Use the authenticated administrator profile from the bootstrap instructions above.
+The target is the hosted Developer Platform project `vareng-test`, with public URL
+<https://web-vareng-test.apps.eseidinger.de>. Run from the repository root:
+
+```shell
+python3 scripts/bootstrap-application.py --environment test --profile lab --deploy-only
+```
+
+This reads `application-test.json`, deploys every component's image repository
+with `:latest`, and waits for workload readiness. Saved image tags or digests are
+overridden only in the submitted payload. The platform resolves the published
+tags to immutable image digests when accepting the deployment. Rerun the command
+after a newer `latest` image is published to deploy it.
+
+Deploy-only reuses the saved PostgreSQL binding and ODIP prefix without changing
+either descriptor, creating stores or requesting access. It can also use an
+existing project-scoped CI deployment credential through the environment instead
+of `--profile lab`; do not mix it with a human profile session. Stdout contains the
+saved PostgreSQL binding UUID on success, while CLI progress goes to stderr.
+`--timeout 600` and `--poll-interval 5` control deployment waiting. A timeout does
+not cancel work already accepted by the platform; inspect project status before
+retrying.
+
+For a new test project, first run without `--deploy-only` to provision PostgreSQL
+and save its binding. Set up ODIP access, browser policy, managed AI secrets, and
+provider approvals as described above. Commit the saved binding and prefix for CI.
+The local deployment command relies on these existing resources and permissions.
+
+CI publishes `latest` from main. To build and publish your local checkout instead,
+authenticate to Docker Hub and run:
+
+```shell
+docker login
+python3 scripts/bootstrap-image.py --file application-test.json
+python3 scripts/bootstrap-application.py --environment test --profile lab --deploy-only
+```
+
+Publishing replaces the shared repository's `latest` tag. It does not deploy
+production; production CI continues to deploy versioned release images. Local
+deployment requires no GitHub Actions run or release tag. After readiness,
+verify the test URL using an approved browser session; readiness alone does not
+verify ODIP access or the complete energy workflow.
+
+## Separate test-local descriptor
+
+[`application-test-local.json`](../../application-test-local.json) targets project
+`vareng-test` on the local Developer Platform. It uses the published
+`:latest` application image, its own PostgreSQL binding and browser policy, and
+the local `odip-test` provider. CI continues to deploy main to the remote
+`vareng-test` project and releases to `vareng`; it does not deploy `test-local`.
+Local and remote test deployments share the application/project name but use
+separate platform instances, descriptors, and bindings. Use `--profile local`
+with `--environment test-local` to target the local platform.
+
+### Prerequisites and addresses
+
+Use Python 3.12 or newer and a running local Developer Platform with local
+application HTTPS enabled (`LOCAL_APPLICATION_HTTPS_ENABLED=true`). The local
+`odip-test` provider must be deployed. These instructions use the default local
+platform domains:
+
+| Service | URL |
+|---|---|
+| Platform API | `https://platform.localhost` |
+| OIDC issuer | `https://identity.localhost/realms/platform` |
+| ODIP provider | `https://web-odip-test.apps.localhost` |
+| VEF application | `https://web-vareng-test.apps.localhost` |
+
+The descriptor already declares the local ODIP origin and outbound HTTPS to
+`web-odip-test.apps.localhost`, `identity.localhost`, and `api.openai.com`.
+Names must resolve to loopback on the host. Browser clients must trust the local
+platform CA. Inside workloads, local application HTTPS supplies private routing
+and a public CA bundle; the JVM must also trust that CA for ODIP and identity
+HTTPS calls. Host CLI trust alone does not configure Java trust in the container.
+
+### CLI installation, CA trust, and login
+
+Run from this repository's root. The sibling platform checkout is assumed to be
+`$HOME/dev/developer-platform`; adjust the certificate path if it is elsewhere.
+Platform setup exports the public certificate to `.runtime/trust/local-ca.pem`.
+If it is missing, export it from the running platform proxy:
+
+```shell
+cd "$HOME/dev/developer-platform"
+mkdir -p .runtime/trust
+docker compose cp proxy:/data/caddy/pki/authorities/local/root.crt .runtime/trust/local-ca.pem
+cd "$HOME/dev/variability-engineering-framework"
+```
+
+Install the CLI and configure the shell for human authentication:
+
+```shell
+python3 -m pip install --upgrade developer-platform-cli==0.3.0
+unset PLATFORM_ACCESS_TOKEN PLATFORM_TOKEN_ENDPOINT PLATFORM_CLIENT_ID PLATFORM_CLIENT_SECRET
+unset PLATFORM_API_URL
+export PLATFORM_CA_BUNDLE="$HOME/dev/developer-platform/.runtime/trust/local-ca.pem"
+curl --fail --cacert "$PLATFORM_CA_BUNDLE" https://platform.localhost/healthz
+curl --fail --cacert "$PLATFORM_CA_BUNDLE" \
+  https://identity.localhost/realms/platform/.well-known/openid-configuration
+```
+
+Keep `PLATFORM_CA_BUNDLE` exported for login and every subsequent bootstrap
+command. A missing CA can cause the CLI's generic availability error while curl
+reports `unable to get local issuer certificate`. Do not unset the bundle for
+local HTTPS. Re-export it in each new shell, or save its absolute path using the
+profile creation command's `--ca-bundle` option.
+
+Create the profile once, then sign in:
+
+```shell
+devplat profiles create local --api-url https://platform.localhost \
+  --issuer https://identity.localhost/realms/platform \
+  --ca-bundle "$PLATFORM_CA_BUNDLE"
+devplat --profile local auth login
+devplat --profile local auth status --output json
+```
+
+If `local` already exists with the correct API and issuer, reuse it; the exported
+bundle overrides a missing profile CA setting. Inspect settings with
+`devplat profiles show --name local --output json`. Follow the printed verification
+URL and code. Human login requires an available secure OS keyring; on a headless
+host without one, use an externally obtained short-lived administrator token via
+`PLATFORM_ACCESS_TOKEN` instead. Project creation requires platform administrator
+authority.
+
+### Publish an image and bootstrap
+
+Use the existing published `latest` image. To build and publish your current
+checkout first, run:
+
+```shell
+docker login
+python3 scripts/bootstrap-image.py --file application-test-local.json
+```
+
+This replaces the shared repository's `latest` tag. Publishing does not itself
+deploy an application.
+
+The descriptor stores the local PostgreSQL binding and ODIP prefix populated
+by bootstrap. On a fresh platform, bootstrap provisions or reuses that platform’s
+resources and replaces these saved values. Provision the project and database,
+save its binding, and deploy `latest`:
+
+```shell
+python3 scripts/bootstrap-application.py --environment test-local --profile local
+```
+
+Request access to the local ODIP provider and save the returned binding prefix:
+
+```shell
+python3 scripts/bootstrap-access.py --environment test-local --profile local
+```
+
+Have the local provider administrator approve the request and grant the required
+dataset access. Redeploy the saved prefix and initialize browser access:
+
+```shell
+python3 scripts/bootstrap-application.py --environment test-local --profile local --deploy-only
+python3 scripts/bootstrap-policy.py --environment test-local --profile local
+```
+
+Complete browser login, then have an administrator approve your user and assign
+membership in the project's `application-users` group. Provision the AI key from
+an owner-only file and obtain the required outbound approvals:
+
+```shell
+devplat --profile local secrets set OPENAI_API_KEY --project vareng-test \
+  --value-file /private/path/openai-api-key
+```
+
+Open <https://web-vareng-test.apps.localhost> and verify login, an ODIP-backed
+run, and AI proposals/explanations. Workload readiness alone does not prove these
+integrations. Review and commit the descriptor's populated binding values.
+
+### Subsequent deployments
+
+Keep the CA bundle configured and deploy newly published `latest` images with:
+
+```shell
+python3 scripts/bootstrap-application.py --environment test-local --profile local --deploy-only
+```
+
+This reuses saved bindings, preserves the descriptor, and waits for readiness.
+All environment-aware bootstrap scripts accept `test-local`, including
+`create-deployment-credential.py` if a dedicated deployment identity is needed.
+Its output names `PLATFORM_CLIENT_ID_TEST_LOCAL` and
+`PLATFORM_CLIENT_SECRET_TEST_LOCAL`; no CI deployment job consumes them by default.
 
 ## Local image
 
