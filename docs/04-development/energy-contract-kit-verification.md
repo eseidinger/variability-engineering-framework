@@ -256,3 +256,121 @@ no failures or errors. The Angular suite passed six tests across two files, all
 checks passed. Model responses in automated AI tests are mocked. This is local
 regression evidence, not the complete deployed Gate 5 suite or live AI-05/AI-06
 acceptance.
+
+## Guided test-environment acceptance — October 24, 2026
+
+Evidence source: owner-reported browser observations and copied UI text during
+a guided walkthrough in `vareng-test`. These are manual live-workflow checks,
+not an automated suite or production regression. Deployment/image digest,
+provider model, prompt revision, raw response envelopes, and server-side request
+records were not captured.
+
+- **AI-02 passed manually:** “Find a cheap solar system for my house.” produced
+  questions about roof area, annual demand, budget, self-sufficiency, existing
+  equipment, and dataset version. Financial/reference assumptions were disclosed
+  separately. The owner explicitly confirmed no ready-to-confirm request and no
+  new run.
+- **AI-03 passed for the observed browser workflow:** the proposal correctly
+  represented 40 m², 4,500 kWh/year, EUR 18,000, minimum self-sufficiency 0.8,
+  no existing components, and reference dataset version `1.0.0`. After checking
+  confirmation, changing the budget to EUR 15,000 cleared the checkbox and
+  disabled submission. Fresh confirmation created successful run
+  `run-a66cf96e-0770-449e-8790-8378944c9523`. Server-side bypass and request
+  payload assertions were not performed.
+- **AI-01 partial:** the complete proposal and confirmed run succeeded, but
+  this walkthrough did not independently capture the absence of a run before
+  the initial confirmation.
+- **AI-04 partial manual review:** the successful run recommended
+  `pv-standard-400-q18-inverter-5kw-battery-10kwh-q1`, with 252 evaluated and
+  110 feasible candidates. The owner supplied matching explanation citations
+  for run ID, status, recommendation, `PROVEN_OPTIMAL`, candidate counts,
+  annualized cost EUR 360.67, investment EUR 8,240, and self-sufficiency
+  `0.889509006`. The explanation correctly converted that ratio to
+  88.9509006%, reproduced customer inputs, and disclosed unavailable measured
+  series, profile derivations, and cost inputs. Other citation groups were not
+  individually inspected. The 110 feasible candidates were observed, not
+  independently verified against an oracle for this exact request.
+- **AI-07 passed for the observed manual scenario:** submitting the same site
+  inputs with a EUR 0 budget created
+  `run-204aeb63-5722-442d-99b0-a040ac01c56a`. The explanation's inspected
+  citations showed the matching run ID, `INFEASIBLE`, 252 evaluated candidates,
+  zero feasible candidates, null recommendation, and `NOT_APPLICABLE`
+  optimality. It reported candidate cost, self-sufficiency, and individual
+  constraint diagnostics as unavailable instead of inventing them. Other
+  mandatory identifier citations were not individually inspected.
+
+- **AI-08 hosted cross-user checks passed for three routes:** the owner
+  reported that the original user's session could retrieve successful run
+  `run-a66cf96e-0770-449e-8790-8378944c9523` and its candidate list. A separate
+  second-user session received `404 run_not_found` for both GET routes. Using
+  the browser's edit-and-resend facility with the second session's CSRF header,
+  the owner also reported `404 run_not_found` for POST
+  `/api/v1/ai/optimization-runs/run-a66cf96e-0770-449e-8790-8378944c9523/explanation`.
+  No foreign run, candidate, or explanation data were returned in these checks.
+  This does not establish whether a model call occurred internally or cover
+  all AI-08 unapproved-source, pointer, and altered-value rejection scenarios.
+
+- **AI-04 successful-run manual review passed for a fresh run:** after the
+  original browser result was no longer available, the owner created run
+  `run-3310c4d7-7232-4beb-92fa-7b75279952d6` using 40 m², 4,500 kWh/year,
+  EUR 15,000, minimum self-sufficiency 0.8, and no existing equipment. The
+  copied explanation and expanded references included the matching run ID,
+  dataset/version, model/simulation versions, customer input fields,
+  recommendation, optimality, candidate counts, components, cost and
+  self-sufficiency metrics, and whole objects for all four passing constraints.
+  Energy metrics, financial assumptions, and the synthetic-profile warning
+  were also cited with matching values and categories. Percentage rounding
+  was consistent with the raw ratio. Missing measured data, reference-profile
+  details, and price/cost inputs were explicitly disclosed. This is a separate
+  successful-run explanation, not recovery of the original explanation or
+  independent reproduction of costs from source inputs.
+
+These checks do not close AI-05/06/09/10/11, the remaining AI-08 scenarios,
+automated acceptance, recovery evidence, or final release acceptance.
+
+## Controlled acceptance preparation — October 24, 2026
+
+The pinned 0.5.0 kit was checksum-verified and extracted locally. Focused
+`EnergyExplanationTest` cases now construct a successful evidence snapshot with
+`FEASIBLE_NOT_PROVEN`, confirm that no replacement-price field is supplied,
+accept the recorded status citation, and reject forged `PROVEN_OPTIMAL` and
+replacement-price citations. Another case places the AI-06 injection text in a
+result warning, checks that it remains a warning in the four approved evidence
+sources, and rejects an altered recommendation citation. Existing tests cover
+malformed output, absent mandatory citations, changed values, foreign run IDs,
+wrong categories/pointers, oversized UTF-8 evidence, missing model version,
+provider failure, and deterministic-result availability. The evidence builder
+currently constructs exactly three or four sources, so its 16-source bound
+cannot be reached through a normal run.
+
+Verification in this workspace: the pinned kit archive passed checksum
+verification; API `validate` passed with zero Checkstyle violations;
+documentation links and `git diff --check` passed. After granting the test
+process access to the local Docker daemon and temporarily moving the API's
+local `.env` aside, Quarkus started PostgreSQL 17 through Dev Services and the
+focused `EnergyExplanationTest,EnergyAiProposalResourceTest,EnergyOptimizationResourceTest`
+suite passed: 12 tests, zero failures, zero errors, zero skipped. The `.env`
+was restored immediately after the test. The initial sandboxed attempt could
+not access Docker; a later attempt reached Docker but the `.env` forced an
+unavailable `localhost:5432` database. No live model was called.
+
+Run the focused checks from `apps/prototype/api` after preparing the pinned kit:
+
+```sh
+python3 ../../../scripts/validate-energy-contract-kit.py --prepare-only --output-dir /tmp/vef-ai-acceptance-kit
+ENERGY_CONTRACT_KIT_DIRECTORY=/tmp/vef-ai-acceptance-kit/contract-kit-v0.5.0/contract-kit \
+  ./mvnw --batch-mode --no-transfer-progress \
+  -Dtest=EnergyExplanationTest,EnergyAiProposalResourceTest,EnergyOptimizationResourceTest test
+```
+
+Use a new output directory for each preparation. The HTTP tests require the
+configured PostgreSQL test database. A local API `.env` containing a JDBC URL
+overrides Dev Services even in the test profile; remove that override for the
+test invocation or use an available database at its configured address. To
+finish AI-05 and AI-06, run the released
+acceptance inputs against the real model in a controlled environment, capture
+the exact model/prompt/configuration and sanitized response evidence, and have
+a reviewer compare claim meaning with the snapshot. Citation validation alone
+cannot prove that prose avoids a false optimality or invented price claim.
+AI-09 also needs hosted provider-failure/browser evidence; AI-11 needs hosted
+limit/error evidence. Keep these checks open until those records exist.
