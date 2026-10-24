@@ -144,6 +144,20 @@ class EnergyExplanationTest {
     }
 
     @Test
+    void rejectsSeventeenthEvidenceSourceWithoutTruncation() throws Exception {
+        ObjectNode sources = mapper.createObjectNode();
+        for (int i = 0; i < 16; i++) {
+            sources.putObject("source-" + i).put("document", i);
+        }
+        EnergyEvidenceService.requireBounds(sources, mapper);
+        sources.putObject("source-16").put("document", 16);
+        assertEquals(17, sources.size());
+        assertThrows(EnergyEvidenceService.EvidenceTooLarge.class,
+                () -> EnergyEvidenceService.requireBounds(sources, mapper));
+        assertEquals(17, sources.size());
+    }
+
+    @Test
     void preservesUnprovenOptimalityAndDoesNotSupplyAbsentPrices() throws Exception {
         ObjectNode result = (ObjectNode) mapper.readTree(example("optimization-result.json"));
         result.put("optimalityStatus", "FEASIBLE_NOT_PROVEN");

@@ -422,3 +422,167 @@ The `ExplanationModel` interface exposes no tools or publication operation.
 These controlled local results do not establish hosted `vareng-test` route,
 credential, policy or outage behavior. AI-09/10/11 and release acceptance
 remain open.
+
+## Guided test-deployment explanation — October 24, 2026
+
+After CI workflow `40108376400` successfully deployed commit `0259ec6` to
+`vareng-test`, the owner created and explained run
+`run-da332eb6-0451-4dbd-8b4d-0b18712062ae` through the browser. The copied
+response reported `SUCCEEDED`, dataset version `1.0.0`, model
+`energy-model/1.0.0`, simulation `energy-simulation/1.0.0`, recommendation
+`pv-standard-400-q18-inverter-5kw-battery-10kwh-q1`, `PROVEN_OPTIMAL`, 252
+evaluated and 110 feasible candidates. The cited candidate had EUR 8,240
+initial investment, EUR 360.67 annualized cost, and self-sufficiency
+`0.889509006`; all four cited constraints passed. The owner-supplied
+`missingEvidence` explicitly said the recommended battery's replacement
+price was unavailable. No unsupported replacement price or global-optimality
+claim was observed. This is hosted evidence for the missing-price portion of
+AI-05 and for the normal explanation route; the `FEASIBLE_NOT_PROVEN` branch
+remains evidenced only by the controlled local real-model test. The published
+image tag for the commit has manifest digest
+`sha256:2309b175359b50c7362790456edf73f4f8aafe8cac336b37d9b6faab4ebc55e1`.
+The actual running pod digest and provider configuration were not independently
+read back. AI-06 injection, AI-09 outage, AI-10 deployed regression, AI-11
+limits, and release acceptance remain open.
+
+## Guided test-deployment reference regression — October 24, 2026
+
+The owner submitted the released reference inputs in `vareng-test` after the
+`0259ec6` deployment: version `1.0.0`, 35 m² roof, 4,500 kWh annual demand,
+EUR 18,000 investment limit, self-sufficiency minimum `0.55`, and no existing
+components. Run `run-6189da32-9d3f-41bc-9f0c-be7bcfe1785b` succeeded with
+252 evaluated and 194 feasible candidates and recommended
+`pv-standard-400-q18-inverter-5kw-battery-10kwh-q1`. Owner-copied UI values
+matched the released numerical oracle: EUR 8,240 investment, EUR 360.67
+annualized cost, self-sufficiency `0.889509006`, grid import `497.209474` kWh,
+grid export `5191.571129` kWh, inverter clipping `233.288106` kWh, and
+terminal discarded energy `3.48011` kWh. All four shown constraints passed.
+Dataset `energy-reference-wasserburg-am-inn-2024` version `1.0.0` had manifest
+SHA-256 `252b90b18b594a764a2744ba133a8db56b233e9e375301befc7616e9c18c1715`;
+model `energy-model/1.0.0`, simulation `energy-simulation/1.0.0`, optimizer
+`energy-optimizer/1.0.0`, and `PROVEN_OPTIMAL` matched the expected evidence.
+The synthetic PVGIS 2023 to 2024 profile warning remained visible. This is a
+guided reference-result regression for part of AI-10, not the complete deployed
+Gate 5 suite or recovery proof.
+
+The owner then changed only the reference investment limit to EUR 0 in the
+current `vareng-test` deployment. Run
+`run-a730b0f3-da65-4b57-b862-4dcdd59f7be5` returned `INFEASIBLE` with
+252 evaluated candidates, zero feasible candidates, null recommendation,
+and `NOT_APPLICABLE` optimality. The authenticated run JSON retained the same
+dataset manifest digest and model/simulation/optimizer versions. The owner
+generated a live AI explanation for this infeasible run. Its first claim cited
+the matching run ID, `INFEASIBLE`, 252 evaluated candidates, zero feasible
+candidates, null recommendation, and `NOT_APPLICABLE` optimality. The
+explanation reported candidate cost, self-sufficiency, and per-candidate
+constraint diagnostics as unavailable rather than inventing them. This is a
+guided hosted AI-07 regression and one deployed negative calculation case;
+the other Gate 5 denial/outage/recovery cases remain separate.
+
+## Controlled provider-egress outage setup — October 24, 2026
+
+For the guided AI-09 test, the owner removed only `api.openai.com:443` from
+`application-test.json` and authorized its application to `vareng-test`.
+Before the change, Developer Platform status showed ready revision 11 and
+image `eseidinger/variability-engineering-framework@sha256:2309b175359b50c7362790456edf73f4f8aafe8cac336b37d9b6faab4ebc55e1`.
+The prior descriptor was saved locally at
+`/tmp/vef-vareng-test-ai-egress-before-20261024.json` for restoration.
+`devplat deploy apply --project vareng-test --file application-test.json
+--if-match 11 --wait --output json` succeeded as operation
+`a269c715-c781-4f7a-9265-0663159a5f59`, revision 12. Post-apply status
+reported one ready replica with the same image digest, AI still enabled, and
+outbound HTTPS retained for ODIP and identity but absent for OpenAI. This
+establishes the controlled outage condition; it does not yet establish the
+application's AI-09 response or recovery behavior.
+
+During revision 12, the owner submitted the ordinary reference request and
+received completed run `run-7cf6c1fe-9ac3-4cef-bd2e-fd2d7ba30ec6` with
+`SUCCEEDED`, 252 evaluated candidates, 194 feasible candidates, and the
+expected recommendation. The browser's explanation action then displayed
+"AI explanation unavailable: Energy data or platform access is temporarily
+unavailable. Retry shortly. The recorded result above remains available."
+The result stayed visible. The raw AI route HTTP status/body and absence of a
+new proposal run were not captured, so those AI-09 assertions remain open.
+
+The prior descriptor was reapplied with `--if-match 12`; operation
+`7f48fde1-7a5d-402f-9885-98368c96b370` succeeded as revision 13.
+Readback showed one ready replica, the unchanged image digest, AI enabled,
+and `api.openai.com:443` restored alongside ODIP and identity egress. The
+local `application-test.json` was also restored after confirming it had not
+changed since the outage apply. A successful explanation after restoration
+was subsequently owner-confirmed for the same saved run, closing the guided
+browser recovery portion of AI-09. The exact recovered response body and
+HTTP status were not copied into this record. Raw outage HTTP status/body and
+the proposal-route no-new-run assertion remain uncaptured, so complete AI-09
+acceptance is still open.
+
+## Internal boundary and deployed-regression preparation — October 24, 2026
+
+`EnergyExplanationTest` now checks the exact 16-source limit and explicit
+rejection of a 17th source without altering the input. The new
+`EnergyAiEvidenceBoundaryResourceTest` uses internal mocks, not a public
+mutation route, to assert `422 evidence_unavailable` for oversized and
+incomplete evidence, no model call, and unchanged retrieval of the completed
+run. The focused PostgreSQL-backed test run passed all eight tests with zero
+failures, errors or skips; the local API `.env` was restored afterward.
+
+`scripts/verify-deployed-energy-oracle.py` compares authenticated exported
+run and candidate-page JSON against the complete released 0.5.0 oracle. An
+offline smoke check passed for all 252 candidates and rejected a deliberately
+altered annualized cost. `scripts/verify-energy-deployment-status.py` verified
+that `vareng-test` revision 13 is ready on image digest
+`sha256:2309b175359b50c7362790456edf73f4f8aafe8cac336b37d9b6faab4ebc55e1`
+with AI enabled and OpenAI, identity and ODIP egress restored. The oracle
+verifier had not yet been run on exported deployed candidate pages at this
+preparation stage; that result is recorded below. The hosted 17-source/64-KiB
+fixture mechanism remains unimplemented. These preparations do not close
+AI-10, hosted AI-11 or the full Gate 5 recovery gate.
+
+## Full deployed reference-oracle comparison — October 24, 2026
+
+The owner exported the authenticated result for
+`run-6189da32-9d3f-41bc-9f0c-be7bcfe1785b` and all candidate pages (100,
+100, and 52 items) from `vareng-test`. `scripts/verify-deployed-energy-oracle.py`
+compared them with the checksum-pinned contract kit 0.5.0 full oracle and
+passed: 252 distinct candidates, 194 feasible candidates, exact feasible
+ranking, all candidate structures, metrics and constraints, plus result
+versions, status, recommendation and dataset provenance matched. The four
+local capture SHA-256 digests, in run/page-0/page-1/page-2 order, were:
+
+```text
+eb0e8d04da2adac7bfd42c7fd7680c7c12cb8c2c8c4ea0e78414f47220294edf
+d71f0a29b42b2464c1b96249ff5b76d508db0f8758832212625ed9566e8e2c01
+d619e32c90c240143fff5ede7eaea98c40fa15817c5fa7c1469e2b9a45b60ac4
+904a04ded927ecfc75003e48b201a0e465dd1644e1ef8201aa965082073460d0
+```
+
+The captures remain in ignored
+`apps/prototype/api/target/deployed-regression/`. This closes the numerical
+reference portion of deployed AI-10 regression; ODIP denial, corrected
+`1.0.1` isolation, cache outage, restart and actual backup restoration remain
+separate Gate 5 checks.
+
+In a subsequent browser negative check on the current `vareng-test`
+deployment, the owner entered `pv-standard-400` under existing component IDs
+with the reference inputs. The application returned "Existing equipment is not
+supported by this model version." The owner confirmed that no new run ID
+appeared. This covers the supported-model boundary for non-empty existing
+equipment; server-side run-count evidence was not captured.
+
+The owner then removed the existing component and requested the same energy
+inputs with dataset version `9.9.9`. The browser returned "The requested
+publication version was not found." and showed no new run ID. This verifies
+one deployed exact-version missing-publication rejection. The HTTP status
+and a server-side run-count delta were not captured.
+
+The owner next requested dataset version `1.0.1` in the same browser workflow.
+The application again returned "The requested publication version was not
+found." This does not establish corrected-version isolation: the `1.0.1`
+publication is not currently available to the deployed ODIP reader. A new
+run ID and the exact response status were not reported for this attempt.
+The upstream integration contract and Gate 5 plan name corrected `1.0.1` as
+the isolation scenario, but ODIP's local publication-acceptance script uses
+`1.0.1` for a deliberately invalid missing-hour draft and publishes `1.0.2`
+as the subsequent valid version. Before repeating this deployed scenario,
+the shared-contract and ODIP owners need to align the version number and
+publish a genuinely corrected, valid version in the test environment.

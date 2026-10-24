@@ -63,9 +63,7 @@ public class EnergyEvidenceService {
                     || !"NOT_APPLICABLE".equals(result.path("optimalityStatus").asText())) {
                 throw new InvalidEvidence();
             }
-            // Pretty serialization is a conservative bound relative to Python's default JSON spacing.
-            if (sources.size() > 16 || mapper.writerWithDefaultPrettyPrinter().writeValueAsString(sources)
-                    .getBytes(StandardCharsets.UTF_8).length > 65536) throw new EvidenceTooLarge();
+            requireBounds(sources, mapper);
             return sources;
         } catch (JsonProcessingException | IllegalArgumentException | NullPointerException exception) {
             throw new InvalidEvidence();
@@ -77,6 +75,12 @@ public class EnergyEvidenceService {
         item.put("category", category);
         item.set("document", document);
         sources.set(id, item);
+    }
+
+    static void requireBounds(ObjectNode sources, ObjectMapper mapper) throws JsonProcessingException {
+        // Pretty serialization is a conservative bound relative to Python's default JSON spacing.
+        if (sources.size() > 16 || mapper.writerWithDefaultPrettyPrinter().writeValueAsString(sources)
+                .getBytes(StandardCharsets.UTF_8).length > 65536) throw new EvidenceTooLarge();
     }
 
     private static boolean resultShape(JsonNode result) {

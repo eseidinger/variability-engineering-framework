@@ -60,7 +60,12 @@ provider response bodies in logs.
 ## AI-11: evidence limits and missing facts
 
 `EnergyExplanationTest` verifies explicit rejection of evidence over 64 KiB and
-a missing required model version before model access. The normal evidence
+a missing required model version before model access. It now also supplies
+exactly 16 and then 17 internal sources, proving that the 17th source is
+rejected without truncation. `EnergyAiEvidenceBoundaryResourceTest` injects
+oversized and incomplete evidence at the internal service boundary and checks
+that the explanation route returns `422 evidence_unavailable`, never calls
+the model, and leaves the completed result readable. The normal evidence
 builder produces three or four sources, so the 16-source branch cannot be
 reached through a public optimization request. To claim hosted acceptance,
 exercise the limit using a private, disposable test fixture or internal test
@@ -69,6 +74,51 @@ job in `vareng-test`; do not add a public mutation route. Assert a stable
 continued access to the completed deterministic result. Record fixture digest,
 deployment revision, response status/code, and cleanup. The private fixture
 mechanism has not yet been implemented, so hosted AI-11 remains open.
+
+## AI-10: deployed numerical regression capture
+
+`scripts/verify-energy-deployment-status.py` reads the live Developer Platform
+status and verifies the ready replica, resolved image digest, enabled AI and
+approved provider/identity egress. Run it with the image digest published for
+the deployment; for the October 24 test image:
+
+```sh
+python3 scripts/verify-energy-deployment-status.py \
+  --project vareng-test \
+  --expected-image eseidinger/variability-engineering-framework@sha256:2309b175359b50c7362790456edf73f4f8aafe8cac336b37d9b6faab4ebc55e1
+```
+
+The public browser route requires a platform session. From the same signed-in
+session that created the reference run, save its JSON result from
+`/api/v1/optimization-runs/{runId}` and every page from
+`/api/v1/optimization-runs/{runId}/candidates?page={index}&pageSize=100`.
+For the released 252-candidate reference, save pages 0, 1 and 2. Keep these
+exports in an ignored local directory such as
+`apps/prototype/api/target/deployed-regression/`. Prepare the pinned kit and
+compare the complete exported result, all 252 candidates, metrics, constraint
+objects and feasible ranking with the released oracle:
+
+```sh
+python3 scripts/validate-energy-contract-kit.py --prepare-only \
+  --output-dir /tmp/vef-deployed-regression-kit
+python3 scripts/verify-deployed-energy-oracle.py \
+  --kit /tmp/vef-deployed-regression-kit/contract-kit-v0.5.0/contract-kit \
+  --run apps/prototype/api/target/deployed-regression/run.json \
+  --candidate-page apps/prototype/api/target/deployed-regression/page-0.json \
+  --candidate-page apps/prototype/api/target/deployed-regression/page-1.json \
+  --candidate-page apps/prototype/api/target/deployed-regression/page-2.json
+```
+
+Use a new extraction directory for each kit preparation. The verifier fails
+on missing pages, IDs, ranking changes, metric drift or provenance changes.
+It makes no network call and cannot authenticate to the protected application
+on its own. The guided reference and zero-budget runs in the verification
+record cover two cases; the full deployed Gate 5 suite still needs ODIP denial,
+corrected `1.0.1` isolation, cache outage, restart and actual backup restore
+evidence. The upstream Gate 5 plan names `1.0.1`, while ODIP's local
+publication-acceptance script currently uses that version for a failed draft
+and `1.0.2` for the next valid publication. Align the deployed test version
+with the shared-contract and ODIP owners before attempting this check.
 
 ## Remaining release gate
 
