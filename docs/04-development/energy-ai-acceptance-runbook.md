@@ -1,9 +1,29 @@
 # Energy AI acceptance runbook
 
-Status: updated October 24, 2026. The October 24 `main` workflow for commit
+Status: updated October 26, 2026. The October 24 `main` workflow for commit
 `a911cc4` passed and deployed to `vareng-test`. A subsequent local live-model
 run on uncommitted test and prompt changes passed AI-05 and AI-06 with the
 configured provider; see the [verification record](energy-contract-kit-verification.md).
+
+## Open AI consumer cases — October 26, 2026
+
+**Five of the eleven AI case IDs remain incomplete:** AI-05, AI-06, AI-08,
+AI-10, and AI-11. This counts case IDs rather than individual assertions;
+AI-10 contains multiple deployed Gate 5 regression scenarios. The
+[verification record](energy-contract-kit-verification.md) provides the
+chronological evidence and limits behind these statuses.
+
+| Case | Remaining acceptance evidence |
+| --- | --- |
+| AI-05 | Hosted `FEASIBLE_NOT_PROVEN` explanation and human review; the replacement-price gap and controlled local branch have evidence. |
+| AI-06 | Hosted adversarial metadata case and semantic review; the controlled local real-model case passed. |
+| AI-08 | Hosted rejection of unapproved sources, unresolved pointers, and altered values; cross-user route checks passed. |
+| AI-10 | Complete unchanged deployed Gate 5 suite, including corrected-version isolation, remaining negative cases, ODIP restart/observability, and actual backup restore. |
+| AI-11 | Hosted evidence-limit fixture and explicit failure; local 16/17-source and 64-KiB boundary tests passed. |
+
+AI-01–AI-04, AI-07, and AI-09 have guided or controlled evidence recorded in
+the verification record. Final cross-project release acceptance is a separate
+decision after the remaining tests.
 
 ## AI-05 and AI-06: controlled live-model run
 
