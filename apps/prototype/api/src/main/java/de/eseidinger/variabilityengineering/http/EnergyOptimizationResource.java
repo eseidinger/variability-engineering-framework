@@ -1,6 +1,7 @@
 package de.eseidinger.variabilityengineering.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.eseidinger.variabilityengineering.adapter.odip.EnergyPublicationClient;
@@ -101,6 +102,11 @@ public class EnergyOptimizationResource {
             return error(422, exception.code(), exception.getMessage());
         } catch (IllegalArgumentException exception) {
             return error(422, "invalid_request", exception.getMessage());
+        } catch (JsonMappingException exception) {
+            if (exception.getCause() instanceof IllegalArgumentException) {
+                return error(422, "invalid_request", "Optimization request violates model constraints.");
+            }
+            return error(400, "invalid_json", "A valid optimization request JSON document is required.");
         } catch (JsonProcessingException exception) {
             return error(400, "invalid_json", "A valid optimization request JSON document is required.");
         } catch (EnergyPublicationClient.HttpStatusException exception) {

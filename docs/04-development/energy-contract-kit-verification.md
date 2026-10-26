@@ -586,3 +586,155 @@ the isolation scenario, but ODIP's local publication-acceptance script uses
 as the subsequent valid version. Before repeating this deployed scenario,
 the shared-contract and ODIP owners need to align the version number and
 publish a genuinely corrected, valid version in the test environment.
+
+## Guided AI-09 provider-outage completion — October 26, 2026
+
+The owner repeated the OpenAI egress-denial check in `vareng-test`. Local
+Developer Platform status captures show ready revision 16 with
+`api.openai.com:443`, ready revision 17 without that egress, and the same
+resolved image in both revisions:
+`eseidinger/variability-engineering-framework@sha256:34c922617c37027566adc2342d8e655090980852cf61b35db08a45b250922904`.
+The captures are `/tmp/vef-ai09-status-before.json` and
+`/tmp/vef-ai09-status-outage.json`; the temporary deployment descriptors are
+`/tmp/vef-ai09-outage.json` and `/tmp/vef-ai09-restore.json`.
+
+During the outage, the owner reported the expected `503 ai_unavailable` for
+the AI proposal route and the explanation POST, while retrieval of a completed
+deterministic run still succeeded. The proposal produced no run ID and no
+browser POST to `/api/v1/optimization-runs` was observed. An initial direct
+browser GET to the explanation URL returned 404 because that route is POST-only;
+it is not counted as an AI-09 result. After restoring OpenAI egress, the owner
+reported HTTP 200 for the explanation POST on
+`run-bb744b50-ae86-4c61-b665-776f265e7d23`. The final Developer Platform
+readback showed ready revision 18, one ready replica, the same image digest,
+AI enabled, and OpenAI, ODIP, and identity egress present.
+
+This closes the guided hosted unavailable-provider and recovery behavior for
+AI-09. Malformed provider output remains covered by controlled local tests; no
+hosted malformed-response injection was performed. The browser observations
+were reported by the owner rather than preserved as sanitized HTTP captures,
+and a server-side run-count delta was not measured. These limits should remain
+visible in the final release evidence review.
+
+## Guided verified-cache fallback — October 26, 2026
+
+The owner created baseline `vareng-test` run
+`run-937becd0-d921-4fb6-a677-7ee20683ab16` using the released reference
+inputs: dataset version `1.0.0`, 35 m² roof, 4,500 kWh annual demand,
+EUR 18,000 budget, minimum self-sufficiency `0.55`, and no existing
+components. It succeeded with 252 evaluated and 194 feasible candidates,
+recommended `pv-standard-400-q18-inverter-5kw-battery-10kwh-q1`, and retained
+manifest SHA-256
+`252b90b18b594a764a2744ba133a8db56b233e9e375301befc7616e9c18c1715`
+and the expected model, simulation, and optimizer versions.
+
+The local status captures `/tmp/vef-odip-before.json` and
+`/tmp/vef-odip-outage-status.json` show ready revisions 18 and 19 on the same
+resolved image
+`eseidinger/variability-engineering-framework@sha256:34c922617c37027566adc2342d8e655090980852cf61b35db08a45b250922904`.
+Revision 19 removed only `web-odip-test.apps.eseidinger.de:443` from outbound
+access; identity and OpenAI egress remained. During that outage, a fresh
+browser session created new run `run-849bd172-1a49-4bd1-88de-88da59f4f440`
+with the same request. The owner reported `SUCCEEDED`, the same 252/194
+counts, recommendation, manifest digest, dataset/version, model versions, and
+`PROVEN_OPTIMAL` status. The different run IDs show that this was a new
+evaluation rather than an idempotent replay. The owner subsequently reported
+that ODIP egress was restored and the deployment was ready with all three
+expected outbound destinations; the final revision and status response were
+not copied into this record.
+
+This is guided deployed evidence that the exact verified version remained
+usable from the persisted cache during an ODIP network outage. The outage run
+was checked through displayed summary/provenance values, not a fresh export of
+all candidate pages. ODIP authorization denial, corrected-version isolation,
+restart, and actual backup restoration remain separate Gate 5 checks.
+
+## Guided restart and persisted-run retrieval — October 26, 2026
+
+After ODIP egress was restored, the owner restarted `vareng-test` through the
+Developer Platform. Operation `1cea7189-cd26-4a91-9c1a-95cd0287368c`
+reported `succeeded` on revision 20 with one ready replica and unchanged
+deployment image
+`eseidinger/variability-engineering-framework@sha256:34c922617c37027566adc2342d8e655090980852cf61b35db08a45b250922904`.
+Using the original browser identity, the owner retrieved completed outage run
+`run-849bd172-1a49-4bd1-88de-88da59f4f440` after the restart. Its returned
+JSON retained `SUCCEEDED`, 252 evaluated and 194 feasible candidates, the
+reference recommendation, `PROVEN_OPTIMAL`, dataset version `1.0.0`, manifest
+SHA-256
+`252b90b18b594a764a2744ba133a8db56b233e9e375301befc7616e9c18c1715`,
+and model/simulation/optimizer versions `1.0.0`. Candidate page 2 with page
+size 100 returned `total: 252`, `page: 2`, and candidate metric and constraint
+objects. The response envelopes were copied into the guided review, but no
+sanitized export or response hashes were retained. This verifies retrieval of
+the completed run and a candidate page after a workload restart; it does not
+test interruption of an in-progress run or actual database backup restoration.
+
+## Guided idempotency regression — October 26, 2026
+
+Through the authenticated `vareng-test` browser session, the owner edited and
+resent an optimization POST with its existing `Idempotency-Key` and a changed
+budget. The route returned HTTP 409 `idempotency_conflict` with no run ID in
+the error envelope. The original Network entry was then lost, so its first
+response and same-body replay were not preserved for that key.
+
+The owner started a fresh reference request and resent that POST unchanged
+with the same key. Both responses returned HTTP 202 with the identical run ID
+`run-b72fedd8-3570-440b-b661-2699c8f8eb05`, identical `createdAt`
+`2026-10-26T14:21:50.681548Z`, and the same `QUEUED` acceptance envelope.
+Together these guided checks demonstrate same-body replay and changed-body
+rejection on the deployed route. The two branches used different keys; no
+server-side run-count delta or sanitized HTTP capture was retained.
+
+## Non-energy dataset denial probe — October 26, 2026
+
+The owner changed a new-key optimization request's dataset ID to
+`non-energy-mobility-counts-2024` version `1.0.0` in `vareng-test`. VEF returned
+HTTP 422 `publication_not_found`. This is not evidence of the required ODIP
+403 dataset-scope denial. The deployed `odip-test` publication and VEF reader
+grant must be checked before repeating the probe; no run ID was reported.
+The owner subsequently confirmed that the non-energy dataset had not been
+created in `odip-test`. The 422 therefore reflects an absent fixture, and the
+denial scenario remains unrun until that fixture is published without a VEF
+reader grant.
+
+## Deployed non-energy dataset denial — October 26, 2026
+
+The ODIP operator used the pinned 0.5.0 fixture publisher in `odip-test` with
+`--fixture non-energy`. Draft `9408c8eb-07ee-4057-9669-1df444b478c0`
+reported manifest SHA-256
+`f0d4f6b882c1a05154fb43283166953fda7a0dba7f2ed435dd7f46088663bbff`
+for `non-energy-mobility-counts-2024` version `1.0.0`. The owner subsequently
+observed draft status `PUBLISHED`. The operator's browser-session read of the
+consumer manifest route returned 401 because ODIP's publication-reader route
+requires a service bearer token; that browser request does not assess the
+published bytes or VEF's reader grant.
+
+With a fresh idempotency key, VEF then requested that published non-energy
+dataset. Its public optimization route returned HTTP 503
+`publication_unavailable` without a run ID. The owner inspected the VEF
+boundary log for this request and reported the sanitized upstream cause as
+HTTP 403. This is guided deployed evidence that ODIP denied VEF's service
+identity at the dataset boundary and VEF did not create a run or fall back to
+the cached energy publication. The exact log envelope, ODIP authorization
+record, and an independent bearer download of the new manifest were not
+preserved in this review.
+
+## Invalid customer input and local error-classification fix — October 26, 2026
+
+The owner edited a new-key deployed optimization request to set
+`site.annualDemandKWh` to `-1`. `vareng-test` rejected it without a run ID,
+but returned HTTP 400 `invalid_json` and the message that a valid JSON
+document was required. The request was syntactically valid JSON; Jackson had
+wrapped the record's customer-value validation exception as a mapping error.
+
+The local API now maps that wrapped model-constraint violation to HTTP 422
+`invalid_request` with a stable generic message, while malformed JSON still
+returns HTTP 400 `invalid_json`. A focused HTTP test exercises both branches
+and checks that the invalid customer value yields no run ID. Against the
+checksum-pinned 0.5.0 kit and a disposable PostgreSQL 17 Dev Services
+container, `EnergyOptimizationResourceTest` passed two tests with no failures,
+errors, or skips. API `validate` reported zero Checkstyle violations; the API
+package build, documentation links, and `git diff --check` passed. The local
+API `.env` was restored after the test. This fix is in the working tree only;
+the deployed `vareng-test` result remains the observed HTTP 400 until a new
+image is built and deployed, followed by a hosted retest.

@@ -20,6 +20,7 @@ import java.util.UUID;
 import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +31,28 @@ class EnergyOptimizationResourceTest {
     @Inject EnergyEvidenceService evidence;
     @Inject JdbcEnergyRunRepository runs;
     @InjectMock ExplanationModel explanationModel;
+
+    @Test
+    void distinguishesInvalidCustomerValuesFromMalformedJson() throws Exception {
+        var request = (ObjectNode) mapper.readTree(Files.readString(Path.of(
+                System.getenv("ENERGY_CONTRACT_KIT_DIRECTORY"), "examples/optimization-request.json")));
+        ((ObjectNode) request.path("site")).put("annualDemandKWh", -1);
+        var invalid = identity("prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                .header("Idempotency-Key", "invalid-demand-" + UUID.randomUUID())
+                .contentType("application/json").body(request.toString())
+                .when().post("/api/v1/optimization-runs")
+                .then().statusCode(422).extract().jsonPath();
+        assertEquals("invalid_request", invalid.getString("code"));
+        assertEquals("Optimization request violates model constraints.", invalid.getString("message"));
+        assertNull(invalid.getString("runId"));
+
+        var malformed = identity("prn_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+                .header("Idempotency-Key", "malformed-json-" + UUID.randomUUID())
+                .contentType("application/json").body("{invalid")
+                .when().post("/api/v1/optimization-runs")
+                .then().statusCode(400).extract().jsonPath();
+        assertEquals("invalid_json", malformed.getString("code"));
+    }
 
     @Test
     void acceptsAndReturnsOwnedFixtureRun() throws Exception {

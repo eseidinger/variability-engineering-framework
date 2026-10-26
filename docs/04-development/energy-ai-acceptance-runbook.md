@@ -45,10 +45,16 @@ policy. Do not mark hosted AI-05/06 complete from its result alone.
 
 ## AI-09: unavailable or malformed provider output
 
+The October 26 guided `vareng-test` repetition recorded unavailable-provider
+and recovery behavior on revisions 16–18; see the
+[verification record](energy-contract-kit-verification.md#guided-ai-09-provider-outage-completion--october-26-2026).
+Hosted malformed output was not injected; controlled local tests cover that
+branch. The procedure below remains useful for another controlled run.
+
 The committed `EnergyAiProposalResourceTest` and
 `EnergyOptimizationResourceTest` exercise provider failures and invalid output
 with controlled model responses. They passed in the October 24 local and CI
-test runs. The deployed check still needs an operator-controlled failure in
+test runs. For a deployed repetition, create an operator-controlled failure in
 `vareng-test` while a known completed run is retained. During that check,
 record the proposal response `503 ai_unavailable`, absence of a new run,
 explanation failure in the browser, and continued retrieval of the recorded
@@ -112,10 +118,12 @@ python3 scripts/verify-deployed-energy-oracle.py \
 Use a new extraction directory for each kit preparation. The verifier fails
 on missing pages, IDs, ranking changes, metric drift or provenance changes.
 It makes no network call and cannot authenticate to the protected application
-on its own. The guided reference and zero-budget runs in the verification
-record cover two cases; the full deployed Gate 5 suite still needs ODIP denial,
-corrected `1.0.1` isolation, cache outage, restart and actual backup restore
-evidence. The upstream Gate 5 plan names `1.0.1`, while ODIP's local
+on its own. The [verification record](energy-contract-kit-verification.md)
+now includes the reference and zero-budget runs, guided ODIP dataset denial,
+verified-cache outage fallback, completed-run retrieval after restart, and
+idempotency checks. The full deployed Gate 5 suite still needs corrected
+version isolation, remaining negative cases, ODIP restart and observability,
+and actual backup restoration. The upstream Gate 5 plan names `1.0.1`, while ODIP's local
 publication-acceptance script currently uses that version for a failed draft
 and `1.0.2` for the next valid publication. Align the deployed test version
 with the shared-contract and ODIP owners before attempting this check.
