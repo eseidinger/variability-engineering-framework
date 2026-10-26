@@ -735,6 +735,28 @@ checksum-pinned 0.5.0 kit and a disposable PostgreSQL 17 Dev Services
 container, `EnergyOptimizationResourceTest` passed two tests with no failures,
 errors, or skips. API `validate` reported zero Checkstyle violations; the API
 package build, documentation links, and `git diff --check` passed. The local
-API `.env` was restored after the test. This fix is in the working tree only;
-the deployed `vareng-test` result remains the observed HTTP 400 until a new
-image is built and deployed, followed by a hosted retest.
+API `.env` was restored after the test. At this local verification stage, the
+deployed `vareng-test` result remained the observed HTTP 400; the subsequent
+deployment and hosted retest are recorded below.
+
+The fix and the October 26 acceptance updates were committed as
+`b6990cb2f46fb360bc40406aeae3459899822437` and pushed to `main`.
+GitHub Actions run `40353197285` passed UI, API, pinned-kit, documentation,
+packaged integration, image publication, and `vareng-test` deployment jobs.
+The deployment operation `f3ce671f-4e54-4309-975b-be24c960a479` reported
+ready revision 21 with image digest
+`sha256:e4ab9ac14f97001f3bb39f4b2b3745715699a63ab45da1645d53990c35162967`.
+The owner's hosted retest of the negative annual demand on that deployment
+returned HTTP 422 `invalid_request`, the stable message
+"Optimization request violates model constraints.", and no run ID. This
+closes the hosted error-classification regression for that customer input.
+
+For the corrected-version isolation scenario, the owner checked ODIP test's
+operator-visible publication drafts and found no energy dataset draft at
+version `1.0.1` or `1.0.2`. The shared Gate 5 plan requires a corrected
+`1.0.1`, while ODIP's local acceptance harness uses `1.0.1` for a deliberately
+failed missing-hour draft and `1.0.2` for the next valid version. Neither
+version was visible in that operator's draft list, and VEF previously
+reported `1.0.1` as unavailable. The corrected content and expected-result
+authority still need cross-project alignment before this scenario can be
+accepted.
