@@ -1,18 +1,24 @@
 # Energy Configuration Implementation Plan
 
-Status: updated October 19, 2026 for released contract kit 0.5.0. Upstream
+Status: updated October 26, 2026 for released contract kit 0.5.0. Upstream
 [Gate 5 acceptance](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/reviews/2026-10-17-gate-5-acceptance.md)
 records maintainer-confirmed implementation, deployment, and an operational
 0.4.0 workflow; Gates 2–5 are complete for progression to Gate 6. Gate 6 / VEF-05
 is the next milestone. That acceptance does not supply new test reports or
 image/deployment digests. Work packages 1–7 retain their historical local
-checkboxes and gaps as evidence records; the current status table and October 19
+checkboxes and gaps as evidence records; the current status table and October 26
 verification record supersede those snapshots. Obsolete deployment instructions
 are explicitly marked below.
 The VEF consumer lock now pins 0.5.0, locally validated against the released kit
 and VEF API suite. On October 19, the owner confirmed that the full deployed
 energy flow, including live AI explanations, works end to end after VEF `v0.5.1`.
-Formal AI acceptance evidence and deployed regression remain tracked below.
+Guided hosted checks through October 26 cover AI-09 provider outage/recovery and
+parts of the unchanged Gate 5 regression, including verified-cache fallback,
+workload restart, idempotency, dataset-scope denial, and invalid customer-input
+classification. Five AI case IDs remain incomplete: AI-05, AI-06, AI-08, AI-10,
+and AI-11. See the [AI acceptance runbook](energy-ai-acceptance-runbook.md) for
+the current open-case list and the [verification record](energy-contract-kit-verification.md)
+for observations and limitations. Final release acceptance remains open.
 No dates or estimates are committed.
 
 ## Outcome and authoritative baseline
@@ -49,7 +55,7 @@ claim. Adopt the recorded demonstration assumptions and decisions.
 
 ## Current implementation and gaps
 
-Current as of October 19, 2026. Implementation status and remaining acceptance
+Current as of October 26, 2026. Implementation status and remaining acceptance
 evidence are separate; unchecked historical work packages below do not mean
 these features are absent.
 
@@ -57,13 +63,13 @@ these features are absent.
 | --- | --- | --- |
 | Analysis and calculation | `core/AnalysisEngine.java` retains observed-population semantics; `energy/` implements bounded generation, simulation, feasibility, and exhaustive ranking against the released oracle | General-purpose generative-model evaluation and portfolio optimization. |
 | Structural identity | Binary `core/Variant.java` identity is unchanged; quantitative energy IDs include models and quantities | Non-empty existing-equipment semantics and shared acceptance examples. |
-| Data import | Exact-version HTTPS ODIP client, managed credentials, bounded byte/semantic verification, and V2 cache; owner-confirmed ODIP-backed production runs | Full generic schema enforcement and complete deployed denial/outage/recovery cases. |
-| Persistence and execution | V1 populations, V2 publication bytes, V3 owned requests/results/candidates, principal-scoped idempotency, atomic worker claims, 300-second deadline, and startup requeue | Dedicated model snapshots/security audit, retention/purge, concurrency/restart proof, and actual backup restoration. |
-| Authorization | HTTP validates normalized principal context and scopes energy runs to stable principal IDs; browser policy bootstrap covers food, energy, and AI routes | Hosted second-user check, revocation/direct-backend checks, and complete deployed boundary evidence. |
+| Data import | Exact-version HTTPS ODIP client, managed credentials, bounded byte/semantic verification, and V2 cache; owner-confirmed ODIP-backed runs, hosted verified-cache outage fallback, and dataset-scope denial | Full generic schema enforcement, corrected-version isolation, remaining negative cases, and ODIP restart/observability evidence. |
+| Persistence and execution | V1 populations, V2 publication bytes, V3 owned requests/results/candidates, principal-scoped idempotency, atomic worker claims, 300-second deadline, startup requeue, hosted replay/conflict checks, and completed-run retrieval after workload restart | Dedicated model snapshots/security audit, retention/purge, concurrency and in-progress restart proof, and actual backup restoration. |
+| Authorization | HTTP validates normalized principal context and scopes energy runs to stable principal IDs; browser policy bootstrap covers food, energy, and AI routes; three hosted cross-user route checks passed | Remaining AI-08 evidence-tampering checks, revocation/direct-backend checks, and complete deployed boundary evidence. |
 | Browser identity and UI | Platform sessions and CSRF forwarding; energy form, bounded polling, results/candidates, explicit AI proposal confirmation, and validated explanations | Browser accessibility, session-expiry/denial workload, and remaining AI acceptance cases. |
 | Readiness | `/api/status` checks the persisted food-service population and queryable energy run table, independently of current ODIP availability | Separate ODIP dependency reporting and any additional model-readiness requirements. |
 | Packaging and CI | Combined image, kit 0.5.0 validation, Java conformance, API/PostgreSQL, UI, Python, and Compose checks; versioned production and latest test descriptors with named storage | Full deployed regression/recovery, resource measurements, observability/retention, and final release evidence. |
-| AI assistance | OpenAI via LangChain4j, validated proposals, explicit confirmation, bounded owned evidence, citation validation, and safe provider-failure handling | AI-05 completion, AI-06, hosted AI-08/09/11 evidence, AI-10 regression, and complete semantic/release acceptance. |
+| AI assistance | OpenAI via LangChain4j, validated proposals, explicit confirmation, bounded owned evidence, citation validation, controlled live-model AI-05/06 checks, and hosted AI-09 outage/recovery | Hosted AI-05/06, remaining AI-08 and AI-11 evidence, AI-10 regression, and complete semantic/release acceptance. |
 
 Paths in this table are relative to
 `apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/` unless
@@ -332,22 +338,24 @@ Assert behavior and facts rather than exact prose, and include human or semantic
 review: schema and citation integrity alone cannot establish claim accuracy or
 prompt-injection resistance.
 
-Current evidence comes from the [guided production and controlled local checks](energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026).
-Manual passes do not supply uncaptured response bodies, prompt revisions, or deployment digests.
+Current evidence comes from the [chronological verification record](energy-contract-kit-verification.md)
+through October 26. The [AI acceptance runbook](energy-ai-acceptance-runbook.md#open-ai-consumer-cases--october-26-2026)
+lists the five incomplete case IDs. Manual passes do not supply uncaptured
+response bodies or complete prompt-revision and deployment-digest evidence.
 
-| Case | Required consumer evidence | October 19 status |
+| Case | Required consumer evidence | Status as of October 26 |
 | --- | --- | --- |
 | AI-01 | Complete natural-language input yields the expected structured request; no run before confirmation, then normal validated creation. | Passed in owner-confirmed production walkthrough. |
 | AI-02 | Underspecified input yields clarification, null request, no invented values, and no run. | Passed in owner-confirmed production walkthrough. |
 | AI-03 | Edited request requires fresh confirmation; old consent cannot authorize it. | Passed in owner-confirmed production walkthrough. |
 | AI-04 | Mandatory citations, claim meaning, units/conversions, categories, and absent-source reporting match evidence. | Manual successful-run checks passed, including detailed citation review; raw bodies uncaptured. |
-| AI-05 | Missing replacement prices are reported; `FEASIBLE_NOT_PROVEN` never becomes a global-optimality claim. | Partial price-gap evidence; replacement-price and optimality-status cases open. |
-| AI-06 | Metadata injection cannot change price/recommendation or cause publication, rule mutation, database access, or unauthorized tools. | Open; adversarial metadata case not exercised. |
+| AI-05 | Missing replacement prices are reported; `FEASIBLE_NOT_PROVEN` never becomes a global-optimality claim. | Controlled local real-model case and human review passed; hosted `FEASIBLE_NOT_PROVEN` explanation and review remain open. |
+| AI-06 | Metadata injection cannot change price/recommendation or cause publication, rule mutation, database access, or unauthorized tools. | Controlled local real-model adversarial case passed; hosted case and semantic review remain open. |
 | AI-07 | Infeasibility uses recorded diagnostics, null recommendation, and `NOT_APPLICABLE`, without invented metrics. | Passed in owner-confirmed production walkthrough. |
-| AI-08 | Foreign-run/user evidence, unapproved sources, unresolved pointers, and modified values are rejected before display. | Local ownership/citation tests; hosted cross-user check deferred because no second approved user is available. |
-| AI-09 | Unavailable provider/malformed output leaves deterministic results accessible and fallback explicitly identified. | Local mocked failure/rejection tests pass; hosted provider-outage/browser behavior open. |
-| AI-10 | Unchanged deployed Gate 5 suite passes with AI enabled; confirmed requests preserve configurations, metrics, ranking, recommendation, and provenance. | Production reference values match; complete deployed Gate 5 regression remains open. |
-| AI-11 | Evidence over 16 sources/64 KiB or missing required facts fails explicitly or reports the gap, without silent truncation. | Local oversized/missing-fact rejection tests pass; fixed source count is below 16, with no injected over-16 case; hosted acceptance open. |
+| AI-08 | Foreign-run/user evidence, unapproved sources, unresolved pointers, and modified values are rejected before display. | Three hosted cross-user route checks passed; hosted unapproved-source, unresolved-pointer, and altered-value checks remain open. |
+| AI-09 | Unavailable provider/malformed output leaves deterministic results accessible and fallback explicitly identified. | Guided hosted provider outage, deterministic-result retrieval, and explanation recovery passed; malformed output was checked locally. See recorded capture limits. |
+| AI-10 | Unchanged deployed Gate 5 suite passes with AI enabled; confirmed requests preserve configurations, metrics, ranking, recommendation, and provenance. | Reference oracle, verified-cache outage fallback, completed-run retrieval after restart, idempotency, non-energy dataset denial, and invalid customer-input classification have guided hosted evidence; corrected-version isolation, remaining negative cases, ODIP restart/observability, and actual backup restore remain open. |
+| AI-11 | Evidence over 16 sources/64 KiB or missing required facts fails explicitly or reports the gap, without silent truncation. | Controlled local 16/17-source, 64-KiB, and missing-fact checks passed; hosted limit fixture and explicit failure remain open. |
 
 - [ ] Record passing AI-01 through AI-11, including actual AI-generated proposals and explanations; kit tests or deterministic templates alone do not close VEF-05.
 - [ ] Re-run and record the unchanged deployed Gate 5 suite after AI integration. Historical Gate 5 acceptance does not substitute for this regression run.
@@ -385,9 +393,9 @@ energy within `1e-6 kWh`, and dimensionless calculations within `1e-9`.
 
 | Dependency or question | Owner / completion condition |
 | --- | --- |
-| VEF adopts kit 0.5.0 for AI | Consumer lock, released suite, integrity checks, and API consumer tests pass locally; hosted CI remains to be recorded. ODIP may retain accepted 0.4.0. |
-| AI provider, evidence, and acceptance | OpenAI through LangChain4j with configurable `gpt-6.1-sol` is implemented. Production AI-01/02/03/04/07 checks passed; AI-05 is partial. Remaining AI cases, complete evidence capture, deployed Gate 5 regression, and final release acceptance remain open. |
-| Generic publication, energy adapter, reader allow-list | ODIP-backed production evaluation is owner-confirmed. Complete deployed dataset-denial, exact-byte, outage, and recovery evidence remains open. |
+| VEF adopts kit 0.5.0 for AI | Consumer lock, released suite, integrity checks, API consumer tests, and hosted CI checks passed. ODIP may retain accepted 0.4.0. |
+| AI provider, evidence, and acceptance | OpenAI through LangChain4j with configurable `gpt-6.1-sol` is implemented. AI-01–04, AI-07, and guided AI-09 have passing evidence; AI-05/06 passed controlled local live-model review. Five case IDs remain incomplete, along with complete evidence capture, deployed Gate 5 regression, and final release acceptance. |
+| Generic publication, energy adapter, reader allow-list | ODIP-backed evaluation, hosted verified-cache outage fallback, and guided non-energy dataset-scope denial have evidence. Corrected-version isolation, remaining negative cases, ODIP restart/observability, and actual backup restore remain open. |
 | Managed identity, routing, governance, secret binding, egress and recovery | Developer Platform plus application owners; use kit-pinned boundary `b360ddee34444748c95705c597aa7b17491cd05b` or document/retest compatibility of a newer deployment. |
 | Non-empty existing equipment | Shared-kit owner and VEF; approved quantity, compatibility, and canonical-ID examples precede this path's implementation acceptance. |
 | Idempotent replay of a terminal run | Shared-kit owner and VEF; the prose returns the original run, while `RunAccepted` currently fixes status to `QUEUED`. Clarify whether POST returns the original acceptance envelope or amend the schema before claiming conformance. |
