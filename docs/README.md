@@ -1,7 +1,7 @@
 # Variability Engineering Framework Documentation
 
-Updated on October 19, 2026 to align the documented food-service MVP, energy and
-AI workflow, persistence, and Developer Platform configuration with the implementation.
+Updated on October 27, 2026 to reconcile the energy implementation and acceptance
+status across VEF, ODIP and the shared contract repository.
 This documentation covers the product, target architecture, architectural decisions,
 development sequence, and prototype operations.
 
@@ -29,7 +29,7 @@ on October 19, 2026; formal AI acceptance and regression evidence remain open.
 - **Implemented:** reserved for behavior present in source.
 - **Verified:** reserved for a recorded, reproducible check.
 
-The repository evidences food-service UI behavior, local container assembly, a domain-independent analysis core, verified fixture import, PostgreSQL round trips, public API behavior, a Compose-backed black-box workload check, bounded energy calculation, durable owned runs, and AI proposal/explanation validation. The [October 19 verification record](04-development/energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026) includes owner-confirmed production checks. It does not establish complete AI acceptance, the full deployed regression/recovery suite, or general-purpose generative-model evaluation.
+The repository evidences food-service UI behavior, local container assembly, a domain-independent analysis core, verified fixture import, PostgreSQL round trips, public API behavior, a Compose-backed black-box workload check, bounded energy calculation, durable owned runs, and AI proposal/explanation validation. The [verification record](04-development/energy-contract-kit-verification.md) includes owner-confirmed production checks and guided hosted evidence through October 26. The [cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) and [gap analysis](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md) consolidate the current baseline. Gate 6 remains open for AI-05/06/08/10/11, remaining regression/recovery and release acceptance; general-purpose generative-model evaluation remains separate.
 
 ### Capability status
 
@@ -42,11 +42,13 @@ The repository evidences food-service UI behavior, local container assembly, a d
 | Combined UI/API image | Implemented | Compose build and startup | CI deployment recorded; production energy journey confirmed by owner |
 | General-purpose generative models and configuration completion | Planned | None | None |
 | Bounded energy inputs and new-equipment generation | Implemented | Complete reference configuration set and boundary tests | Owner-confirmed production reference result |
-| Verified energy publication and deterministic optimization | Implemented | Exact reference simulation/ranking and PostgreSQL byte round trip | Owner-confirmed ODIP-backed production runs; full regression/recovery open |
-| Durable owned energy runs and candidate pages | Implemented | HTTP and PostgreSQL creation, replay, ownership, result, and page tests | Production runs recorded; hosted cross-user and recovery checks open |
-| Energy AI proposals, confirmation, and explanations | Implemented | Mocked provider, confirmation, citation, evidence-bound, and failure checks | Guided AI-01/02/03/04/07 checks passed; AI-05 partial; remaining cases open |
+| Verified energy publication and deterministic optimization | Implemented | Exact reference simulation/ranking and PostgreSQL byte round trip | Full deployed 252-candidate oracle comparison and guided cache fallback; remaining regression/recovery open |
+| Durable owned energy runs and candidate pages | Implemented | HTTP and PostgreSQL creation, replay, ownership, result, and page tests | Guided cross-user denial, idempotency and completed-run retrieval after restart; integrated restore open |
+| Energy AI proposals, confirmation, and explanations | Implemented | Mocked provider, confirmation, citation, evidence-bound, and failure checks | Guided/controlled AI-01–04/07/09 evidence; AI-05/06/08/10/11 incomplete |
 | Portfolio optimization and reusable components | Planned | None | None |
 
 ## Maintenance
 
 Use product documents for outcomes and scope, architecture documents for system design, ADRs for decisions and alternatives, development documents for sequencing and evidence, and operations documents for executable procedures. Update an ADR before changing an accepted architectural choice. Do not describe proposed or source-inspected behavior as operationally verified.
+
+The [October 27 local gap-closure record](04-development/energy-gap-closure-verification.md) records the follow-up implementation and tests; it does not close hosted Gate 6 acceptance.

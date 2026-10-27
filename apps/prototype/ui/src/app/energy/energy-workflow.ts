@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, ElementRef, inject, signal } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { JsonPipe } from '@angular/common';
 import { ReactiveFormsModule, NonNullableFormBuilder, Validators } from '@angular/forms';
@@ -14,6 +14,8 @@ import { EnergyApiService, EnergyExplanation, EnergyRequest, EnergyRequestPropos
 })
 export class EnergyWorkflowComponent {
   private readonly api = inject(EnergyApiService);
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+  private runRevision = 0;
   private readonly builder = inject(NonNullableFormBuilder);
   private readonly destroy = inject(DestroyRef);
   private timer: ReturnType<typeof setTimeout> | undefined;
@@ -69,6 +71,7 @@ export class EnergyWorkflowComponent {
     const description = this.proposalForm.controls.description;
     if (description.invalid) {
       description.markAsTouched();
+      this.host.nativeElement.querySelector<HTMLElement>('#proposal-description')?.focus();
       this.error.set('Describe the site and constraints in 4,000 characters or fewer.');
       return;
     }
@@ -115,6 +118,7 @@ export class EnergyWorkflowComponent {
   protected submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      this.host.nativeElement.querySelector<HTMLElement>('input.ng-invalid')?.focus();
       this.error.set('Check the highlighted inputs before starting a run.');
       return;
     }
@@ -134,6 +138,7 @@ export class EnergyWorkflowComponent {
   }
 
   private startRun(request: EnergyRequest): void {
+    const revision = ++this.runRevision;
     this.clearTimer();
     this.error.set(null);
     this.page.set(null);
@@ -150,6 +155,7 @@ export class EnergyWorkflowComponent {
     this.statusMessage.set('Submitting energy run…');
     this.api.create(request, this.idempotencyKey!).pipe(takeUntilDestroyed(this.destroy)).subscribe({
       next: accepted => {
+        if (revision !== this.runRevision) return;
         this.run.set(accepted);
         this.attempts = 0;
         this.busy.set(false);
@@ -157,6 +163,7 @@ export class EnergyWorkflowComponent {
         this.poll(accepted.runId);
       },
       error: error => {
+        if (revision !== this.runRevision) return;
         this.busy.set(false);
         this.error.set(this.errorMessage(error));
       },
@@ -187,8 +194,8 @@ export class EnergyWorkflowComponent {
     const run = this.run();
     if (!run || page < 0) return;
     this.api.candidates(run.runId, page).pipe(takeUntilDestroyed(this.destroy)).subscribe({
-      next: result => this.page.set(result),
-      error: error => this.error.set(this.errorMessage(error)),
+      next: result => { if (this.run()?.runId === run.runId) this.page.set(result); },
+      error: error => { if (this.run()?.runId === run.runId) this.error.set(this.errorMessage(error)); },
     });
   }
 
@@ -201,6 +208,7 @@ export class EnergyWorkflowComponent {
     this.timer = setTimeout(() => {
       this.api.run(runId).pipe(takeUntilDestroyed(this.destroy)).subscribe({
         next: result => {
+          if (this.run()?.runId !== runId) return;
           this.run.set(result);
           if (result.status === 'QUEUED' || result.status === 'RUNNING') {
             this.statusMessage.set(`Run ${result.status.toLowerCase()}. Checking progress…`);
@@ -210,7 +218,7 @@ export class EnergyWorkflowComponent {
             if (result.status !== 'FAILED') this.loadPage(0);
           }
         },
-        error: error => this.error.set(this.errorMessage(error)),
+        error: error => { if (this.run()?.runId === runId) this.error.set(this.errorMessage(error)); },
       });
     }, 2000);
   }

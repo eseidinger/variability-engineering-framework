@@ -1,0 +1,18 @@
+[
+  "common-v1.schema.json",
+  "dataset-publication-v1.schema.json",
+  "energy-ai-explanation-v1.schema.json",
+  "energy-ai-request-proposal-v1.schema.json",
+  "energy-candidate-v1.schema.json",
+  "energy-component-catalog-v1.schema.json",
+  "energy-export-tariff-v1.schema.json",
+  "energy-import-tariff-v1.schema.json",
+  "energy-optimization-request-v1.schema.json",
+  "energy-optimization-result-v1.schema.json",
+  "energy-pv-yield-v1.schema.json",
+  "energy-reference-load-shape-v1.schema.json",
+  "error-v1.schema.json",
+  "platform-access-error-v1.schema.json",
+  "platform-operational-envelope-v1.schema.json",
+  "platform-principal-headers-v1.schema.json"
+]

@@ -1,8 +1,8 @@
 package de.eseidinger.variabilityengineering.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import de.eseidinger.variabilityengineering.energy.EnergyContracts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.eseidinger.variabilityengineering.energy.EnergyOptimizationRequest;
 import de.eseidinger.variabilityengineering.energy.ai.ProposalModel;
@@ -24,7 +24,7 @@ public class ProposalService {
         }
         JsonNode root;
         try {
-            root = mapper.reader().with(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).readTree(output);
+            root = EnergyContracts.parse(output);
         } catch (JsonProcessingException error) {
             throw new InvalidProposal("invalid_json");
         }
@@ -57,6 +57,11 @@ public class ProposalService {
                 throw new InvalidProposal("invalid_ready_domain");
             }
         } else throw new InvalidProposal("invalid_status");
+        try {
+            EnergyContracts.validate("energy-ai-request-proposal-v1", root);
+        } catch (IllegalArgumentException exception) {
+            throw new InvalidProposal("invalid_schema");
+        }
         return root;
     }
 

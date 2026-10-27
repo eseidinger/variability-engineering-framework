@@ -11,8 +11,11 @@ eleven AI consumer acceptance cases, and unchanged deployed Gate 5 regression.
 VEF's consumer lock pins 0.5.0 and passed local kit and API tests. AI proposals,
 confirmation, and validated explanations are implemented. The owner confirmed
 the production energy journey and several guided AI acceptance cases on
-October 19, 2026; the [verification record](energy-contract-kit-verification.md)
-separates those results from remaining acceptance and hosted CI evidence.
+October 19, 2026. Guided checks through October 26 add numerical regression,
+cross-user denial, provider recovery, cache fallback, restart and idempotency.
+The [verification record](energy-contract-kit-verification.md) and
+[AI runbook](energy-ai-acceptance-runbook.md) track the five incomplete AI case
+IDs (AI-05/06/08/10/11), remaining regression/recovery and release evidence.
 The food-service analysis contract and energy numerical baseline are unchanged.
 
 ```mermaid

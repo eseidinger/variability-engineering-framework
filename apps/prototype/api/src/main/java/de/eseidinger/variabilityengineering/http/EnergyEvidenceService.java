@@ -2,6 +2,7 @@ package de.eseidinger.variabilityengineering.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import de.eseidinger.variabilityengineering.energy.EnergyContracts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.eseidinger.variabilityengineering.energy.EnergyOptimizationRequest;
@@ -23,8 +24,10 @@ public class EnergyEvidenceService {
             throw new EvidenceNotReady();
         }
         try {
-            JsonNode request = mapper.readTree(run.requestJson());
-            JsonNode result = mapper.readTree(run.resultJson());
+            JsonNode request = EnergyContracts.parse(run.requestJson());
+            JsonNode result = EnergyContracts.parse(run.resultJson());
+            EnergyContracts.validate("energy-optimization-request-v1", request);
+            EnergyContracts.validate("energy-optimization-result-v1", result);
             if (!EnergyOptimizationResource.requestShape(request) || !resultShape(result)) throw new InvalidEvidence();
             EnergyOptimizationRequest typed = mapper.treeToValue(request, EnergyOptimizationRequest.class);
             if (!run.datasetId().equals(typed.dataset().datasetId())
@@ -49,7 +52,8 @@ public class EnergyEvidenceService {
                 String recommendation = result.path("recommendedConfigurationId").asText();
                 String candidateJson = runs.recommendedCandidate(run.runId(), recommendation)
                         .orElseThrow(InvalidEvidence::new);
-                JsonNode candidate = mapper.readTree(candidateJson);
+                JsonNode candidate = EnergyContracts.parse(candidateJson);
+                EnergyContracts.validate("energy-candidate-v1", candidate);
                 if (!candidateShape(candidate)
                         || !candidate.path("schemaVersion").asText().equals("energy-candidate/v1")
                         || !candidate.path("configurationId").asText().equals(recommendation)
@@ -78,9 +82,16 @@ public class EnergyEvidenceService {
     }
 
     static void requireBounds(ObjectNode sources, ObjectMapper mapper) throws JsonProcessingException {
-        // Pretty serialization is a conservative bound relative to Python's default JSON spacing.
-        if (sources.size() > 16 || mapper.writerWithDefaultPrettyPrinter().writeValueAsString(sources)
-                .getBytes(StandardCharsets.UTF_8).length > 65536) throw new EvidenceTooLarge();
+        // Match Python's default ', ' and ': ' separators without counting punctuation in strings.
+        if (sources.size() > 16 || mapper.writeValueAsString(sources).getBytes(StandardCharsets.UTF_8).length
+                + separatorSpaces(sources) > 65536) throw new EvidenceTooLarge();
+    }
+
+    private static long separatorSpaces(JsonNode node) {
+        if (!node.isContainerNode()) return 0;
+        long spaces = Math.max(0, node.size() - 1) + (node.isObject() ? node.size() : 0);
+        for (JsonNode child : node) spaces += separatorSpaces(child);
+        return spaces;
     }
 
     private static boolean resultShape(JsonNode result) {

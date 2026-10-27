@@ -16,11 +16,14 @@ reports 67 API tests (66 passed, one deployed-only ODIP check skipped), six UI
 tests, and 27 Python bootstrap/integrity tests. These are recorded results, not
 a new test run or proof of hosted behavior.
 
-The [guided production record](energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026)
-contains owner-confirmed AI-01/02/03/04/07 checks, partial AI-05 evidence, and the
-deferred cross-user check. Local failure/evidence tests cover parts of AI-09/11;
-they do not close hosted acceptance. The catalog below also includes future
-framework expectations; a listed expectation alone does not imply test coverage.
+The [verification record](energy-contract-kit-verification.md) adds guided hosted
+checks through October 26: full reference-oracle comparison, cross-user denial,
+AI-09 outage/recovery, verified-cache fallback, restart and idempotency. Controlled
+local real-model AI-05/06 checks and evidence-boundary tests also have evidence.
+AI-05/06/08/10/11 remain incomplete; use the [AI runbook](energy-ai-acceptance-runbook.md)
+and [shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md) for outstanding assertions. The
+[October 27 review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) records fresh local checks separately. The catalog
+below includes future framework expectations; listing one does not imply coverage.
 
 | Check | Expectation |
 |---|---|
@@ -48,3 +51,15 @@ framework expectations; a listed expectation alone does not imply test coverage.
 | Language conformance | Shared inputs produce equivalent normalized results. |
 
 Experiments must state the question, hypothesis, versions, hardware, configuration, input generator or dataset version, mapping and derivations, revision, repeated measurements, raw results, and limitations. Optimization experiments also record solver, parameters, seed where applicable, termination status, bounds, and elapsed time. Record runtime, peak memory, relevant latency distributions, storage and index costs, and operational effort where applicable. A successful deployment is not a benchmark result.
+
+## Energy gap regression
+
+After building the UI, run `npx playwright install chromium` and
+`npm run test:energy-browser` from `apps/prototype/ui`. The check serves the production
+bundle on loopback, mocks HTTP with synthetic data, and runs all axe rules on desktop
+and mobile journeys; it writes `test-results/energy-browser.json`. CI runs it and
+retains that artifact for 30 days. This does not test deployed authentication.
+
+See [local gap-closure verification](energy-gap-closure-verification.md) for PostgreSQL
+retention/concurrency, complete schema, corrected-publication and bounded runtime
+checks, and sanitized evidence collection.

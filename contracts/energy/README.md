@@ -34,7 +34,9 @@ python3 scripts/validate-energy-contract-kit.py --output-dir /tmp/vef-energy-kit
 
 The command prints `ENERGY_CONTRACT_KIT_DIRECTORY`, the path containing
 `schemas/`, `fixtures/`, and `expected-results/`. `--prepare-only --output-dir`
-verifies and extracts without requiring `uv` or running the upstream tests.
+verifies and extracts without requiring `uv` or running the upstream tests. Both modes
+also compare the packaged API schemas and index against the immutable release bytes.
+Runtime validation resolves references locally and never fetches schema URLs.
 The API CI job prepares the same checksum-pinned release and supplies this path
 as an environment variable for Java model conformance tests. These compare every
 released configuration and quantity, investment, roof use, and electrical ratio
@@ -47,8 +49,7 @@ tests. Image publication depends on this contract job. Integrity regression
 tests also exercise corrupt downloads/cache entries and rejected extraction.
 
 The VEF consumer pin implements its portion of `SHARED-01`. ODIP independently
-pins the accepted 0.4.0 archive; it may retain that pin until coordinated
-adoption. Upstream Gate 5 was accepted by maintainer direction on October 17,
+pins the same 0.5.0 archive and checksum; its handoff was accepted on October 19. Upstream Gate 5 was accepted by maintainer direction on October 17,
 2026. Local 0.5.0 adoption evidence is recorded in the
 [consumer verification](../../docs/04-development/energy-contract-kit-verification.md)
 and [implementation plan](../../docs/04-development/energy-configuration-implementation-plan.md).

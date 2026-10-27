@@ -25,10 +25,15 @@ class EnergyPublicationImportServiceTest {
         var repository = new MemoryRepository();
         var transport = new FixtureTransport();
         var client = new EnergyPublicationClient(URI.create("https://odip.example"), () -> "reader-token", transport);
-        var service = new EnergyPublicationImportService(repository, client);
+        var registry = new io.micrometer.core.instrument.simple.SimpleMeterRegistry();
+        var dependency = new OdipDependencyState(registry);
+        var service = new EnergyPublicationImportService(repository, client, dependency);
+        assertEquals(OdipDependencyState.State.NOT_CHECKED, dependency.state());
 
         assertEquals("252b90b18b594a764a2744ba133a8db56b233e9e375301befc7616e9c18c1715",
                 service.importExact(ID, VERSION).manifestSha256());
+        assertEquals(OdipDependencyState.State.AVAILABLE, dependency.state());
+        assertEquals(1, registry.get("energy.odip.state").tag("state", "AVAILABLE").gauge().value());
         assertEquals(1, repository.saves);
         assertEquals(6, transport.calls);
 
@@ -40,10 +45,14 @@ class EnergyPublicationImportServiceTest {
         assertEquals("252b90b18b594a764a2744ba133a8db56b233e9e375301befc7616e9c18c1715",
                 service.importExact(ID, VERSION).manifestSha256());
         assertEquals(2, repository.saves);
+        assertEquals(OdipDependencyState.State.UNAVAILABLE, dependency.state());
+        assertEquals(1, dependency.fallbackCount());
         transport.unavailable = false;
 
         transport.denied = true;
         assertThrows(IOException.class, () -> service.importExact(ID, VERSION));
+        assertEquals(OdipDependencyState.State.DENIED, dependency.state());
+        assertEquals(1, dependency.fallbackCount());
         assertEquals(2, repository.saves);
     }
 

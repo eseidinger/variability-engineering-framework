@@ -4,8 +4,10 @@ Status: typed new-equipment generation, publication verification/cache,
 simulation/ranking, durable owned run API, consultant UI, and AI proposals and
 explanations are implemented and tested locally. The owner confirmed the
 ODIP-backed production workflow and guided AI checks on October 19, 2026.
-Full AI acceptance, deployed regression/recovery, and security-boundary checks
-remain open; see the [acceptance record](../04-development/energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026).
+Subsequent guided checks through October 26 cover the full reference oracle,
+cross-user denial, provider recovery, cache fallback, restart and idempotency.
+AI-05/06/08/10/11, remaining regression/recovery and security-boundary evidence
+remain open; see the [acceptance record](../04-development/energy-contract-kit-verification.md).
 The dependency is [contract kit 0.5.0](../../contracts/energy/README.md), which
 adds AI contracts without changing the accepted deterministic numerical baseline.
 
@@ -69,10 +71,12 @@ records these choices.
 
 - Non-empty existing-equipment requests fail explicitly pending shared quantity/ownership/identity examples.
 - Individually valid component IDs may concatenate into an ID exceeding 128 characters or colliding with another assignment. These cases fail instead of truncating or merging choices.
-- The verifier enforces this profile's required fields and cross-document rules; full generic JSON Schema validation remains open.
+- Packaged, byte-verified kit 0.5.0 JSON Schemas validate publications, requests and AI envelopes offline, including optional fields and formats. Cross-document rules remain explicit. The allowed 1–8,784-hour profile versus the complete-year reference scope still needs a shared decision.
 - The general-purpose Boolean feature-model AST remains planned.
-- Authenticated ODIP-backed production runs have owner-confirmed evidence;
-  the full deployed denial, outage-fallback, restart, and recovery suite remains open.
+- Authenticated ODIP-backed runs, dataset denial, verified-cache outage fallback
+  and completed-run retrieval after VEF restart have guided hosted evidence.
+  Corrected-version isolation, remaining negative cases, ODIP restart/observability
+  and actual integrated backup restoration remain open.
 
 ## Durable run flow
 
@@ -83,6 +87,14 @@ single PostgreSQL-backed worker executes the pure optimizer. The `/energy` UI
 submits requests and displays progress, recommendation, candidate pages, and
 dataset/calculation evidence. DTOs, repositories, and UI stay outside the pure
 model. See [ADR-016](../03-decisions/ADR-016-energy-run-execution.md).
+
+V4 adds application security audit records for owned run, candidate and explanation reads,
+and hourly 180-day terminal-run/audit cleanup. Candidate rows cascade with the run;
+active runs and shared publication cache bytes remain. ODIP dependency metrics expose
+the last observed state, observation time and cache fallbacks on the private management
+interface without changing readiness. See the
+[local gap-closure record](../04-development/energy-gap-closure-verification.md) for
+verification, deployment implications and remaining recovery limits.
 
 The upstream DEC-02 approves v1 dispatch and economics, adopted in ADR-015.
 
@@ -99,8 +111,7 @@ limited to 16 sources and 64 KiB of UTF-8 JSON. Customer inputs, assumptions,
 the recorded result, and the recommended candidate (for success) are separate
 sources. VEF validates explanation shape, categories, exact JSON Pointer
 citations and values, required result facts, and infeasibility semantics before
-display. These explicit profile checks do not establish full generic JSON Schema
-validation or the semantic accuracy of every claim. The model has no tools and
+display. Draft 2020-12 schema validation supplements these profile checks; neither establishes the semantic accuracy of every claim. The model has no tools and
 cannot modify the deterministic result.
 Provider failures return `503`; invalid explanations return `502`. Saved results
 remain readable. See the [API model](system-model/api-model.md) for route contracts.

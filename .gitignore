@@ -2,3 +2,5 @@
 /scripts/__pycache__/
 /.local/deployment/
 .env
+
+/apps/prototype/ui/test-results/

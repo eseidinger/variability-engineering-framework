@@ -158,6 +158,18 @@ class EnergyExplanationTest {
     }
 
     @Test
+    void permitsExactly64KiBAndRejectsTheNextUtf8Byte() throws Exception {
+        var sources = mapper.createObjectNode();
+        // Python defaults serialize this as {"source": "..."}: 14 bytes of structure.
+        sources.put("source", "é".repeat(32761));
+        EnergyEvidenceService.requireBounds(sources, mapper);
+        sources.put("source", "é".repeat(32761) + "x");
+        assertThrows(EnergyEvidenceService.EvidenceTooLarge.class,
+                () -> EnergyEvidenceService.requireBounds(sources, mapper));
+        assertEquals(32762, sources.path("source").asText().length());
+    }
+
+    @Test
     void preservesUnprovenOptimalityAndDoesNotSupplyAbsentPrices() throws Exception {
         ObjectNode result = (ObjectNode) mapper.readTree(example("optimization-result.json"));
         result.put("optimalityStatus", "FEASIBLE_NOT_PROVEN");

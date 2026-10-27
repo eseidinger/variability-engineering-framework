@@ -12,6 +12,8 @@ import jakarta.annotation.PreDestroy;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
+import java.util.concurrent.Future;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ import java.util.concurrent.TimeoutException;
 /** One bounded worker for the declared single-replica service. Claims and terminal writes are transactional. */
 @ApplicationScoped
 public class EnergyRunWorker {
+    private static final Logger LOG = Logger.getLogger(EnergyRunWorker.class);
     @Inject JdbcEnergyRunRepository runs;
     @Inject JdbcEnergyPublicationRepository publications;
     @Inject ObjectMapper mapper;
@@ -41,6 +44,10 @@ public class EnergyRunWorker {
         if (next.isEmpty()) return;
         var claim = next.get();
         var task = computation.submit(() -> calculate(claim.run()));
+        await(claim, task);
+    }
+
+    void await(JdbcEnergyRunRepository.Claimed claim, Future<Output> task) {
         try {
             var output = task.get(300, TimeUnit.SECONDS);
             runs.complete(claim, output.status(), output.resultJson(), null, output.candidates());
@@ -57,6 +64,7 @@ public class EnergyRunWorker {
     }
 
     private void fail(JdbcEnergyRunRepository.Claimed claim, String code, String message) {
+        LOG.warnf("event=energy_run_failed run_id=%s code=%s", claim.run().runId(), code);
         var error = mapper.createObjectNode();
         error.put("schemaVersion", "error/v1");
         error.put("status", 500);
@@ -144,5 +152,5 @@ public class EnergyRunWorker {
         computation.shutdownNow();
     }
 
-    private record Output(String status, String resultJson, List<String> candidates) { }
+    record Output(String status, String resultJson, List<String> candidates) { }
 }

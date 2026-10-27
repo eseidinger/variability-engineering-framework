@@ -109,6 +109,15 @@ def main() -> None:
 
     def prepare_and_validate(output_dir: Path) -> None:
         kit = extract_kit(archive, lock, output_dir)
+        runtime = REPOSITORY_ROOT / "apps/prototype/api/src/main/resources/energy-contract"
+        expected = sorted(path.name for path in (kit / "schemas").glob("*.schema.json"))
+        if json.loads((runtime / "index.json").read_text()) != expected:
+            raise ValueError("Packaged schema index differs from the pinned kit")
+        if sorted(path.name for path in runtime.glob("*.schema.json")) != expected:
+            raise ValueError("Packaged schema files differ from the pinned kit")
+        for name in expected:
+            if (runtime / name).read_bytes() != (kit / "schemas" / name).read_bytes():
+                raise ValueError(f"Packaged schema differs from the pinned kit: {name}")
         print(f"ENERGY_CONTRACT_KIT_DIRECTORY={kit}", flush=True)
         if not args.prepare_only:
             validate_kit(kit, cache_dir)

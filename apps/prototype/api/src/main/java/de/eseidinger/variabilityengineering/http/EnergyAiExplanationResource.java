@@ -1,6 +1,7 @@
 package de.eseidinger.variabilityengineering.http;
 
 import de.eseidinger.variabilityengineering.persistence.JdbcEnergyRunRepository;
+import de.eseidinger.variabilityengineering.persistence.EnergyRetention;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -19,6 +20,7 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 public class EnergyAiExplanationResource {
     @Inject JdbcEnergyRunRepository runs;
+    @Inject EnergyRetention retention;
     @Inject EnergyEvidenceService evidence;
     @Inject ExplanationService explanations;
     @ConfigProperty(name = "energy.ai.enabled", defaultValue = "false") boolean enabled;
@@ -31,6 +33,7 @@ public class EnergyAiExplanationResource {
             return error(400, "invalid_run_id", "Run ID is malformed.");
         }
         var owned = runs.findOwned(runId, principal);
+        retention.audit(principal, runId, "EXPLAIN_RUN", owned.isPresent());
         if (owned.isEmpty()) return error(404, "run_not_found", "Run was not found.");
         if (!enabled) return error(503, "ai_unavailable", "AI explanations are not available now.");
         try {

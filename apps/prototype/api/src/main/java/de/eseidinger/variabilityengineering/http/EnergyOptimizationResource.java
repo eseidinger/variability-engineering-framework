@@ -3,6 +3,7 @@ package de.eseidinger.variabilityengineering.http;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import de.eseidinger.variabilityengineering.energy.EnergyContracts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.eseidinger.variabilityengineering.adapter.odip.EnergyPublicationClient;
 import de.eseidinger.variabilityengineering.adapter.odip.EnergyPublicationImportService;
@@ -10,6 +11,7 @@ import de.eseidinger.variabilityengineering.energy.EnergyFeatureModel;
 import de.eseidinger.variabilityengineering.energy.EnergyModelException;
 import de.eseidinger.variabilityengineering.energy.EnergyOptimizationRequest;
 import de.eseidinger.variabilityengineering.persistence.JdbcEnergyRunRepository;
+import de.eseidinger.variabilityengineering.persistence.EnergyRetention;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
@@ -41,6 +43,7 @@ public class EnergyOptimizationResource {
     private static final String GROUPS = "^grp_[0-9a-f]{32}( grp_[0-9a-f]{32})*$";
 
     @Inject JdbcEnergyRunRepository runs;
+    @Inject EnergyRetention retention;
     @Inject EnergyPublicationImportService publications;
     @Inject ObjectMapper mapper;
 
@@ -75,8 +78,9 @@ public class EnergyOptimizationResource {
             return error(413, "request_too_large", "Optimization request must be at most 64 KiB.");
         }
         try {
-            JsonNode tree = mapper.readTree(body);
+            JsonNode tree = EnergyContracts.parse(body);
             if (!requestShape(tree)) return error(400, "invalid_request", "Optimization request has missing or unknown fields.");
+            EnergyContracts.validate("energy-optimization-request-v1", tree);
             var request = mapper.treeToValue(tree, EnergyOptimizationRequest.class);
             if (!request.site().existingComponentIds().isEmpty()) {
                 return error(422, "existing_equipment_not_supported", "Existing equipment is not supported by this model version.");
@@ -101,7 +105,7 @@ public class EnergyOptimizationResource {
         } catch (EnergyModelException exception) {
             return error(422, exception.code(), exception.getMessage());
         } catch (IllegalArgumentException exception) {
-            return error(422, "invalid_request", exception.getMessage());
+            return error(422, "invalid_request", "Optimization request violates model constraints.");
         } catch (JsonMappingException exception) {
             if (exception.getCause() instanceof IllegalArgumentException) {
                 return error(422, "invalid_request", "Optimization request violates model constraints.");
@@ -149,6 +153,7 @@ public class EnergyOptimizationResource {
         if (principal == null) return error(401, "invalid_principal", "Normalized platform identity is required.");
         if (!runId.matches(RUN_ID)) return error(400, "invalid_run_id", "Run ID is malformed.");
         var found = runs.findOwned(runId, principal);
+        retention.audit(principal, runId, "READ_RUN", found.isPresent());
         if (found.isEmpty()) return error(404, "run_not_found", "Run was not found.");
         var run = found.get();
         try {
@@ -183,6 +188,7 @@ public class EnergyOptimizationResource {
             return error(400, "invalid_page", "Page must be nonnegative and pageSize must be 1–100.");
         }
         var found = runs.findOwned(runId, principal);
+        retention.audit(principal, runId, "READ_CANDIDATES", found.isPresent());
         if (found.isEmpty()) return error(404, "run_not_found", "Run was not found.");
         if (!Set.of("SUCCEEDED", "INFEASIBLE").contains(found.get().status())) {
             return error(409, "candidates_not_ready", "Candidate results are not available for this run.");

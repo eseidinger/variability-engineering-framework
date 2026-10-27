@@ -1,5 +1,12 @@
 # Energy Contract Kit Consumer Verification
 
+Current summary (October 27, 2026): both consumers pin kit 0.5.0; Gate 5 and the
+ODIP handoff retain their maintainer acceptance. AI-05/06/08/10/11 and final
+release acceptance remain open. See the [cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) for
+the reconciled status and fresh local checks, and the [gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md)
+for follow-up. The entries below are chronological evidence snapshots; later
+observations supersede earlier pending/deferred statements.
+
 Date: October 12, 2026. Status: locally verified VEF portion of `SHARED-01`.
 Hosted CI, ODIP's consumer pin, Java energy conformance, and cross-project Gate 1
 closure remain pending. This is not energy calculation/deployment acceptance.
@@ -760,3 +767,14 @@ version was visible in that operator's draft list, and VEF previously
 reported `1.0.1` as unavailable. The corrected content and expected-result
 authority still need cross-project alignment before this scenario can be
 accepted.
+
+## October 27 local implementation follow-up
+
+The [gap-closure verification](energy-gap-closure-verification.md) and
+[sanitized evidence summary](energy-gap-closure-evidence.json) record schema,
+retention/audit, AI-boundary, runtime, corrected-publication and browser checks.
+These working-tree improvements do not change the five open hosted AI case IDs
+or provide new deployment or owner acceptance. After explicit consent, the
+controlled synthetic AI-05/06 live-model retest passed on October 27; the linked
+record includes output/prompt hashes and assistant review, with hosted and final
+owner semantic acceptance still open.

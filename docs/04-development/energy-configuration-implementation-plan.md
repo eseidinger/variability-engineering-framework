@@ -1,6 +1,8 @@
 # Energy Configuration Implementation Plan
 
-Status: updated October 26, 2026 for released contract kit 0.5.0. Upstream
+Status: reconciled October 27, 2026 for released contract kit 0.5.0. The
+[cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) and [gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md) are the shared status
+and follow-up baseline; hosted observations remain dated through October 26. Upstream
 [Gate 5 acceptance](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/reviews/2026-10-17-gate-5-acceptance.md)
 records maintainer-confirmed implementation, deployment, and an operational
 0.4.0 workflow; Gates 2–5 are complete for progression to Gate 6. Gate 6 / VEF-05
@@ -47,15 +49,16 @@ acceptance cases were reviewed. The 0.5.0 kit suite subsequently passed during c
 below remain historical evidence.
 
 Kit 0.5.0 adds the VEF AI handoff without changing ODIP publication APIs, energy
-schemas, numerical fixtures/oracles, or platform identity contracts. ODIP may
-retain its accepted 0.4.0 pin until coordinated adoption. Consume immutable
+schemas, numerical fixtures/oracles, or platform identity contracts. ODIP has
+also adopted 0.5.0; its publication handoff was accepted by maintainer confirmation
+on October 19. Both consumer locks now identify the same archive checksum. Consume immutable
 released archives during implementation and CI. Gate 5 is accepted by maintainer
 authority; 0.5.0 publication does not close Gate 6 or authorize a 1.0.0 acceptance
 claim. Adopt the recorded demonstration assumptions and decisions.
 
 ## Current implementation and gaps
 
-Current as of October 26, 2026. Implementation status and remaining acceptance
+Current as of October 27, 2026, including the [local gap-closure checks](energy-gap-closure-verification.md). Implementation status and remaining acceptance
 evidence are separate; unchecked historical work packages below do not mean
 these features are absent.
 
@@ -63,11 +66,11 @@ these features are absent.
 | --- | --- | --- |
 | Analysis and calculation | `core/AnalysisEngine.java` retains observed-population semantics; `energy/` implements bounded generation, simulation, feasibility, and exhaustive ranking against the released oracle | General-purpose generative-model evaluation and portfolio optimization. |
 | Structural identity | Binary `core/Variant.java` identity is unchanged; quantitative energy IDs include models and quantities | Non-empty existing-equipment semantics and shared acceptance examples. |
-| Data import | Exact-version HTTPS ODIP client, managed credentials, bounded byte/semantic verification, and V2 cache; owner-confirmed ODIP-backed runs, hosted verified-cache outage fallback, and dataset-scope denial | Full generic schema enforcement, corrected-version isolation, remaining negative cases, and ODIP restart/observability evidence. |
-| Persistence and execution | V1 populations, V2 publication bytes, V3 owned requests/results/candidates, principal-scoped idempotency, atomic worker claims, 300-second deadline, startup requeue, hosted replay/conflict checks, and completed-run retrieval after workload restart | Dedicated model snapshots/security audit, retention/purge, concurrency and in-progress restart proof, and actual backup restoration. |
+| Data import | Exact-version HTTPS ODIP client, managed credentials, bounded byte/semantic verification, and V2 cache; owner-confirmed ODIP-backed runs, hosted verified-cache outage fallback, and dataset-scope denial | Offline complete schema validation and restored corrected-version import now pass locally. Hosted corrected-version/negative regression and ODIP observability remain open. |
+| Persistence and execution | V1 populations, V2 publication bytes, V3 owned requests/results/candidates, principal-scoped idempotency, atomic worker claims, 300-second deadline, startup requeue, hosted replay/conflict checks, and completed-run retrieval after workload restart | V4 retention/audit, concurrent reservation/claim tests, stale-claim recovery and source snapshot collection now pass locally. Upgrade replay and integrated deployed backup restoration remain open. |
 | Authorization | HTTP validates normalized principal context and scopes energy runs to stable principal IDs; browser policy bootstrap covers food, energy, and AI routes; three hosted cross-user route checks passed | Remaining AI-08 evidence-tampering checks, revocation/direct-backend checks, and complete deployed boundary evidence. |
-| Browser identity and UI | Platform sessions and CSRF forwarding; energy form, bounded polling, results/candidates, explicit AI proposal confirmation, and validated explanations | Browser accessibility, session-expiry/denial workload, and remaining AI acceptance cases. |
-| Readiness | `/api/status` checks the persisted food-service population and queryable energy run table, independently of current ODIP availability | Separate ODIP dependency reporting and any additional model-readiness requirements. |
+| Browser identity and UI | Platform sessions and CSRF forwarding; energy form, bounded polling, results/candidates, explicit AI proposal confirmation, and validated explanations | 24 automated desktop/mobile browser/accessibility checks now pass with mocked HTTP. Real platform session and assistive-technology review plus remaining hosted AI cases remain open. |
+| Readiness | `/api/status` checks the persisted food-service population and queryable energy run table, independently of current ODIP availability | Private ODIP last-observed-state, age and fallback metrics are implemented and tested. Hosted collection and operational alert thresholds remain open. |
 | Packaging and CI | Combined image, kit 0.5.0 validation, Java conformance, API/PostgreSQL, UI, Python, and Compose checks; versioned production and latest test descriptors with named storage | Full deployed regression/recovery, resource measurements, observability/retention, and final release evidence. |
 | AI assistance | OpenAI via LangChain4j, validated proposals, explicit confirmation, bounded owned evidence, citation validation, controlled live-model AI-05/06 checks, and hosted AI-09 outage/recovery | Hosted AI-05/06, remaining AI-08 and AI-11 evidence, AI-10 regression, and complete semantic/release acceptance. |
 
@@ -393,7 +396,7 @@ energy within `1e-6 kWh`, and dimensionless calculations within `1e-9`.
 
 | Dependency or question | Owner / completion condition |
 | --- | --- |
-| VEF adopts kit 0.5.0 for AI | Consumer lock, released suite, integrity checks, API consumer tests, and hosted CI checks passed. ODIP may retain accepted 0.4.0. |
+| VEF adopts kit 0.5.0 for AI | Consumer lock, released suite, integrity checks, API consumer tests, and hosted CI checks passed. ODIP also pins 0.5.0; its accepted handoff is dated October 19. |
 | AI provider, evidence, and acceptance | OpenAI through LangChain4j with configurable `gpt-6.1-sol` is implemented. AI-01–04, AI-07, and guided AI-09 have passing evidence; AI-05/06 passed controlled local live-model review. Five case IDs remain incomplete, along with complete evidence capture, deployed Gate 5 regression, and final release acceptance. |
 | Generic publication, energy adapter, reader allow-list | ODIP-backed evaluation, hosted verified-cache outage fallback, and guided non-energy dataset-scope denial have evidence. Corrected-version isolation, remaining negative cases, ODIP restart/observability, and actual backup restore remain open. |
 | Managed identity, routing, governance, secret binding, egress and recovery | Developer Platform plus application owners; use kit-pinned boundary `b360ddee34444748c95705c597aa7b17491cd05b` or document/retest compatibility of a newer deployment. |

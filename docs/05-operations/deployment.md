@@ -3,8 +3,11 @@
 Status: on October 19, 2026, the owner confirmed that AI explanations and the
 full deployed energy integration flow work end to end. This records an
 owner-verified operational workflow following release `v0.5.1`. The follow-up
-production walkthrough records run IDs and acceptance checks; deployment digests
-and the complete deployed acceptance-suite report remain open. See the [verification record](../04-development/energy-contract-kit-verification.md#deployed-energy-workflow--owner-confirmation-october-19-2026).
+production walkthrough records run IDs and acceptance checks. Test-deployment
+digests and guided outage/restart checks are recorded through October 26, most
+recently revision 21; a complete final-release inventory and deployed suite remain
+open. See the [verification record](../04-development/energy-contract-kit-verification.md).
+These are dated observations, not a fresh runtime inspection.
 
 The prototype deploys through the existing Developer Platform as one container
 image containing the UI and API. PostgreSQL is an independently managed named
@@ -493,3 +496,32 @@ Quarkus serves the compiled Angular UI at <http://localhost:8080> and the API be
 7. Record runtime, peak memory, revision, environment, and limitations.
 
 Backup, restore, schema migration, rollback, and incident procedures must be added after their application behavior is implemented and tested. Platform-level monitoring or backup capabilities do not by themselves prove recovery of this application.
+
+## Energy lifecycle and dependency observations
+
+Migration V4 adds `energy_security_audit` and retention indexes. The hourly
+`EnergyRetention` job is enabled by default (`energy.retention.enabled=true`);
+only tests disable it. Each invocation deletes up to 500 terminal runs completed
+at least 180 days ago and up to 5,000 audit events at least 180 days old, in one
+transaction. Candidate rows cascade; active work and shared immutable publication
+cache entries are retained. Large backlogs take multiple invocations. Deleted
+idempotency reservations may subsequently create a new run. Monitor sanitized
+`energy_retention_completed` / `energy_retention_failed` events and backlog age.
+Application deletion does not erase retained database backups; backup expiry and
+post-restore cleanup remain an operational responsibility.
+
+Run, candidate and explanation ownership checks write minimized ALLOWED/DENIED
+audit events. A failed audit write fails the read operation closed. This table
+does not replace platform authentication/access-policy audit or seven-day log
+retention. No prompts, results, tokens or customer payloads enter these events.
+
+Private management metrics `energy.odip.state` (fixed state labels),
+`energy.odip.observed.epoch.seconds`, and `energy.odip.cache.fallbacks` report the
+last observed import dependency state and cumulative fallback count since process
+start. They are event-driven observations, not continuous reachability probes.
+Readiness stays independent so verified-cache fallback remains usable; account for
+observation age before alerting. Hosted scraping and alerts still need verification.
+
+The [local verification record](../04-development/energy-gap-closure-verification.md)
+contains migration, cleanup and concurrency evidence. Review the new retention
+behavior before rolling out this working-tree change.

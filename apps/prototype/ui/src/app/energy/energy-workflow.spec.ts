@@ -96,6 +96,30 @@ describe('EnergyWorkflowComponent', () => {
     fixture.destroy();
   });
 
+  it('ignores an old poll response after a newer run has been submitted', () => {
+    vi.useFakeTimers();
+    const fixture = TestBed.createComponent(EnergyWorkflowComponent);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne('/api/v1/capabilities').flush({});
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const submit = () => root.querySelector('section[aria-labelledby="inputs-title"] form')
+      ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    submit();
+    http.expectOne('/api/v1/optimization-runs').flush({ runId: 'run-old', status: 'QUEUED' });
+    vi.advanceTimersByTime(2000);
+    const oldPoll = http.expectOne('/api/v1/optimization-runs/run-old');
+    submit();
+    http.expectOne('/api/v1/optimization-runs').flush({ runId: 'run-new', status: 'QUEUED' });
+    oldPoll.flush({ runId: 'run-old', status: 'SUCCEEDED', recommendedConfigurationId: 'stale-recommendation' });
+    http.expectNone(request => request.url.endsWith('/candidates'));
+    fixture.detectChanges();
+    expect(root.textContent).not.toContain('stale-recommendation');
+    vi.advanceTimersByTime(2000);
+    http.expectOne('/api/v1/optimization-runs/run-new').flush({ runId: 'run-new', status: 'FAILED' });
+    fixture.destroy();
+  });
+
   it('requires confirmation of the current proposal after editing', () => {
     const fixture = TestBed.createComponent(EnergyWorkflowComponent);
     const http = TestBed.inject(HttpTestingController);

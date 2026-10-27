@@ -1,8 +1,8 @@
 package de.eseidinger.variabilityengineering.http;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import de.eseidinger.variabilityengineering.energy.EnergyContracts;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.eseidinger.variabilityengineering.energy.ai.ExplanationModel;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -34,7 +34,7 @@ public class ExplanationService {
             throw new InvalidExplanation("empty_or_oversized_output");
         }
         try {
-            JsonNode explanation = mapper.reader().with(DeserializationFeature.FAIL_ON_TRAILING_TOKENS).readTree(raw);
+            JsonNode explanation = EnergyContracts.parse(raw);
             JsonNode result = sources.path("result").path("document");
             if (!object(explanation, Set.of("schemaVersion", "runId", "claims", "missingEvidence"))
                     || !"energy-ai-explanation/v1".equals(explanation.path("schemaVersion").asText())
@@ -90,6 +90,11 @@ public class ExplanationService {
                 }
             }
             if (!cited.containsAll(required)) throw new InvalidExplanation("missing_required_citations");
+            try {
+                EnergyContracts.validate("energy-ai-explanation-v1", explanation);
+            } catch (IllegalArgumentException exception) {
+                throw new InvalidExplanation("invalid_schema");
+            }
             return explanation;
         } catch (JsonProcessingException exception) {
             throw new InvalidExplanation("invalid_json");

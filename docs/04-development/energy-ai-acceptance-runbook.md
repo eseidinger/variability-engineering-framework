@@ -1,9 +1,11 @@
 # Energy AI acceptance runbook
 
-Status: updated October 26, 2026. The October 24 `main` workflow for commit
-`a911cc4` passed and deployed to `vareng-test`. A subsequent local live-model
-run on uncommitted test and prompt changes passed AI-05 and AI-06 with the
-configured provider; see the [verification record](energy-contract-kit-verification.md).
+Status: reconciled October 27, 2026; latest recorded hosted observations are
+from October 26. CI run `40353197285` for `b6990cb` passed and deployed test
+revision 21; the hosted invalid-input retest returned 422. Controlled local
+live-model AI-05/06 checks passed on October 24, but do not close their hosted
+cases. See the [verification record](energy-contract-kit-verification.md) and
+[shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md).
 
 ## Open AI consumer cases — October 26, 2026
 
@@ -155,3 +157,14 @@ including ODIP publication, exact reference result, negative cases, outage,
 restart and actual backup restoration. Record image, kit, policy and deployment
 digests, then obtain the three project owners' release acceptance. The current
 CI deployment and protected public probe do not close those gates.
+
+## October 27 local implementation follow-up
+
+The [gap-closure verification](energy-gap-closure-verification.md) and
+[sanitized evidence summary](energy-gap-closure-evidence.json) record schema,
+retention/audit, AI-boundary, runtime, corrected-publication and browser checks.
+These working-tree improvements do not change the five open hosted AI case IDs
+or provide new deployment or owner acceptance. After explicit consent, the
+controlled synthetic AI-05/06 live-model retest passed on October 27; the linked
+record includes output/prompt hashes and assistant review, with hosted and final
+owner semantic acceptance still open.

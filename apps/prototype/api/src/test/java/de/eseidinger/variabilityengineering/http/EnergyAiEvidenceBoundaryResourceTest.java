@@ -1,6 +1,8 @@
 package de.eseidinger.variabilityengineering.http;
 
 import de.eseidinger.variabilityengineering.energy.ai.ExplanationModel;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import de.eseidinger.variabilityengineering.persistence.JdbcEnergyRunRepository;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -56,6 +58,31 @@ class EnergyAiEvidenceBoundaryResourceTest {
         verifyNoInteractions(model);
         var after = identity().when().get(path).then().statusCode(200).extract().jsonPath();
         assertEquals(before.getMap("$"), after.getMap("$"));
+    }
+
+    @Test
+    void rejectsForeignSourcesPointersValuesAndRunIdsAtTheHttpBoundary() throws Exception {
+        var mapper = new ObjectMapper();
+        var run = new JdbcEnergyRunRepository.Run(RUN_ID, PRINCIPAL,
+                example("optimization-request.json"), "energy-reference-wasserburg-am-inn-2024",
+                "1.0.0", "f".repeat(64), "SUCCEEDED", Instant.parse("2026-10-10T10:00:00Z"),
+                null, Instant.parse("2026-10-10T10:00:01Z"), example("optimization-result.json"), null, null);
+        when(runs.findOwned(RUN_ID, PRINCIPAL)).thenReturn(Optional.of(run));
+        var sources = (ObjectNode) mapper.readTree(Files.readString(Path.of(
+                System.getenv("ENERGY_CONTRACT_KIT_DIRECTORY"), "ai/example-evidence.json")));
+        when(evidence.prepare(any())).thenReturn(sources);
+        for (String mutation : new String[]{"source", "pointer", "value", "runId"}) {
+            var explanation = (ObjectNode) mapper.readTree(example("ai-explanation.json"));
+            var citation = (ObjectNode) explanation.path("claims").get(0).path("citations").get(0);
+            if (mutation.equals("runId")) explanation.put("runId", "run-foreign-0001");
+            else citation.put(mutation, mutation.equals("pointer") ? "/missing" : "unapproved");
+            when(model.explain(any())).thenReturn(explanation.toString());
+            assertEquals("invalid_ai_explanation", identity().when()
+                    .post("/api/v1/ai/optimization-runs/" + RUN_ID + "/explanation")
+                    .then().statusCode(502).extract().jsonPath().getString("code"));
+            assertEquals(mapper.readTree(run.resultJson()), mapper.readTree(identity().when()
+                    .get("/api/v1/optimization-runs/" + RUN_ID).then().statusCode(200).extract().asString()));
+        }
     }
 
     private static String example(String file) throws Exception {

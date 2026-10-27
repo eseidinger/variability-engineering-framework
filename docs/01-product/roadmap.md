@@ -26,8 +26,9 @@ The bounded [energy workflow](../02-architecture/energy-configuration.md) has
 its own implementation and acceptance track against contract kit 0.5.0. It
 includes ODIP-backed deterministic optimization and reviewed AI assistance;
 this does not complete general-purpose model evaluation or portfolio selection.
-The [October 19 production walkthrough](../04-development/energy-contract-kit-verification.md#guided-production-acceptance--october-19-2026)
-records passed checks and the remaining AI, deployed regression, recovery, and
-release acceptance work.
+The [verification record](../04-development/energy-contract-kit-verification.md)
+includes guided checks through October 26. AI-05/06/08/10/11, remaining deployed
+regression/recovery and final release acceptance remain open; the
+[AI runbook](../04-development/energy-ai-acceptance-runbook.md) lists the assertions.
 
 The selected observed-data correctness oracle is the versioned [food-service MVP v1 fixture](../../examples/food-service/mvp-v1/README.md). Its expected results cover normalization, dimensions, filtering, leverage, and ingredient unavailability.

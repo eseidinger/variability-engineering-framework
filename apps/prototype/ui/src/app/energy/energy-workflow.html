@@ -15,7 +15,7 @@
     <p>Include usable roof area, annual demand, budget, minimum self-sufficiency, and the dataset version. The assistant asks when information is missing.</p>
     <form [formGroup]="proposalForm" (ngSubmit)="prepareProposal()">
       <label for="proposal-description">Site and constraints</label>
-      <textarea id="proposal-description" formControlName="description" rows="5" maxlength="4000"></textarea>
+      <textarea id="proposal-description" formControlName="description" [attr.aria-invalid]="proposalForm.controls.description.invalid && proposalForm.controls.description.touched" rows="5" maxlength="4000"></textarea>
       <button type="submit" [disabled]="busy()">Prepare request</button>
     </form>
     @if (proposal(); as draft) {
@@ -45,22 +45,22 @@
     @if (capabilities(); as bounds) {
       <p class="muted">The model evaluates at most {{ bounds.maxCandidateEvaluations }} configurations per run. Runs have a {{ bounds.runTimeoutSeconds }} second limit.</p>
     }
-    <form [formGroup]="form" (ngSubmit)="submit()">
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
       <div class="fields">
         <label>Dataset version
-          <input formControlName="datasetVersion" autocomplete="off" aria-describedby="version-help" />
+          <input formControlName="datasetVersion" [attr.aria-invalid]="form.controls.datasetVersion.invalid && form.controls.datasetVersion.touched" autocomplete="off" aria-describedby="version-help" />
         </label>
         <label>Usable roof area (m²)
-          <input formControlName="roofArea" type="number" min="0" step="0.1" />
+          <input formControlName="roofArea" [attr.aria-invalid]="form.controls.roofArea.invalid && form.controls.roofArea.touched" type="number" min="0" step="0.1" />
         </label>
         <label>Annual demand (kWh)
-          <input formControlName="annualDemand" type="number" min="0.001" step="1" />
+          <input formControlName="annualDemand" [attr.aria-invalid]="form.controls.annualDemand.invalid && form.controls.annualDemand.touched" type="number" min="0.001" step="1" />
         </label>
         <label>Maximum initial investment (EUR)
-          <input formControlName="budget" type="number" min="0" step="1" />
+          <input formControlName="budget" [attr.aria-invalid]="form.controls.budget.invalid && form.controls.budget.touched" type="number" min="0" step="1" />
         </label>
         <label>Minimum self-sufficiency (0–1)
-          <input formControlName="selfSufficiency" type="number" min="0" max="1" step="0.01" />
+          <input formControlName="selfSufficiency" [attr.aria-invalid]="form.controls.selfSufficiency.invalid && form.controls.selfSufficiency.touched" type="number" min="0" max="1" step="0.01" />
         </label>
         <label>Existing component IDs (comma-separated)
           <input formControlName="existingComponentIds" aria-describedby="existing-help" />

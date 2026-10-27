@@ -31,3 +31,5 @@ article { border: 1px solid #cbd6e2; border-radius: .5rem; padding: 1rem; overfl
 article h3 { margin-top: 0; }
 .pager { display: flex; align-items: center; gap: .75rem; margin-top: 1rem; }
 @media (max-width: 48rem) { .energy { padding: 1rem; }.fields { grid-template-columns: 1fr; } dl { grid-template-columns: 1fr; } }
+
+h2, code { overflow-wrap: anywhere; }

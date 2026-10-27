@@ -1,7 +1,7 @@
 package de.eseidinger.variabilityengineering.adapter.odip;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import de.eseidinger.variabilityengineering.energy.EnergyContracts;
 import de.eseidinger.variabilityengineering.energy.EnergyCatalog;
 import de.eseidinger.variabilityengineering.energy.EnergyComponent;
 import de.eseidinger.variabilityengineering.energy.EnergyOptimizationRequest;
@@ -26,7 +26,6 @@ public final class EnergyPublicationVerifier {
     public static final int MAX_ARTIFACT_BYTES = 10 * 1_048_576;
     public static final int MAX_TOTAL_BYTES = 50 * 1_048_576;
     private static final int MAX_HOURS = 8_784;
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private record Role(String schemaVersion, String unit) { }
     private static final Map<String, Role> ROLES = Map.of(
@@ -47,6 +46,7 @@ public final class EnergyPublicationVerifier {
         }
         require(totalBytes <= MAX_TOTAL_BYTES, "publication exceeds 50 MiB");
         var manifest = parse(manifestBytes);
+        EnergyContracts.validate("dataset-publication-v1", manifest);
         fields(manifest, Set.of("schemaVersion", "datasetId", "version", "status", "schemaRef",
                 "metadata", "publishedAt", "artifacts", "quality", "provenance"), Set.of());
         require("dataset-publication/v1".equals(string(manifest, "schemaVersion")), "unsupported manifest schema");
@@ -118,6 +118,7 @@ public final class EnergyPublicationVerifier {
             require(bytes != null, "missing artifact: " + id);
             require(sha256(bytes).equals(string(descriptor, "sha256")), "artifact digest mismatch: " + id);
             var document = parse(bytes);
+            EnergyContracts.validate(expected.schemaVersion().replace("/", "-"), document);
             require(expected.schemaVersion().equals(string(document, "schemaVersion")), "unsupported artifact schema: " + id);
             roleDocuments.put(role, document);
         }
@@ -203,7 +204,7 @@ public final class EnergyPublicationVerifier {
 
     private static JsonNode parse(byte[] bytes) {
         try {
-            var node = MAPPER.readTree(bytes);
+            var node = EnergyContracts.parse(bytes);
             require(node != null && node.isObject(), "JSON document must be an object");
             return node;
         } catch (java.io.IOException e) {
