@@ -800,7 +800,13 @@ rejection. The resource now returns 422 `publication_not_published` for that
 status, preserving 404 -> 422 `publication_not_found` and outage -> 503.
 Regression tests check all three HTTP responses and unchanged database run
 count, plus refusal of cached data on 409 without retry or cache save.
-The hosted retest remains pending in the linked guided record.
+Commit `561887e` passed CI run `40502827158`, including deployment to
+`vareng-test`. The operator's hosted retest returned HTTP 422
+`publication_not_published`, message "The requested publication version is not
+published.", with no run ID in the supplied error envelope. The classification
+regression passes. Hosted database run count was not independently measured;
+the local HTTP test checks it. This is not an independent hosted VEF test of
+invalid published bytes: ODIP intentionally prevents serving this fixture.
 The full API suite against an isolated PostgreSQL 17 instance passed 93 tests
 with two explicitly skipped checks (95 discovered), zero failures/errors and
 zero Checkstyle violations. Documentation links and whitespace checks passed.
