@@ -916,3 +916,18 @@ Loading fetches the run/candidates without a create or AI POST; explanation
 remains an explicit user action. Lint, all nine UI tests, production build and
 24 desktop/mobile browser/AXE checks pass. Hosted fixture explanation review is
 pending; AI-05/06/08/10/11 remain OPEN. See the AI runbook for the operator steps.
+
+### AI-05 hosted citation and semantic review: PASS
+
+The maintainer supplied the complete rendered response for
+`run-ai05-acceptance-20261027`, including 32 citations and missing evidence.
+All citation values/categories match the corrected oracle and declared fixture;
+all mandatory identifiers, cost/self-sufficiency and whole constraints are cited.
+The explanation explicitly preserves FEASIBLE_NOT_PROVEN, declines global
+optimality, identifies missing battery replacement price, retains the recommendation
+and metrics, and distinguishes synthetic/model outputs from measurements.
+Assistant semantic review passes AI-05. The shared guided record links the
+per-citation review, transcript hash, prompt digest, configured gpt-6.1-sol and
+revision-36 be61607 image pins. Raw HTTP/provider JSON and a separate independent
+human-review verdict were not captured. AI-06/08/10/11 remain OPEN; no final
+Gate 6 pass is inferred.

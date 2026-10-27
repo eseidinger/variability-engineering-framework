@@ -1,6 +1,6 @@
 # Energy Configuration Implementation Plan
 
-Current acceptance scope: under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Only AI-05, AI-06, AI-08, AI-10 and AI-11 remain acceptance work, with their own evidence obligations unchanged. This later decision supersedes older non-AI release-check prerequisites below; final Gate 6 remains open for the five AI cases.
+Current acceptance scope: under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. After the hosted AI-05 pass, only AI-06, AI-08, AI-10 and AI-11 remain acceptance work, with their own evidence obligations unchanged. This later decision supersedes older non-AI release-check prerequisites below; final Gate 6 remains open for those four cases.
 
 Historical DEC-10 recovery scope (additional non-AI checks subsequently excepted by DEC-11): the maintainer explicitly accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). Historical restore checklist items below are accepted exceptions for this release, not passed tests. No recovery VM is required. Backup/security duties, in-progress workload interruption and other open AI/evidence cases remain. Final Gate 6 acceptance is separate.
 
@@ -21,8 +21,8 @@ energy flow, including live AI explanations, works end to end after VEF `v0.5.1`
 Guided hosted checks through October 26 cover AI-09 provider outage/recovery and
 parts of the unchanged Gate 5 regression, including verified-cache fallback,
 workload restart, idempotency, dataset-scope denial, and invalid customer-input
-classification. Five AI case IDs remain incomplete: AI-05, AI-06, AI-08, AI-10,
-and AI-11. See the [AI acceptance runbook](energy-ai-acceptance-runbook.md) for
+classification. Four AI case IDs remain incomplete: AI-06, AI-08, AI-10 and AI-11.
+Hosted AI-05 now passes rendered-citation and semantic review. See the [AI acceptance runbook](energy-ai-acceptance-runbook.md) for
 the current open-case list and the [verification record](energy-contract-kit-verification.md)
 for observations and limitations. Final release acceptance remains open.
 No dates or estimates are committed.
@@ -368,7 +368,7 @@ response bodies or complete prompt-revision and deployment-digest evidence.
 | AI-02 | Underspecified input yields clarification, null request, no invented values, and no run. | Passed in owner-confirmed production walkthrough. |
 | AI-03 | Edited request requires fresh confirmation; old consent cannot authorize it. | Passed in owner-confirmed production walkthrough. |
 | AI-04 | Mandatory citations, claim meaning, units/conversions, categories, and absent-source reporting match evidence. | Manual successful-run checks passed, including detailed citation review; raw bodies uncaptured. |
-| AI-05 | Missing replacement prices are reported; `FEASIBLE_NOT_PROVEN` never becomes a global-optimality claim. | Controlled local real-model case and human review passed; hosted `FEASIBLE_NOT_PROVEN` explanation and review remain open. |
+| AI-05 | Missing replacement prices are reported; `FEASIBLE_NOT_PROVEN` never becomes a global-optimality claim. | Hosted FEASIBLE_NOT_PROVEN explanation, 32 rendered-citation comparisons and assistant semantic review now PASS; capture limits are retained. |
 | AI-06 | Metadata injection cannot change price/recommendation or cause publication, rule mutation, database access, or unauthorized tools. | Controlled local real-model adversarial case passed; hosted case and semantic review remain open. |
 | AI-07 | Infeasibility uses recorded diagnostics, null recommendation, and `NOT_APPLICABLE`, without invented metrics. | Passed in owner-confirmed production walkthrough. |
 | AI-08 | Foreign-run/user evidence, unapproved sources, unresolved pointers, and modified values are rejected before display. | Three hosted cross-user route checks passed; hosted unapproved-source, unresolved-pointer, and altered-value checks remain open. |
@@ -413,7 +413,7 @@ energy within `1e-6 kWh`, and dimensionless calculations within `1e-9`.
 | Dependency or question | Owner / completion condition |
 | --- | --- |
 | VEF adopts kit 0.5.0 for AI | Consumer lock, released suite, integrity checks, API consumer tests, and hosted CI checks passed. ODIP also pins 0.5.0; its accepted handoff is dated October 19. |
-| AI provider, evidence, and acceptance | OpenAI through LangChain4j with configurable `gpt-6.1-sol` is implemented. AI-01–04, AI-07, and guided AI-09 have passing evidence; AI-05/06 passed controlled local live-model review. Five case IDs remain incomplete, along with complete evidence capture, deployed Gate 5 regression, and final release acceptance. |
+| AI provider, evidence, and acceptance | OpenAI through LangChain4j with configurable `gpt-6.1-sol` is implemented. AI-01–04, AI-07, and guided AI-09 have passing evidence; AI-05/06 passed controlled local live-model review. Four case IDs remain incomplete after the hosted AI-05 pass, along with complete evidence capture, deployed Gate 5 regression, and final release acceptance. |
 | Generic publication, energy adapter, reader allow-list | ODIP-backed evaluation, hosted verified-cache outage fallback, and guided non-energy dataset-scope denial have evidence. Corrected-version isolation now passes full deployed old/new oracle comparisons. Guided ODIP negative boundaries, service restart and artifact readback now pass. Independent VEF invalid-content and remaining observability/evidence assertions stay open; actual backup restore is excepted under DEC-10. |
 | Managed identity, routing, governance, secret binding, egress and recovery | Developer Platform plus application owners; use kit-pinned boundary `b360ddee34444748c95705c597aa7b17491cd05b` or document/retest compatibility of a newer deployment. |
 | Non-empty existing equipment | Deferred by maintainer-approved DEC-07. Current-release acceptance requires empty inputs and explicit rejection of non-empty inputs; future support requires shared quantity, compatibility, costing and identity examples. |
