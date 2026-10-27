@@ -861,10 +861,18 @@ unchanged recommendation, EUR 365.64 annualized cost, EUR 8,240 investment,
 self-sufficiency 0.889509006, expected manifest digest and PROVEN_OPTIMAL.
 The reported fields match the independent corrected oracle. This passes the
 post-restart functional summary check, without a new complete candidate export.
-Direct ODIP artifact-byte readback remains pending because a successful VEF run
-alone cannot exclude use of its verified cache. Historical retained logs from retired
+The operator subsequently downloaded all five published artifacts directly from
+ODIP. Every file's digest matches the approved 1.0.1 manifest and every byte
+matches the corrected reference. The guided record links the per-file verification
+and private local archive hash. Operator artifact readback after restart passes;
+consumer manifest/ETag capture, direct proof of S3-only storage per artifact and
+actual database/bucket restore remain separate open evidence.
+Historical retained logs from retired
 pods are readable in both projects; recent ODIP request logs carry correlation
 IDs. Seven-day retention is configured, not proven by elapsed expiry.
 ODIP's actual storage backend is S3, so the integrated recovery gate includes
 its database and referenced object versions as well as VEF's database and access
 reconciliation. No database/bucket restore or operator recovery request occurred.
+Read-only recovery preflight found no reachable configured VM at
+127.0.0.1:2222, no local VM directory and no /dev/kvm. A usable isolated target
+and explicit verified snapshot are required before the joint restore exercise.
