@@ -888,3 +888,15 @@ restoration is claimed. The successful service restart and byte readback remain
 valid; other open AI, security, observability, interrupted-workload and evidence
 assertions remain. AI-10 as a whole and final Gate 6 are not accepted by this
 scoped decision. Released kit 0.5.0 and its pins are unchanged.
+
+### Maintainer accepts remaining non-AI points without verification
+
+[DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md)
+records the maintainer's explicit instruction to accept the other listed non-AI
+points without further testing while retaining the open AI cases. Operational,
+security, retention, reproducibility, workload, accessibility, S3 and additional
+non-AI release-evidence/review points are ACCEPTED_EXCEPTION for this release.
+The previous missing evidence is not now a passed test. DEC-10 remains the
+restore exception. AI-05, AI-06, AI-08, AI-10 and AI-11 and their own evidence
+obligations remain OPEN; these are the remaining acceptance work. Final Gate 6
+is not passed and no production deployment or release publication is implied.

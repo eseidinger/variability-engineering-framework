@@ -9,6 +9,8 @@ Controlled local live-model AI-05/06 checks passed again on October 27, but do
 not close their hosted cases. See the [verification record](energy-contract-kit-verification.md) and
 [shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md).
 
+Current acceptance scope: under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Only AI-05, AI-06, AI-08, AI-10 and AI-11 remain acceptance work, with their own evidence obligations unchanged. This later decision supersedes older non-AI release-check prerequisites below; final Gate 6 remains open for the five AI cases.
+
 ## Open AI consumer cases — October 27, 2026
 
 **Five of the eleven AI case IDs remain incomplete:** AI-05, AI-06, AI-08,
@@ -22,14 +24,14 @@ chronological evidence and limits behind these statuses.
 | AI-05 | Hosted `FEASIBLE_NOT_PROVEN` explanation and human review; the replacement-price gap and controlled local branch have evidence. |
 | AI-06 | Hosted adversarial metadata case and semantic review; the controlled local real-model case passed. |
 | AI-08 | Hosted rejection of unapproved sources, unresolved pointers, and altered values; cross-user route checks passed. |
-| AI-10 | Complete release-pinned deployed suite: corrected-version isolation and ODIP negative boundaries now pass; independent VEF invalid-content checks and remaining observability/evidence assertions stay open. ODIP restart/readback pass; joint backup restore is excepted under DEC-10. |
+| AI-10 | Complete release-pinned deployed suite: corrected-version isolation and ODIP negative boundaries now pass; independent VEF invalid-content and AI-enabled regression evidence stay open. Additional non-AI checks are excepted under DEC-11. ODIP restart/readback pass; joint backup restore is excepted under DEC-10. |
 | AI-11 | Hosted evidence-limit fixture and explicit failure; local 16/17-source and 64-KiB boundary tests passed. |
 
 AI-01–AI-04, AI-07, and AI-09 have guided or controlled evidence recorded in
 the verification record. Final cross-project release acceptance is a separate
 decision after the remaining tests.
 
-The maintainer accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). This is ACCEPTED_EXCEPTION, not a demonstrated recovery. No recovery VM is required; other acceptance cases remain open.
+The maintainer accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). This is ACCEPTED_EXCEPTION, not a demonstrated recovery. No recovery VM is required. DEC-11 subsequently excepts the other listed non-AI points; the five AI cases remain open.
 
 ## AI-05 and AI-06: controlled live-model run
 
@@ -162,8 +164,9 @@ After these cases, run the unchanged deployed Gate 5 regression for AI-10,
 including ODIP publication, exact reference result, negative cases, outage,
 restart and retained-state checks, applying DEC-10 to the actual backup-restore
 portion. Record image, kit, policy and deployment
-digests, then obtain the three project owners' release acceptance. The current
-CI deployment and protected public probe do not close those gates.
+digests needed for the open AI cases, then record their outstanding acceptance
+decisions. The other listed non-AI points already have maintainer acceptance
+under DEC-11. A CI deployment or protected public probe does not pass an AI case.
 
 ## October 27 local implementation follow-up
 
