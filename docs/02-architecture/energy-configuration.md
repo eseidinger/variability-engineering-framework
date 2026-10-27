@@ -75,8 +75,10 @@ records these choices.
 - The general-purpose Boolean feature-model AST remains planned.
 - Authenticated ODIP-backed runs, dataset denial, verified-cache outage fallback
   and completed-run retrieval after VEF restart have guided hosted evidence.
-  Corrected-version isolation, remaining negative cases, ODIP restart/observability
-  and actual integrated backup restoration remain open.
+  Corrected-version isolation now passes both full deployed oracles; see the
+  [guided acceptance](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-guided-release-acceptance.md).
+  Remaining negative cases, ODIP restart/observability and actual integrated
+  backup restoration remain open.
 
 ## Durable run flow
 

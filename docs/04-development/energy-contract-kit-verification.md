@@ -778,3 +778,14 @@ or provide new deployment or owner acceptance. After explicit consent, the
 controlled synthetic AI-05/06 live-model retest passed on October 27; the linked
 record includes output/prompt hashes and assistant review, with hosted and final
 owner semantic acceptance still open.
+
+## October 27 guided version isolation and request rejection
+
+The [cross-project guided record](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-guided-release-acceptance.md) contains the two owned runs, protected-browser exports and complete numerical
+comparisons: all 252 candidates and the feasible ranking match each version's
+independent oracle. Original 1.0.0 stays at EUR 360.67; corrected 1.0.1 produces
+EUR 365.64 with the same recommendation and 194 feasible candidates. Original
+readback after correction passed. Non-empty existing equipment and unpublished
+9.9.9 also returned their expected 422 error codes in browser Network.
+GAP-03 is closed for this test environment; AI-10 and final Gate 6 remain open.
+The guided record states raw-lineage, run-count and deployment-pin limitations.

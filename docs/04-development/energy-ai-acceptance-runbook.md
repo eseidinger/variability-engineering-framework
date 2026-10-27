@@ -145,10 +145,10 @@ now includes the reference and zero-budget runs, guided ODIP dataset denial,
 verified-cache outage fallback, completed-run retrieval after restart, and
 idempotency checks. The full deployed Gate 5 suite still needs corrected
 version isolation, remaining negative cases, ODIP restart and observability,
-and actual backup restoration. The upstream Gate 5 plan names `1.0.1`, while ODIP's local
-publication-acceptance script currently uses that version for a failed draft
-and `1.0.2` for the next valid publication. Align the deployed test version
-with the shared-contract and ODIP owners before attempting this check.
+and actual backup restoration. The subsequent DEC-09 fixture uses failed draft
+1.0.99 and genuinely corrected 1.0.1. The [guided test](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-guided-release-acceptance.md) now passes old/new owned runs against both full oracles and preserves 1.0.0.
+That closes version isolation in this test environment; remaining AI-10
+negative, ingestion/traceability, observability and recovery evidence stays open.
 
 ## Remaining release gate
 
