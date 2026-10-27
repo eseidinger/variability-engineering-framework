@@ -9,7 +9,7 @@ Controlled local live-model AI-05/06 checks passed again on October 27, but do
 not close their hosted cases. See the [verification record](energy-contract-kit-verification.md) and
 [shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md).
 
-## Open AI consumer cases — October 26, 2026
+## Open AI consumer cases — October 27, 2026
 
 **Five of the eleven AI case IDs remain incomplete:** AI-05, AI-06, AI-08,
 AI-10, and AI-11. This counts case IDs rather than individual assertions;
@@ -22,12 +22,14 @@ chronological evidence and limits behind these statuses.
 | AI-05 | Hosted `FEASIBLE_NOT_PROVEN` explanation and human review; the replacement-price gap and controlled local branch have evidence. |
 | AI-06 | Hosted adversarial metadata case and semantic review; the controlled local real-model case passed. |
 | AI-08 | Hosted rejection of unapproved sources, unresolved pointers, and altered values; cross-user route checks passed. |
-| AI-10 | Complete release-pinned deployed suite: corrected-version isolation and ODIP negative boundaries now pass; independent VEF invalid-content checks, ODIP restart/observability and actual backup restore remain open. |
+| AI-10 | Complete release-pinned deployed suite: corrected-version isolation and ODIP negative boundaries now pass; independent VEF invalid-content checks and remaining observability/evidence assertions stay open. ODIP restart/readback pass; joint backup restore is excepted under DEC-10. |
 | AI-11 | Hosted evidence-limit fixture and explicit failure; local 16/17-source and 64-KiB boundary tests passed. |
 
 AI-01–AI-04, AI-07, and AI-09 have guided or controlled evidence recorded in
 the verification record. Final cross-project release acceptance is a separate
 decision after the remaining tests.
+
+The maintainer accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). This is ACCEPTED_EXCEPTION, not a demonstrated recovery. No recovery VM is required; other acceptance cases remain open.
 
 ## AI-05 and AI-06: controlled live-model run
 
@@ -145,18 +147,21 @@ It makes no network call and cannot authenticate to the protected application
 on its own. The [verification record](energy-contract-kit-verification.md)
 now includes the reference and zero-budget runs, guided ODIP dataset denial,
 verified-cache outage fallback, completed-run retrieval after restart, and
-idempotency checks. The full deployed Gate 5 suite still needs corrected
-version isolation, remaining negative cases, ODIP restart and observability,
-and actual backup restoration. The subsequent DEC-09 fixture uses failed draft
+idempotency checks. Corrected-version isolation, ODIP negative boundaries and
+service restart/artifact readback now have guided evidence. Independent VEF
+invalid-content and remaining observability assertions stay open; actual backup
+restoration is a current-release exception under DEC-10. The subsequent DEC-09 fixture uses failed draft
 1.0.99 and genuinely corrected 1.0.1. The [guided test](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-guided-release-acceptance.md) now passes old/new owned runs against both full oracles and preserves 1.0.0.
 That closes version isolation in this test environment; remaining AI-10
-negative, ingestion/traceability, observability and recovery evidence stays open.
+negative, ingestion/traceability and observability evidence stays open. The
+restore-execution portion is excepted under DEC-10.
 
 ## Remaining release gate
 
 After these cases, run the unchanged deployed Gate 5 regression for AI-10,
 including ODIP publication, exact reference result, negative cases, outage,
-restart and actual backup restoration. Record image, kit, policy and deployment
+restart and retained-state checks, applying DEC-10 to the actual backup-restore
+portion. Record image, kit, policy and deployment
 digests, then obtain the three project owners' release acceptance. The current
 CI deployment and protected public probe do not close those gates.
 

@@ -876,3 +876,15 @@ reconciliation. No database/bucket restore or operator recovery request occurred
 Read-only recovery preflight found no reachable configured VM at
 127.0.0.1:2222, no local VM directory and no /dev/kvm. A usable isolated target
 and explicit verified snapshot are required before the joint restore exercise.
+
+### Current-release recovery-test exception
+
+The maintainer stated "Akzeptiere auch ohne Recovery Test." after confirming
+no recovery VM is available. [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md)
+records ACCEPTED_EXCEPTION for the joint ODIP database/S3 plus VEF database
+restore exercise and its restore-specific reconciliation/readback steps. No
+VM provisioning or restore drill is required for this current release. No actual
+restoration is claimed. The successful service restart and byte readback remain
+valid; other open AI, security, observability, interrupted-workload and evidence
+assertions remain. AI-10 as a whole and final Gate 6 are not accepted by this
+scoped decision. Released kit 0.5.0 and its pins are unchanged.
