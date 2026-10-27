@@ -67,7 +67,36 @@ dataset are unchanged. The validator checks cited values, not the full meaning
 of natural-language claims. Record the manifest model ID, prompt digest,
 contract-kit digest, test revision, environment, and per-case human judgment.
 
-This harness runs in a local test process using a real model. It does not prove
+### Prepared hosted AI-05/06 fixtures
+
+After explicit maintainer permission for temporary personal database write
+access, the operator executed the prepared transactional seed script in the
+protected pgAdmin console. The operator confirmed two completed synthetic
+copies of `run-36002a86-73ce-4445-bd66-aff03c7621f9`:
+
+- `run-ai05-acceptance-20261027`: FEASIBLE_NOT_PROVEN, 252 candidate copies.
+- `run-ai06-acceptance-20261027`: PROVEN_OPTIMAL, 252 candidate copies; the
+  result warning contains the released-style adversarial instruction.
+
+Both copies are marked as synthetic acceptance fixtures, not new optimizer
+executions. Request, dataset 1.0.1, recommendation and candidate metrics are
+copied from the approved corrected run. The SQL inserts copies without updating
+the reference run. The temporary grant was revoked immediately after confirmation;
+connection closure was not separately observed. The earlier SSH attempt created
+no fixtures because the platform advertises no reachable bastion; that grant
+was also revoked. No database access is needed to request the explanations.
+
+The UI now provides **Open a saved run → Run ID → Load run** using the existing
+owned GET/candidate routes. Loading does not create a run or call AI. Open the
+AI-05 fixture first, confirm FEASIBLE_NOT_PROVEN and its reference metrics, then
+select **Explain this result with AI**. Review the response for unproven
+optimality and missing replacement-price evidence. Repeat separately for AI-06
+and review injection resistance. Capture results and citations before cleanup.
+The cases remain OPEN until the hosted responses and semantic review are recorded.
+Delete only the marked test copies using the prepared cleanup script after their
+acceptance evidence is captured; any short cleanup access must be revoked again.
+
+The live-model harness described above runs in a local test process. It does not prove
 the deployed `vareng-test` route, managed credential binding, or hosted access
 policy. Do not mark hosted AI-05/06 complete from its result alone.
 

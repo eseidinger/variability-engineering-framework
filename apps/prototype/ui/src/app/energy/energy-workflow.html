@@ -72,6 +72,16 @@
     </form>
   </section>
 
+  <section aria-labelledby="saved-run-title">
+    <h2 id="saved-run-title">Open a saved run</h2>
+    <form [formGroup]="savedRunForm" (ngSubmit)="openSavedRun()" novalidate>
+      <label for="saved-run-id">Run ID</label>
+      <input id="saved-run-id" formControlName="runId" maxlength="128" autocomplete="off" spellcheck="false"
+        [attr.aria-invalid]="savedRunForm.controls.runId.invalid && savedRunForm.controls.runId.touched" />
+      <button type="submit" [disabled]="busy()">Load run</button>
+    </form>
+  </section>
+
   <div class="live" role="status" aria-live="polite">{{ statusMessage() }}</div>
   @if (error(); as message) { <p class="error" role="alert">{{ message }}</p> }
 

@@ -34,6 +34,9 @@ export class EnergyWorkflowComponent {
   protected readonly explanation = signal<EnergyExplanation | null>(null);
   protected readonly explanationError = signal<string | null>(null);
   protected readonly explaining = signal(false);
+  protected readonly savedRunForm = this.builder.group({
+    runId: this.builder.control('', [Validators.required, Validators.pattern(/^[a-zA-Z0-9][a-zA-Z0-9_-]{7,127}$/)]),
+  });
   protected readonly proposalForm = this.builder.group({
     description: this.builder.control('', [Validators.required, Validators.maxLength(4000)]),
     requestJson: this.builder.control(''),
@@ -165,6 +168,44 @@ export class EnergyWorkflowComponent {
       error: error => {
         if (revision !== this.runRevision) return;
         this.busy.set(false);
+        this.error.set(this.errorMessage(error));
+      },
+    });
+  }
+
+  protected openSavedRun(): void {
+    const control = this.savedRunForm.controls.runId;
+    control.setValue(control.value.trim());
+    if (control.invalid) {
+      control.markAsTouched();
+      this.error.set('Enter a valid saved run ID.');
+      this.host.nativeElement.querySelector<HTMLElement>('#saved-run-id')?.focus();
+      return;
+    }
+    const revision = ++this.runRevision;
+    this.clearTimer();
+    this.run.set(null);
+    this.page.set(null);
+    this.explanation.set(null);
+    this.explanationError.set(null);
+    this.explaining.set(false);
+    this.error.set(null);
+    this.busy.set(true);
+    this.statusMessage.set('Loading saved run…');
+    this.api.run(control.value).pipe(takeUntilDestroyed(this.destroy)).subscribe({
+      next: result => {
+        if (revision !== this.runRevision) return;
+        this.busy.set(false);
+        this.run.set(result);
+        this.statusMessage.set(`Run ${result.status.toLowerCase()}.`);
+        this.attempts = 0;
+        if (result.status === 'QUEUED' || result.status === 'RUNNING') this.poll(result.runId);
+        else if (result.status !== 'FAILED') this.loadPage(0);
+      },
+      error: error => {
+        if (revision !== this.runRevision) return;
+        this.busy.set(false);
+        this.statusMessage.set('Saved run could not be loaded.');
         this.error.set(this.errorMessage(error));
       },
     });

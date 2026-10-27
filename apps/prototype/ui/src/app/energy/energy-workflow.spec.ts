@@ -30,6 +30,59 @@ describe('EnergyWorkflowComponent', () => {
     vi.useRealTimers();
   });
 
+  it('opens a saved unproven run without creating a run or calling AI automatically', () => {
+    const fixture = TestBed.createComponent(EnergyWorkflowComponent);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne('/api/v1/capabilities').flush({});
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const input = root.querySelector('#saved-run-id') as HTMLInputElement;
+    input.value = 'run-ai05-acceptance-20261027';
+    input.dispatchEvent(new Event('input'));
+    root.querySelector('section[aria-labelledby="saved-run-title"] form')
+      ?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    http.expectOne('/api/v1/optimization-runs/run-ai05-acceptance-20261027').flush({
+      runId: input.value, status: 'SUCCEEDED', optimalityStatus: 'FEASIBLE_NOT_PROVEN',
+      recommendedConfigurationId: 'cfg-reference', evaluatedCandidateCount: 252, feasibleCandidateCount: 194,
+      dataset: { datasetId: 'reference', version: '1.0.1', schemaRef: 'urn:energy:v1', manifestSha256: 'a'.repeat(64) },
+    });
+    http.expectOne('/api/v1/optimization-runs/run-ai05-acceptance-20261027/candidates?page=0&pageSize=20')
+      .flush({ items: [], total: 252, page: 0, pageSize: 20 });
+    fixture.detectChanges();
+    expect(root.textContent).toContain('FEASIBLE_NOT_PROVEN');
+    expect(root.textContent).toContain('194 feasible of 252');
+    http.expectNone(request => request.method === 'POST');
+    const explain = Array.from(root.querySelectorAll('button')).find(button => button.textContent?.includes('Explain this result'));
+    explain?.click();
+    http.expectOne('/api/v1/ai/optimization-runs/run-ai05-acceptance-20261027/explanation')
+      .flush({ schemaVersion: 'energy-ai-explanation/v1', runId: input.value, claims: [], missingEvidence: [] });
+    fixture.destroy();
+  });
+
+  it('validates saved IDs and reports missing or inaccessible runs', () => {
+    const fixture = TestBed.createComponent(EnergyWorkflowComponent);
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne('/api/v1/capabilities').flush({});
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    const input = root.querySelector('#saved-run-id') as HTMLInputElement;
+    const form = root.querySelector('section[aria-labelledby="saved-run-title"] form');
+    input.value = '../other-run';
+    input.dispatchEvent(new Event('input'));
+    form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    http.expectNone(request => request.url.includes('/optimization-runs'));
+    expect(document.activeElement).toBe(input);
+    input.value = 'run-not-owned-0001';
+    input.dispatchEvent(new Event('input'));
+    form?.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+    http.expectOne('/api/v1/optimization-runs/run-not-owned-0001')
+      .flush({ message: 'Run was not found.' }, { status: 404, statusText: 'Not Found' });
+    fixture.detectChanges();
+    expect(root.textContent).toContain('Run was not found.');
+    expect(root.querySelector('#result-title')).toBeNull();
+    fixture.destroy();
+  });
+
   it('submits the pinned request and displays completed evidence', () => {
     vi.useFakeTimers();
     const fixture = TestBed.createComponent(EnergyWorkflowComponent);

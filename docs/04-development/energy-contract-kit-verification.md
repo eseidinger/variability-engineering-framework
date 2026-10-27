@@ -900,3 +900,19 @@ The previous missing evidence is not now a passed test. DEC-10 remains the
 restore exception. AI-05, AI-06, AI-08, AI-10 and AI-11 and their own evidence
 obligations remain OPEN; these are the remaining acceptance work. Final Gate 6
 is not passed and no production deployment or release publication is implied.
+
+### Hosted AI-05/06 fixture preparation and saved-run loading
+
+The maintainer authorized a temporary scoped human read-write grant for two
+synthetic fixtures. The SSH attempt could not connect and its grant was revoked.
+The operator then used the protected PostgreSQL console and confirmed
+`run-ai05-acceptance-20261027` (FEASIBLE_NOT_PROVEN) and
+`run-ai06-acceptance-20261027` (PROVEN_OPTIMAL, injected metadata), each with
+252 candidates. The console grant was immediately revoked after confirmation.
+The script marks copies as synthetic and never updates the reference run.
+
+The UI adds a saved-run form using existing owner-protected GET endpoints.
+Loading fetches the run/candidates without a create or AI POST; explanation
+remains an explicit user action. Lint, all nine UI tests, production build and
+24 desktop/mobile browser/AXE checks pass. Hosted fixture explanation review is
+pending; AI-05/06/08/10/11 remain OPEN. See the AI runbook for the operator steps.
