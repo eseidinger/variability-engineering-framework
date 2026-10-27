@@ -830,4 +830,11 @@ passes the hosted wrong-unit upload rejection; the earlier expected FAILED
 worker result was incorrect guidance. An earlier `missing_artifact` response
 also prevented validation with an incomplete upload set. Independent hosted
 VEF validation of invalid served content remains open. The guided record
-prepares a separate checksum-mismatch fixture 1.0.92, still awaiting execution.
+retains the separate checksum-mismatch fixture 1.0.92.
+
+The subsequent hosted upload of version 1.0.92's altered import tariff returned
+422 `checksum_mismatch`, "Artifact digest does not match the manifest". This
+passes ODIP upload integrity rejection; independent tampered read responses
+and VEF invalid-content rejection remain untested in the hosted environment.
+The guided record prepares unsupported publication schema v99 as version
+1.0.93; draft-creation rejection is expected but has not yet been observed.
