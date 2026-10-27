@@ -945,3 +945,25 @@ owned-evidence reads/audit are application operations. No independent database/
 audit before-after export or raw provider response was captured. The shared
 review retains transcript hash and image/model/prompt pins. AI-08/10/11 remain
 OPEN; cleanup of the two marked copies is the next authorized action.
+
+### Hosted private AI-08/11 validation boundary: PASS
+
+The maintainer confirmed cleanup of the two AI-05/06 test copies; the scoped
+database grant was revoked. VEF commit `edc4157` then passed all CI jobs on
+[run 40550620333, attempt 3](https://github.com/eseidinger/variability-engineering-framework/actions/runs/40550620333/attempts/3)
+and deployed image digest `a3b0f884c4186072fe3fdb673d032c0c1e5e51aa46d71b3ab8cc34528eff8a75`.
+The private `ai-boundary` scheduled component in `vareng-test` revision 40 had
+no database binding, external egress or public port. Its single run succeeded;
+all seven controlled AI-08/11 checks emitted PASS and the final marker recorded
+`cases=7`. Invalid explanations returned 502, and oversized or incomplete
+evidence returned 422 without a model call. Its in-memory completed result
+remained readable through the resource method. Revision 41 removed the job;
+only the ready web component remained on the same image.
+
+The [shared sanitized evidence](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-hosted-ai-boundary-probe.json)
+retains declaration, fixture and log hashes, status, image and cleanup pins.
+Earlier public cross-user 404 route checks complete AI-08's access boundary.
+The invalid payloads were injected inside the hosted job at the actual resource
+methods, not through a public HTTP gateway; the fixture repository was in
+memory. AI-08 and AI-11 pass within those limits. AI-10 and final Gate 6 remain
+open.

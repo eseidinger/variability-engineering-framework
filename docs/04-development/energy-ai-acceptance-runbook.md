@@ -9,12 +9,13 @@ Controlled local live-model AI-05/06 checks passed again on October 27, but do
 not close their hosted cases. See the [verification record](energy-contract-kit-verification.md) and
 [shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md).
 
-Current acceptance scope: under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. After the hosted AI-05/06 passes, only AI-08, AI-10 and AI-11 remain acceptance work, with their own evidence obligations unchanged. This later decision supersedes older non-AI release-check prerequisites below; final Gate 6 remains open for those three cases.
+Current acceptance scope: under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 now pass within their recorded evidence limits. Only AI-10 remains acceptance work; final Gate 6 is open. This later status supersedes older non-AI release-check prerequisites and chronological case counts below.
 
 ## Open AI consumer cases — October 27, 2026
 
-**Three of the eleven AI case IDs remain incomplete:** AI-08, AI-10 and AI-11.
-AI-05/06 passed the subsequent hosted rendered-response citation and semantic reviews. This counts case IDs rather than individual assertions;
+**One of the eleven AI case IDs remains incomplete: AI-10.**
+AI-05/06 passed hosted rendered-response citation and semantic reviews; AI-08/11
+passed the private hosted validation boundary probe. This counts case IDs rather than individual assertions;
 AI-10 contains multiple deployed Gate 5 regression scenarios. The
 [verification record](energy-contract-kit-verification.md) provides the
 chronological evidence and limits behind these statuses.
@@ -23,15 +24,15 @@ chronological evidence and limits behind these statuses.
 | --- | --- |
 | AI-05 | **PASS:** hosted explanation preserves FEASIBLE_NOT_PROVEN and missing battery replacement price; all 32 rendered citations and assistant semantic review pass. Capture limits are recorded in the guided review. |
 | AI-06 | **PASS:** hosted response ignores injected recommendation/price/action, retains reference facts, and passes all 33 rendered-citation comparisons and assistant semantic review. Capture limits are in the guided record. |
-| AI-08 | Hosted rejection of unapproved sources, unresolved pointers, and altered values; cross-user route checks passed. |
+| AI-08 | **PASS:** hosted private resource-method probe rejects foreign source, unresolved pointer, changed value and foreign run with 502; earlier public cross-user route checks passed. Internal-method and in-memory fixture limits are recorded. |
 | AI-10 | Complete release-pinned deployed suite: corrected-version isolation and ODIP negative boundaries now pass; independent VEF invalid-content and AI-enabled regression evidence stay open. Additional non-AI checks are excepted under DEC-11. ODIP restart/readback pass; joint backup restore is excepted under DEC-10. |
-| AI-11 | Hosted evidence-limit fixture and explicit failure; local 16/17-source and 64-KiB boundary tests passed. |
+| AI-11 | **PASS:** hosted private probe checks 16/17 sources, a schema-valid in-memory result whose evidence exceeds 64 KiB, and missing model version; 422 and zero model calls are asserted where the resource method applies. |
 
 AI-01–AI-04, AI-07, and AI-09 have guided or controlled evidence recorded in
 the verification record. Final cross-project release acceptance is a separate
 decision after the remaining tests.
 
-The maintainer accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). This is ACCEPTED_EXCEPTION, not a demonstrated recovery. No recovery VM is required. DEC-11 subsequently excepts the other listed non-AI points; AI-08/10/11 remain open after the subsequent AI-05/06 passes.
+The maintainer accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). This is ACCEPTED_EXCEPTION, not a demonstrated recovery. No recovery VM is required. DEC-11 subsequently excepts the other listed non-AI points; AI-10 remains open after the hosted AI-05/06/08/11 passes.
 
 ## AI-05 and AI-06: controlled live-model run
 
@@ -141,8 +142,8 @@ exercise the limit using a private, disposable test fixture or internal test
 job in `vareng-test`; do not add a public mutation route. Assert a stable
 `422 evidence_unavailable` or an explicit reported gap, no model call, and
 continued access to the completed deterministic result. Record fixture digest,
-deployment revision, response status/code, and cleanup. Hosted AI-11 remains
-open until the private fixture run is captured.
+deployment revision, response status/code, and cleanup. The private fixture run
+was captured on October 27; the instructions remain for repetition.
 
 The private synthetic-only probe is now packaged as
 `EnergyAiAcceptanceProbe` in the API image. It has no HTTP route, resource
@@ -155,10 +156,16 @@ missing-version cases assert `422 evidence_unavailable` and zero model calls;
 the source-count case checks the internal bound because normal evidence has at
 most four sources. Every failure check reads the original result through the
 resource method. Local packaged-image classpath execution passed all seven.
-Hosted acceptance still requires the scheduled component run, image pin,
-logs/exit state and removal of the disposable component. This tests the
-application service/resource boundary in the hosted image; it does not claim a
-new public HTTP route or gateway check.
+The same probe passed as a disposable scheduled component in `vareng-test`
+revision 40 on image digest `a3b0f884c4186072fe3fdb673d032c0c1e5e51aa46d71b3ab8cc34528eff8a75`.
+The job reported `succeeded` at 18:08:09 UTC; eight untruncated log lines
+contain all seven PASS markers and the completion marker. Revision 41 removed
+the job and retained only a ready `web` component on the same image. The
+[sanitized hosted record](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-hosted-ai-boundary-probe.json)
+pins fixture, declaration and log hashes. AI-08/11 pass with this private
+application service/resource-method evidence and the earlier public cross-user
+checks. No public evidence-mutation route or gateway assertion is claimed for
+the injected payloads; the fixture repository was in memory.
 
 ## AI-10: deployed numerical regression capture
 
