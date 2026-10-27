@@ -1004,3 +1004,24 @@ independent VEF invalid-content subcase. The in-memory fake ODIP transport
 did not mutate a live read response or invoke the public gateway. The complete
 unchanged cross-project Gate 5 suite on the AI-enabled release image remains
 unrecorded as one run; AI-10 and final Gate 6 remain OPEN.
+
+### Current AI-enabled image: original and corrected full oracles PASS
+
+After the documentation-only VEF commit `af53fae`, CI run 40560871383 passed
+and deployed image
+`cea0b41b880201a3a24cce0191d508c5d5486226ef51c1e10b4232c9221d2d6c`
+to ready `vareng-test` revision 45 with AI enabled. The maintainer created new
+protected `1.0.1` and `1.0.0` runs on that image. Browser-saved result JSON and
+all three candidate pages for each run passed `verify-deployed-energy-oracle.py`
+against the approved corrected and original oracles respectively. Each had
+252 evaluated and 194 feasible candidates; the recommended configuration was
+unchanged. Corrected annualized cost was 365.64 EUR; original was 360.67 EUR.
+All candidate metrics, constraints, per-version ranking and result provenance
+matched their oracle. A separate comparison confirmed unchanged components,
+feasibility, constraints and non-cost metrics across the two versions. The
+[shared sanitized report](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-ai10-current-image-oracles.json)
+retains hashes and IDs. The ODIP non-energy fixture is published with its pinned
+manifest digest. A later energy pipeline attempt failed with
+`NewConnectionError`; the catalog URL is a GitHub release page, not the raw
+PVGIS JSON. This evidence does not close the single automated Gate 5 suite or
+raw-input lineage, so AI-10 and Gate 6 stay OPEN.

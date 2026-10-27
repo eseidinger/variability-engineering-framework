@@ -240,6 +240,24 @@ denials; it does not claim a public gateway or live ODIP read mutation. AI-10
 remains OPEN until the complete unchanged deployed Gate 5 suite with AI enabled
 is recorded as one release-pinned regression.
 
+The next CI documentation deployment reached `vareng-test` revision 45 on image
+`cea0b41b880201a3a24cce0191d508c5d5486226ef51c1e10b4232c9221d2d6c`.
+The deployment verifier confirmed readiness and enabled AI. Two new protected
+browser runs on this same image passed independent **complete** 252-candidate
+oracles: original `1.0.0` run `run-d484d00e-a109-4ce3-8d40-9affecd731d2`
+(360.67 EUR) and corrected `1.0.1` run
+`run-9564f0a8-dfcb-433c-979a-29918000be0a` (365.64 EUR). Their full
+result and three candidate-page JSON exports were checked locally, including
+provenance, every candidate metric/constraint, ranking and recommendation.
+Across versions, configurations, components, feasibility, constraints and all
+non-cost metrics remained identical. The
+[sanitized current-image evidence](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-ai10-current-image-oracles.json)
+records file/oracle hashes. The protected exports remain ignored local files.
+ODIP's non-energy publication was also read back with its pinned manifest hash.
+Its energy source catalog entry links to the energy dataset, but a pipeline
+attempt failed with `NewConnectionError` and no successful raw-input lineage is
+claimed. AI-10 remains OPEN for the single unchanged cross-project Gate 5 suite.
+
 ## Remaining release gate
 
 Run the unchanged deployed Gate 5 regression for AI-10,
