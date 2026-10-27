@@ -117,6 +117,9 @@ public class EnergyOptimizationResource {
             if (exception.status() == 404) {
                 return error(422, "publication_not_found", "The requested publication version was not found.");
             }
+            if (exception.status() == 409) {
+                return error(422, "publication_not_published", "The requested publication version is not published.");
+            }
             logPublicationFailure(exception);
             return error(503, "publication_unavailable", "The energy publication could not be verified now.");
         } catch (InterruptedException exception) {

@@ -21,6 +21,25 @@ class EnergyPublicationImportServiceTest {
     private static final String VERSION = "1.0.0";
 
     @Test
+    void rejectsUnpublishedVersionEvenWithVerifiedCache() throws Exception {
+        var repository = new MemoryRepository();
+        var transport = new FixtureTransport();
+        var client = new EnergyPublicationClient(URI.create("https://odip.example"), () -> "reader-token", transport);
+        var dependency = new OdipDependencyState(new io.micrometer.core.instrument.simple.SimpleMeterRegistry());
+        var service = new EnergyPublicationImportService(repository, client, dependency);
+        service.importExact(ID, VERSION);
+        transport.unpublished = true;
+
+        var failure = assertThrows(EnergyPublicationClient.HttpStatusException.class,
+                () -> service.importExact(ID, VERSION));
+        assertEquals(409, failure.status());
+        assertEquals(7, transport.calls);
+        assertEquals(1, repository.saves);
+        assertEquals(0, dependency.fallbackCount());
+        assertEquals(OdipDependencyState.State.INVALID, dependency.state());
+    }
+
+    @Test
     void importsOnceFallsBackOnOutageAndRejectsDeniedAccess() throws Exception {
         var repository = new MemoryRepository();
         var transport = new FixtureTransport();
@@ -80,6 +99,7 @@ class EnergyPublicationImportServiceTest {
         private int conditionalCalls;
         private boolean denied;
         private boolean unavailable;
+        private boolean unpublished;
 
         private FixtureTransport() throws IOException {
             String kit = System.getenv("ENERGY_CONTRACT_KIT_DIRECTORY");
@@ -98,6 +118,7 @@ class EnergyPublicationImportServiceTest {
             calls++;
             assertEquals("reader-token", token);
             if (denied) return new EnergyPublicationClient.Response(403, null, null);
+            if (unpublished) return new EnergyPublicationClient.Response(409, null, null);
             if (unavailable) return new EnergyPublicationClient.Response(503, null, null);
             if (etag != null) {
                 conditionalCalls++;

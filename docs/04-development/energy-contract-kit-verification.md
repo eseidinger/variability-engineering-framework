@@ -789,3 +789,18 @@ readback after correction passed. Non-empty existing equipment and unpublished
 9.9.9 also returned their expected 422 error codes in browser Network.
 GAP-03 is closed for this test environment; AI-10 and final Gate 6 remain open.
 The guided record states raw-lineage, run-count and deployment-pin limitations.
+
+### Failed partial-calendar publication: upstream 409 classification
+
+The operator observed ODIP reject synthetic version 1.0.90 (4,368 aligned UTC
+hours rather than a complete year) as FAILED / `profile_validation_failed`.
+VEF then returned 503 `publication_unavailable`. The pinned ODIP contract
+defines GET 409 as an existing, unpublished version; this is a permanent input
+rejection. The resource now returns 422 `publication_not_published` for that
+status, preserving 404 -> 422 `publication_not_found` and outage -> 503.
+Regression tests check all three HTTP responses and unchanged database run
+count, plus refusal of cached data on 409 without retry or cache save.
+The hosted retest remains pending in the linked guided record.
+The full API suite against an isolated PostgreSQL 17 instance passed 93 tests
+with two explicitly skipped checks (95 discovered), zero failures/errors and
+zero Checkstyle violations. Documentation links and whitespace checks passed.
