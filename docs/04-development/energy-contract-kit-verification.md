@@ -855,8 +855,14 @@ resource snapshots were readable; these are not workload benchmarks.
 
 ODIP revision 10's service restart operation
 `2b197f8a-f634-4456-b357-bd496ecf5f8c` succeeded, replaced the web pod and
-retained the same image. A new operator-run corrected-version calculation and
-publication-byte readback remain pending. Historical retained logs from retired
+retained the same image. The operator then created corrected-version run
+`run-36002a86-73ce-4445-bd66-aff03c7621f9`: SUCCEEDED, 194/252 feasible,
+unchanged recommendation, EUR 365.64 annualized cost, EUR 8,240 investment,
+self-sufficiency 0.889509006, expected manifest digest and PROVEN_OPTIMAL.
+The reported fields match the independent corrected oracle. This passes the
+post-restart functional summary check, without a new complete candidate export.
+Direct ODIP artifact-byte readback remains pending because a successful VEF run
+alone cannot exclude use of its verified cache. Historical retained logs from retired
 pods are readable in both projects; recent ODIP request logs carry correlation
 IDs. Seven-day retention is configured, not proven by elapsed expiry.
 ODIP's actual storage backend is S3, so the integrated recovery gate includes
