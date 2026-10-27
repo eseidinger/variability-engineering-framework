@@ -819,4 +819,15 @@ the complete 2024 period, matching artifact digests and otherwise valid schemas;
 the local worker rejects the missing final hour. The hosted status rejection
 passes. The worker failure code/report and an independent hosted VEF validation
 of invalid published bytes were not captured. The linked guided record retains
-the fixture digest and prepares a separate wrong-unit case; AI-10 remains open.
+the fixture digest. AI-10 remains open.
+
+### Wrong-unit upload rejection
+
+The operator's version-1.0.91 wrong-unit case returned HTTP 422
+`schema_validation_failed`, "Document fails schema energy-import-tariff-v1".
+ODIP enforces the EUR/kWh schema at upload, before worker validation. This
+passes the hosted wrong-unit upload rejection; the earlier expected FAILED
+worker result was incorrect guidance. An earlier `missing_artifact` response
+also prevented validation with an incomplete upload set. Independent hosted
+VEF validation of invalid served content remains open. The guided record
+prepares a separate checksum-mismatch fixture 1.0.92, still awaiting execution.
