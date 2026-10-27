@@ -842,3 +842,23 @@ supported". Hosted ODIP unsupported-schema rejection passes. The guided record
 links a sanitized consolidated negative-case summary with fixture hashes,
 reported responses and boundary/capture limits. Independent hosted VEF
 invalid-content injection, integrated recovery and final Gate 6 remain open.
+
+### Renewed operational inventory and ODIP restart
+
+The [shared operational snapshot](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-operational-checks.json)
+records ready VEF revision 29, OCI source `9bbb577`, image
+`sha256:38cb0d1b9ded9fb140edbd18a325d00ebe498da939b9c1ca2e3ad043b9dc4c8a`.
+The normal documentation CI deployment advanced revision 28 during collection.
+Declared/running images, AI enabled/model setting and required provider/identity
+egress passed the existing deployment verifier. Bounded HTTP metrics and
+resource snapshots were readable; these are not workload benchmarks.
+
+ODIP revision 10's service restart operation
+`2b197f8a-f634-4456-b357-bd496ecf5f8c` succeeded, replaced the web pod and
+retained the same image. A new operator-run corrected-version calculation and
+publication-byte readback remain pending. Historical retained logs from retired
+pods are readable in both projects; recent ODIP request logs carry correlation
+IDs. Seven-day retention is configured, not proven by elapsed expiry.
+ODIP's actual storage backend is S3, so the integrated recovery gate includes
+its database and referenced object versions as well as VEF's database and access
+reconciliation. No database/bucket restore or operator recovery request occurred.
