@@ -810,3 +810,13 @@ invalid published bytes: ODIP intentionally prevents serving this fixture.
 The full API suite against an isolated PostgreSQL 17 instance passed 93 tests
 with two explicitly skipped checks (95 discovered), zero failures/errors and
 zero Checkstyle violations. Documentation links and whitespace checks passed.
+
+### Missing-hour publication status
+
+Following the guided upload/validate steps, the operator reported ODIP version
+1.0.99 as FAILED. The prepared synthetic fixture has 8,783 PV values within
+the complete 2024 period, matching artifact digests and otherwise valid schemas;
+the local worker rejects the missing final hour. The hosted status rejection
+passes. The worker failure code/report and an independent hosted VEF validation
+of invalid published bytes were not captured. The linked guided record retains
+the fixture digest and prepares a separate wrong-unit case; AI-10 remains open.
