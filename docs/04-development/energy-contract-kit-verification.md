@@ -1,8 +1,9 @@
 # Energy Contract Kit Consumer Verification
 
 Current summary (October 27, 2026): both consumers pin kit 0.5.0; Gate 5 and the
-ODIP handoff retain their maintainer acceptance. AI-05/06/08/10/11 and final
-release acceptance remain open. See the [cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) for
+ODIP handoff retain their maintainer acceptance. Hosted AI-05/06/08/11 pass
+within recorded limits; only AI-10 and final release acceptance remain open.
+See the [cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) for
 the reconciled status and fresh local checks, and the [gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md)
 for follow-up. The entries below are chronological evidence snapshots; later
 observations supersede earlier pending/deferred statements.
@@ -967,3 +968,21 @@ The invalid payloads were injected inside the hosted job at the actual resource
 methods, not through a public HTTP gateway; the fixture repository was in
 memory. AI-08 and AI-11 pass within those limits. AI-10 and final Gate 6 remain
 open.
+
+### AI-10 private probe prepared; browser CI dependency stabilized
+
+The checksum-pinned original 1.0.0 fixture and approved corrected 1.0.1
+fixture are packaged as a deterministic 256,687-byte ZIP resource with digest
+`8fbb0cf6fb7d65da84be8ee554b5ae48abc808bd4cdb048787f99649d46e9d74`.
+The private `EnergyAi10AcceptanceProbe` exercises the actual VEF verifier,
+client and optimizer with a fake in-memory ODIP transport. Its ten local
+classpath checks and ten checks in a network-isolated local VEF container pass:
+both complete 252-candidate oracles, exact-version/cache behavior and five
+invalid-content/state denials. This is preparation, not hosted AI-10 PASS.
+
+The previous CI/browser job repeatedly stalled inside Playwright's
+`--with-deps` apt update while other jobs passed. The UI job now uses the
+official Playwright 1.64.0 container pinned by digest, matching the project's
+package lock. The same 24 browser/accessibility checks pass locally inside
+that container without network access. Hosted CI and private AI-10 execution
+remain to be captured.

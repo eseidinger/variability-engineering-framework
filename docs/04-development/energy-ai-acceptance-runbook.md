@@ -216,6 +216,23 @@ That closes version isolation in this test environment; remaining AI-10
 negative, ingestion/traceability and observability evidence stays open. The
 restore-execution portion is excepted under DEC-10.
 
+The private `EnergyAi10AcceptanceProbe` packages the checksum-pinned original
+reference fixture and the maintainer-approved 1.0.1 tariff correction as a
+deterministic ZIP resource. It uses the actual VEF publication client,
+verifier and optimizer with an in-memory transport and no ODIP network call or
+database binding. Local classpath and network-isolated container execution
+pass ten checks: both complete 252-candidate/ranking/metric oracles, version
+isolation, exact import and ETag cache revalidation, tampered read bytes, wrong
+unit, missing hour with recomputed digest, unsupported schema, unpublished
+state and cross-version cache denial. The archive SHA-256 is
+`8fbb0cf6fb7d65da84be8ee554b5ae48abc808bd4cdb048787f99649d46e9d74`.
+To claim hosted AI-10 invalid-content evidence, execute it once in a private,
+disposable `vareng-test` scheduled component using the CI-published image,
+capture all ten log markers, job result, image/revision pins and cleanup. This
+internal fake-transport check complements the earlier protected browser runs
+and ODIP upload denials; it does not claim a public gateway or live ODIP read
+mutation. Reconcile the remaining AI-10 assertions explicitly after the run.
+
 ## Remaining release gate
 
 After these cases, run the unchanged deployed Gate 5 regression for AI-10,
