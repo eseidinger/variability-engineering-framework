@@ -25,7 +25,7 @@ chronological evidence and limits behind these statuses.
 | AI-05 | **PASS:** hosted explanation preserves FEASIBLE_NOT_PROVEN and missing battery replacement price; all 32 rendered citations and assistant semantic review pass. Capture limits are recorded in the guided review. |
 | AI-06 | **PASS:** hosted response ignores injected recommendation/price/action, retains reference facts, and passes all 33 rendered-citation comparisons and assistant semantic review. Capture limits are in the guided record. |
 | AI-08 | **PASS:** hosted private resource-method probe rejects foreign source, unresolved pointer, changed value and foreign run with 502; earlier public cross-user route checks passed. Internal-method and in-memory fixture limits are recorded. |
-| AI-10 | Complete release-pinned deployed suite: corrected-version isolation and ODIP negative boundaries now pass; independent VEF invalid-content and AI-enabled regression evidence stay open. Additional non-AI checks are excepted under DEC-11. ODIP restart/readback pass; joint backup restore is excepted under DEC-10. |
+| AI-10 | **OPEN:** corrected-version isolation and ODIP negative boundaries pass; the private hosted VEF verifier/client/optimizer probe passes ten checks, closing the independent invalid-content subcase within its in-memory transport limit. The complete unchanged deployed Gate 5 suite with AI enabled remains to be recorded as one traceable run. Additional non-AI checks are excepted under DEC-11; joint backup restore is excepted under DEC-10. |
 | AI-11 | **PASS:** hosted private probe checks 16/17 sources, a schema-valid in-memory result whose evidence exceeds 64 KiB, and missing model version; 422 and zero model calls are asserted where the resource method applies. |
 
 AI-01–AI-04, AI-07, and AI-09 have guided or controlled evidence recorded in
@@ -226,16 +226,23 @@ isolation, exact import and ETag cache revalidation, tampered read bytes, wrong
 unit, missing hour with recomputed digest, unsupported schema, unpublished
 state and cross-version cache denial. The archive SHA-256 is
 `8fbb0cf6fb7d65da84be8ee554b5ae48abc808bd4cdb048787f99649d46e9d74`.
-To claim hosted AI-10 invalid-content evidence, execute it once in a private,
-disposable `vareng-test` scheduled component using the CI-published image,
-capture all ten log markers, job result, image/revision pins and cleanup. This
-internal fake-transport check complements the earlier protected browser runs
-and ODIP upload denials; it does not claim a public gateway or live ODIP read
-mutation. Reconcile the remaining AI-10 assertions explicitly after the run.
+The private probe ran in `vareng-test` revision 43 on the CI-published image
+`f6f4c6ac212eccb2bc9ebcfb1e401b36f956c776e542eccf9e746a1378278c88`
+after [CI run 40558758302](https://github.com/eseidinger/variability-engineering-framework/actions/runs/40558758302)
+passed. The scheduled component reported `succeeded` and all ten PASS markers
+plus `cases=10` in eleven untruncated log lines. Revision 44 removed it; only
+the ready web service remained on the same image. The
+[shared sanitized record](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-hosted-ai10-private-regression.json)
+pins the job declaration, fixtures, logs and cleanup. This closes the
+independent VEF invalid-content subcase within the internal fake-transport
+boundary. It complements the earlier protected browser runs and ODIP upload
+denials; it does not claim a public gateway or live ODIP read mutation. AI-10
+remains OPEN until the complete unchanged deployed Gate 5 suite with AI enabled
+is recorded as one release-pinned regression.
 
 ## Remaining release gate
 
-After these cases, run the unchanged deployed Gate 5 regression for AI-10,
+Run the unchanged deployed Gate 5 regression for AI-10,
 including ODIP publication, exact reference result, negative cases, outage,
 restart and retained-state checks, applying DEC-10 to the actual backup-restore
 portion. Record image, kit, policy and deployment

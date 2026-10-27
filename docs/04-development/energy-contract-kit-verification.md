@@ -2,7 +2,9 @@
 
 Current summary (October 27, 2026): both consumers pin kit 0.5.0; Gate 5 and the
 ODIP handoff retain their maintainer acceptance. Hosted AI-05/06/08/11 pass
-within recorded limits; only AI-10 and final release acceptance remain open.
+within recorded limits. The private hosted AI-10 probe passes ten checks, but
+the complete unchanged deployed Gate 5 suite and final release acceptance
+remain open.
 See the [cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) for
 the reconciled status and fresh local checks, and the [gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md)
 for follow-up. The entries below are chronological evidence snapshots; later
@@ -969,7 +971,7 @@ methods, not through a public HTTP gateway; the fixture repository was in
 memory. AI-08 and AI-11 pass within those limits. AI-10 and final Gate 6 remain
 open.
 
-### AI-10 private probe prepared; browser CI dependency stabilized
+### AI-10 private probe hosted; browser CI dependency stabilized
 
 The checksum-pinned original 1.0.0 fixture and approved corrected 1.0.1
 fixture are packaged as a deterministic 256,687-byte ZIP resource with digest
@@ -978,11 +980,27 @@ The private `EnergyAi10AcceptanceProbe` exercises the actual VEF verifier,
 client and optimizer with a fake in-memory ODIP transport. Its ten local
 classpath checks and ten checks in a network-isolated local VEF container pass:
 both complete 252-candidate oracles, exact-version/cache behavior and five
-invalid-content/state denials. This is preparation, not hosted AI-10 PASS.
+invalid-content/state denials. This local result was preparation for the hosted
+run, not an AI-10 case PASS.
 
 The previous CI/browser job repeatedly stalled inside Playwright's
 `--with-deps` apt update while other jobs passed. The UI job now uses the
 official Playwright 1.64.0 container pinned by digest, matching the project's
 package lock. The same 24 browser/accessibility checks pass locally inside
-that container without network access. Hosted CI and private AI-10 execution
-remain to be captured.
+that container without network access. CI run
+[40558758302](https://github.com/eseidinger/variability-engineering-framework/actions/runs/40558758302)
+then passed all jobs, including the browser and packaged integration jobs,
+published image digest
+`f6f4c6ac212eccb2bc9ebcfb1e401b36f956c776e542eccf9e746a1378278c88`
+and deployed it ready to `vareng-test` revision 42.
+
+A private `ai10-regression` scheduled component on revision 43 used that same
+image, with no database binding, outbound access or public port. Its single
+run succeeded at 18:29:26 UTC and emitted all ten PASS markers plus `cases=10`
+in eleven untruncated log lines. Revision 44 removed it; `web` stayed ready on
+the same image. The [shared sanitized evidence](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-hosted-ai10-private-regression.json)
+retains fixture, declaration, log and cleanup hashes. This closes the
+independent VEF invalid-content subcase. The in-memory fake ODIP transport
+did not mutate a live read response or invoke the public gateway. The complete
+unchanged cross-project Gate 5 suite on the AI-enabled release image remains
+unrecorded as one run; AI-10 and final Gate 6 remain OPEN.
