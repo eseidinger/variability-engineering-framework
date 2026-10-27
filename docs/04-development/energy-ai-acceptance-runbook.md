@@ -97,6 +97,11 @@ Their marked fixture copies are ready for the authorized scoped cleanup.
 Delete only the marked test copies using the prepared cleanup script after their
 acceptance evidence is captured; any short cleanup access must be revoked again.
 
+Cleanup was completed on October 27. The maintainer confirmed the guarded SQL
+result `remaining_test_runs=0` and reference status `SUCCEEDED`; the temporary
+grant was revoked immediately. See the [shared cleanup record](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-hosted-ai-fixture-cleanup.json).
+Do not attempt to load the deleted fixture run IDs again. AI-08/10/11 remain open.
+
 The live-model harness described above runs in a local test process. It does not prove
 the deployed `vareng-test` route, managed credential binding, or hosted access
 policy. Do not mark hosted AI-05/06 complete from its result alone.
@@ -136,8 +141,24 @@ exercise the limit using a private, disposable test fixture or internal test
 job in `vareng-test`; do not add a public mutation route. Assert a stable
 `422 evidence_unavailable` or an explicit reported gap, no model call, and
 continued access to the completed deterministic result. Record fixture digest,
-deployment revision, response status/code, and cleanup. The private fixture
-mechanism has not yet been implemented, so hosted AI-11 remains open.
+deployment revision, response status/code, and cleanup. Hosted AI-11 remains
+open until the private fixture run is captured.
+
+The private synthetic-only probe is now packaged as
+`EnergyAiAcceptanceProbe` in the API image. It has no HTTP route, resource
+binding or provider call. A disposable scheduled component may invoke it with
+`--synthetic-only`; it uses four copied contract-kit 0.5.0 examples and the
+actual evidence builder, citation validator and resource methods. Its seven
+checks cover AI-08 source/pointer/value/foreign-run rejection and AI-11
+16/17-source, 64-KiB and missing-version boundaries. The 64-KiB and
+missing-version cases assert `422 evidence_unavailable` and zero model calls;
+the source-count case checks the internal bound because normal evidence has at
+most four sources. Every failure check reads the original result through the
+resource method. Local packaged-image classpath execution passed all seven.
+Hosted acceptance still requires the scheduled component run, image pin,
+logs/exit state and removal of the disposable component. This tests the
+application service/resource boundary in the hosted image; it does not claim a
+new public HTTP route or gateway check.
 
 ## AI-10: deployed numerical regression capture
 
