@@ -1,10 +1,12 @@
 # Energy AI acceptance runbook
 
-Status: reconciled October 27, 2026; latest recorded hosted observations are
-from October 26. CI run `40353197285` for `b6990cb` passed and deployed test
-revision 21; the hosted invalid-input retest returned 422. Controlled local
-live-model AI-05/06 checks passed on October 24, but do not close their hosted
-cases. See the [verification record](energy-contract-kit-verification.md) and
+Status: reconciled October 27, 2026. The
+[guided deployed record](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-guided-release-acceptance.md)
+records corrected-version oracle equality, infeasible explanation review and
+ODIP publication/upload/schema rejections. VEF's unpublished-state classification
+fix `561887e` passed CI/test deployment `40502827158` and hosted retest.
+Controlled local live-model AI-05/06 checks passed again on October 27, but do
+not close their hosted cases. See the [verification record](energy-contract-kit-verification.md) and
 [shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md).
 
 ## Open AI consumer cases — October 26, 2026
@@ -20,7 +22,7 @@ chronological evidence and limits behind these statuses.
 | AI-05 | Hosted `FEASIBLE_NOT_PROVEN` explanation and human review; the replacement-price gap and controlled local branch have evidence. |
 | AI-06 | Hosted adversarial metadata case and semantic review; the controlled local real-model case passed. |
 | AI-08 | Hosted rejection of unapproved sources, unresolved pointers, and altered values; cross-user route checks passed. |
-| AI-10 | Complete unchanged deployed Gate 5 suite, including corrected-version isolation, remaining negative cases, ODIP restart/observability, and actual backup restore. |
+| AI-10 | Complete release-pinned deployed suite: corrected-version isolation and ODIP negative boundaries now pass; independent VEF invalid-content checks, ODIP restart/observability and actual backup restore remain open. |
 | AI-11 | Hosted evidence-limit fixture and explicit failure; local 16/17-source and 64-KiB boundary tests passed. |
 
 AI-01–AI-04, AI-07, and AI-09 have guided or controlled evidence recorded in

@@ -836,5 +836,9 @@ The subsequent hosted upload of version 1.0.92's altered import tariff returned
 422 `checksum_mismatch`, "Artifact digest does not match the manifest". This
 passes ODIP upload integrity rejection; independent tampered read responses
 and VEF invalid-content rejection remain untested in the hosted environment.
-The guided record prepares unsupported publication schema v99 as version
-1.0.93; draft-creation rejection is expected but has not yet been observed.
+The subsequent version-1.0.93 draft-creation attempt with unsupported publication
+schema v99 returned 422 `unsupported_schema`, "Publication schema is not
+supported". Hosted ODIP unsupported-schema rejection passes. The guided record
+links a sanitized consolidated negative-case summary with fixture hashes,
+reported responses and boundary/capture limits. Independent hosted VEF
+invalid-content injection, integrated recovery and final Gate 6 remain open.
