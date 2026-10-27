@@ -258,6 +258,18 @@ Its energy source catalog entry links to the energy dataset, but a pipeline
 attempt failed with `NewConnectionError` and no successful raw-input lineage is
 claimed. AI-10 remains OPEN for the single unchanged cross-project Gate 5 suite.
 
+The separate ODIP synthetic dataset `energy-ai10-lineage-20261027` then passed
+protected reference-input capture of the pinned PVGIS JSON, worker validation,
+publication, raw-byte readback and all five artifact digest checks. Its published
+draft `9cd77d70-058c-47ed-ab4a-7507af293698` links one raw artifact with
+source SHA-256 `d82aff39f867cb3cd77f7f355ec164b2d43c19d27bb86b13e87306885d082f29`.
+The local operator cookie file was removed and the maintainer confirmed removal
+of the three temporary worker grants. The
+[shared isolated-lineage record](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-ai10-isolated-lineage.json)
+keeps this PASS separate from the immutable reference versions and the failed
+catalog URL download. No VEF run on this isolated dataset or complete Gate 5
+suite is inferred; AI-10 stays OPEN.
+
 ## Remaining release gate
 
 Run the unchanged deployed Gate 5 regression for AI-10,

@@ -1025,3 +1025,11 @@ manifest digest. A later energy pipeline attempt failed with
 `NewConnectionError`; the catalog URL is a GitHub release page, not the raw
 PVGIS JSON. This evidence does not close the single automated Gate 5 suite or
 raw-input lineage, so AI-10 and Gate 6 stay OPEN.
+
+The later isolated ODIP dataset `energy-ai10-lineage-20261027/1.0.0` passed
+protected capture and raw-byte readback of the pinned 824,681-byte PVGIS JSON,
+publication with one linked input and readback of all five checksum-matching
+artifacts. The [sanitized evidence](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-27-ai10-isolated-lineage.json)
+pins draft, manifest, raw artifact, capture run and cleanup facts. The
+catalog-source scheduled download failure remains separate; published reference
+versions are unchanged. AI-10's one-run cross-project regression remains OPEN.
