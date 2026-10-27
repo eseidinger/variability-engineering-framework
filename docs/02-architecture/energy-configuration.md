@@ -69,9 +69,9 @@ records these choices.
 
 ## Limits of this slice
 
-- Non-empty existing-equipment requests fail explicitly pending shared quantity/ownership/identity examples.
+- The current release covers new installations under maintainer-approved [DEC-07](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-07-new-equipment-release-scope.md). `existingComponentIds` must be empty; non-empty requests fail with `existing_equipment_not_supported`. Existing-equipment quantities, ownership and identity belong to a later version.
 - Individually valid component IDs may concatenate into an ID exceeding 128 characters or colliding with another assignment. These cases fail instead of truncating or merging choices.
-- Packaged, byte-verified kit 0.5.0 JSON Schemas validate publications, requests and AI envelopes offline, including optional fields and formats. Cross-document rules remain explicit. The allowed 1–8,784-hour profile versus the complete-year reference scope still needs a shared decision.
+- Packaged, byte-verified kit 0.5.0 JSON Schemas validate publications, requests and AI envelopes offline, including optional fields and formats. Cross-document rules remain explicit. Maintainer-approved [DEC-08](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-08-complete-calendar-year.md) requires one complete UTC calendar year. Import and the typed profile now enforce January-to-January boundaries and the exact 8,760/8,784 aligned hours; partial or rolling years are rejected.
 - The general-purpose Boolean feature-model AST remains planned.
 - Authenticated ODIP-backed runs, dataset denial, verified-cache outage fallback
   and completed-run retrieval after VEF restart have guided hosted evidence.

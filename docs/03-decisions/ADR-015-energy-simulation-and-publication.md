@@ -70,3 +70,13 @@ records run IDs, matching reference values, and the passed manual checks. This
 supersedes the historical deployed-access gap above. Complete deployed denial,
 outage-fallback, restart, recovery, and remaining AI acceptance evidence is still
 open; the original decision and its October 13 scope are unchanged.
+
+## October 27 annual-period amendment
+
+Shared [DEC-08](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-08-complete-calendar-year.md) requires a complete Gregorian UTC calendar year: January 1 midnight to the
+next January 1 midnight, exactly 8,760 or 8,784 aligned hours. EnergyProfile and
+the publication verifier enforce it before cache admission or optimization.
+Partial/rolling periods are rejected instead of annualized. Existing short
+low-level simulation cases remain numerical unit tests. The immutable 0.5.0
+kit and original 2024 oracle stay pinned; include the decision in the next kit
+release. See the [scope verification](../04-development/energy-release-scope-verification.md).

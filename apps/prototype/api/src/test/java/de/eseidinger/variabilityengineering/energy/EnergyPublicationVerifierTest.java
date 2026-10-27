@@ -39,6 +39,24 @@ class EnergyPublicationVerifierTest {
     }
 
     @Test
+    void rejectsNonCalendarPublicationPeriodsBeforeReadingSeries() throws IOException {
+        var fixture = fixture();
+        for (var times : new String[][] {
+                {"2024-01-01T00:00:00Z", "2024-01-02T00:00:00Z"},
+                {"2024-01-01T00:00:00Z", "2024-12-31T00:00:00Z"},
+                {"2024-01-01T01:00:00Z", "2025-01-01T01:00:00Z"},
+                {"2023-02-01T00:00:00Z", "2024-02-01T00:00:00Z"}}) {
+            var manifest = (ObjectNode) MAPPER.readTree(fixture.manifest());
+            var period = (ObjectNode) manifest.path("metadata").path("period");
+            period.put("start", times[0]);
+            period.put("endExclusive", times[1]);
+            var error = assertThrows(IllegalArgumentException.class,
+                    () -> verifier.verify(MAPPER.writeValueAsBytes(manifest), fixture.artifacts()));
+            assertEquals("energy profiles require one complete UTC calendar year", error.getMessage());
+        }
+    }
+
+    @Test
     void rejectsDigestMismatchAndMissingArtifact() throws IOException {
         var fixture = fixture();
         fixture.artifacts().get("pv-yield")[0] ^= 1;

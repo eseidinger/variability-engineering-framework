@@ -25,7 +25,6 @@ public final class EnergyPublicationVerifier {
     public static final int MAX_MANIFEST_BYTES = 1_048_576;
     public static final int MAX_ARTIFACT_BYTES = 10 * 1_048_576;
     public static final int MAX_TOTAL_BYTES = 50 * 1_048_576;
-    private static final int MAX_HOURS = 8_784;
 
     private record Role(String schemaVersion, String unit) { }
     private static final Map<String, Role> ROLES = Map.of(
@@ -65,9 +64,7 @@ public final class EnergyPublicationVerifier {
         Instant start = instant(period, "start");
         Instant end = instant(period, "endExclusive");
         require("PT1H".equals(string(period, "step")), "only one-hour intervals are supported");
-        long hours = ChronoUnit.HOURS.between(start, end);
-        require(hours > 0 && hours <= MAX_HOURS && start.plus(hours, ChronoUnit.HOURS).equals(end),
-                "publication period must contain 1..8784 whole UTC hours");
+        int hours = EnergyProfile.calendarYearHours(start, end);
 
         var quality = object(manifest, "quality");
         fields(quality, Set.of("status", "policyRef", "warnings"), Set.of());
@@ -125,11 +122,11 @@ public final class EnergyPublicationVerifier {
         require(ids.equals(artifactBytes.keySet()), "unexpected artifact bytes");
 
         var catalog = parseCatalog(roleDocuments.get("COMPONENT_CATALOG"), version);
-        var pv = series(roleDocuments.get("PV_YIELD_PER_KWP"), period, start, (int) hours, "kWh/kWp");
-        var load = series(roleDocuments.get("REFERENCE_LOAD_SHAPE"), period, start, (int) hours, "fraction");
-        var imports = series(roleDocuments.get("IMPORT_TARIFF"), period, start, (int) hours, "EUR/kWh");
-        var exports = series(roleDocuments.get("EXPORT_TARIFF"), period, start, (int) hours, "EUR/kWh");
-        var profileHours = new ArrayList<EnergyProfile.Hour>((int) hours);
+        var pv = series(roleDocuments.get("PV_YIELD_PER_KWP"), period, start, hours, "kWh/kWp");
+        var load = series(roleDocuments.get("REFERENCE_LOAD_SHAPE"), period, start, hours, "fraction");
+        var imports = series(roleDocuments.get("IMPORT_TARIFF"), period, start, hours, "EUR/kWh");
+        var exports = series(roleDocuments.get("EXPORT_TARIFF"), period, start, hours, "EUR/kWh");
+        var profileHours = new ArrayList<EnergyProfile.Hour>(hours);
         for (int i = 0; i < hours; i++) {
             profileHours.add(new EnergyProfile.Hour(start.plus(i, ChronoUnit.HOURS),
                     pv.get(i), load.get(i), imports.get(i), exports.get(i)));

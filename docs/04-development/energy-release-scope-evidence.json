@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "collectedAt": "2026-10-27T09:51:01.696655+00:00",
+  "scope": "local-release-scope-regression",
+  "releaseAccepted": false,
+  "decisions": [
+    "DEC-07",
+    "DEC-08"
+  ],
+  "sourceRevisions": {
+    "energy-system-configuration": "4b9e4ef76fd813a81e1eecbf72800d21e41927e2",
+    "variability-engineering-framework": "5013c8f7d203d82574d6ef0a5cf727cccf1b2190",
+    "open-data-intelligence-platform": "b764beb11499667df18aa5bd7c56a89caafd6478"
+  },
+  "workingTreeChangesIncluded": true,
+  "api": {
+    "tests": 93,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 2,
+    "suites": [
+      {
+        "name": "de.eseidinger.variabilityengineering.StatusResourceTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.http.FoodServiceAnalysisResourceTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.persistence.JdbcEnergyPublicationRepositoryTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.persistence.JdbcEnergyRunRepositoryTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.persistence.JdbcPopulationRepositoryTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.http.EnergyAiEvidenceBoundaryResourceTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.http.EnergyAiProposalResourceTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.http.EnergyOptimizationResourceTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.persistence.EnergyLifecycleTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.adapter.foodservice.FoodServiceFixtureAdapterTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.adapter.foodservice.FoodServiceFixtureConformanceTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.adapter.odip.EnergyPublicationDeployedTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.adapter.odip.EnergyPublicationImportServiceTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.adapter.odip.PlatformHttpClientFactoryTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.core.AnalysisEngineTest",
+        "tests": 7,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyContractsTest",
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyCorrectedPublicationTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyFeatureModelConformanceTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyFeatureModelTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyInputValidationTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyOptimizerConformanceTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyProfileTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyPublicationClientTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyPublicationVerifierTest",
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyRunWorkerTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergyRuntimeBenchmarkTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 1
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.energy.EnergySimulationConformanceTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.http.EnergyExplanationTest",
+        "tests": 8,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.http.EnergyPublicationLoggingTest",
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.http.ProposalPromptTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      {
+        "name": "de.eseidinger.variabilityengineering.http.ProposalServiceTest",
+        "tests": 2,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "odipWorker": {
+    "tests": 89,
+    "failures": 0,
+    "errors": 0,
+    "ruff": "PASS"
+  },
+  "sharedKit": {
+    "tests": 82,
+    "result": "PASS",
+    "version": "0.5.0"
+  },
+  "modelSourceArchiveSha256": "558a8352862c8aa903701f19a274f42a47876a7d028293a3abb629a86b8b780f",
+  "sourceFiles": {
+    "odip/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "odip/contracts/contract-kit.lock.json": "f2d47aadb5a7b4b97e0a8b2cb082053cdf4740993d8206cdd889d29aa9355b20",
+    "odip/workers/data-worker/pyproject.toml": "6c032368dd9d86fa51080ed96a4fcb40d0e74043b5af9cc29c1903cf6141523a",
+    "odip/workers/data-worker/src/odip_worker/energy/__init__.py": "18cd341ae6d8bed043f261c4ad9d4c4aeacb40cbda559a8a14051b16f8cd8d75",
+    "odip/workers/data-worker/src/odip_worker/energy/annual.py": "cd9ac9474924504745a9127bdaf7e7a941e9dfb3bc374ec154f5f697e4acb46e",
+    "odip/workers/data-worker/src/odip_worker/energy/profile.py": "6f88abd071e73d0f79ea2fafb112683b697cb6dc51fd8ab70b28b17005d7496b",
+    "odip/workers/data-worker/uv.lock": "d30bf05ee169f32125237ccc40570e4d9d1387ca38eb10b4afac07b35b6e905a",
+    "vef/LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "vef/NOTICE": "7aabdd2f14451de454ec7cf1f90ee889bad9363218ec450da6cfb722835cd705",
+    "vef/apps/prototype/api/pom.xml": "c9df9657c693413dfff36b7a320ee9dbf0cdd365fc1448dc5f11d24e8ab319d8",
+    "vef/apps/prototype/api/src/main/docker/Dockerfile.jvm": "063c99c9ac9ade42f41d2dd43cdc10b7b4d1e34e6703ec96a69361ee31ed2019",
+    "vef/apps/prototype/api/src/main/docker/Dockerfile.legacy-jar": "1229365df106d4e8db46a8d896c0a4f1851e213a1491b12fbb0a425a250641f5",
+    "vef/apps/prototype/api/src/main/docker/Dockerfile.native": "e67e6909d9f43fb304c53d212baa4f5f63655fdc57b4ba56d78ccc9cb2d61f2e",
+    "vef/apps/prototype/api/src/main/docker/Dockerfile.native-micro": "c8aa2355bde021d6b0377193bd635786a3bef013c3f81df30b7fa81e780eee32",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/StatusResource.java": "8ce3a2ee56cfe8635da84d9f5e74b315b1a17b168301ee1e87c53c01aa5a006c",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/adapter/foodservice/FoodServiceFixtureAdapter.java": "30b07181e563ca3b3aad1d968f4fdab6cf0bc1b6bfdf2ba3f772e2620c6eef8c",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/adapter/odip/EnergyPublicationClient.java": "f48ed6cf304f8d6f1fabd03a69571025229dd5403c146005936bce126af63740",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/adapter/odip/EnergyPublicationImportService.java": "08264839bc7ac4dbdb0166fdaf40e97fddc464134be9fbf2fe10fba762c9b42f",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/adapter/odip/EnergyPublicationVerifier.java": "0bdb42629603e220587413a3f6d66d2cd6f5eb04bfb933032a9afa077c44bd2b",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/adapter/odip/LocalFixtureEnergyPublicationImportService.java": "d832b4ba624c9d2c73a05c28d3aef557255f3d8dd778001874dccae7c9b4842d",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/adapter/odip/ManagedClientCredentialsTokenProvider.java": "cbe9bdef6787b2bcf15f604c9928e7b746803cdbfa384e3ab92b9ab9f6757262",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/adapter/odip/OdipDependencyState.java": "15ea37d3a401377efdf49feba67d458ab7466db84819cac08c02f5ca0b93ea00",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/adapter/odip/PlatformHttpClientFactory.java": "4beb78672ae73527bff277a082ef29226829493081060edb89f96e4d81d6141b",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/adapter/odip/VerifiedEnergyPublication.java": "d359cc32edcffc44df24bc1da19daf17cab203a68dc83695e590d66dc2349309",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/AnalysisEngine.java": "84525c05b1a89d0151b01ae94848b011154f907b715f54fd0c9ae669e4e95e67",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/AnalysisPopulation.java": "50309b27c0eb0a25b23a19fe6499a397348367d00ae322be40c0fa6e6e30cc29",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/AnalysisQuery.java": "9e7428af1ecfd1c2ba27d801db10a3ec2c31c7657164b8930e77d8b95a12a1ad",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/AnalysisResult.java": "df57220cde27142ce8ac7ea02ee50546ad95b8110c5902dd55457e580fbec781",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/DimensionDefinition.java": "3d9fce1365e7d91ee1d2557d4ff2de4d2d4e766fa86d284101ec765ef55a7726",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/DimensionValue.java": "acab565a4bf3450fbb8122f998e6a3d02956018eb90e8be68e16fa6d485db050",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/ElementLeverage.java": "a0c923f95ea0f0b411df9944eec24361bb6279af7abe77016a6dd57c15de2fa7",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/ElementUnavailabilityScenario.java": "dd7aa14e3e616db510e10e89470e262f74c553e5a3ac1f6ec5a9c66cc317bf1e",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/ImpactResult.java": "34dd395fc559b4455be9826cb88fa63d0a964f231f3b2c010ecef729dd3f8600",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/Variant.java": "9e4653bca1a06005f416d3bc713023d388009e272318d9aef05ed6740c30f4e2",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/VariantRecord.java": "7899847d45358e7c652f524554bc89e07695d3b8696849dcbd6a888ccb5e2b0b",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/core/configuration/ElementSelection.java": "57f7906d6e5aabfa33df17faf63ef036f38379bec55603643937ccca3182fd87",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyCatalog.java": "1674b04d53f40ba44cc48880be875158bbc99a36da34b80a1ef738f8b69cc07e",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyComponent.java": "1326b51b77b08165d5dae1cc2558949927df4f59757d7cd4b99627ace01028d6",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyConfiguration.java": "380fe7c6cf103dbef5ef28dec975ba8341d18ddf331a710b040eadc4ddaf40e5",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyContracts.java": "b9b4323f07cdabae248b46cbe72249d766459ff1d71afe708d3894b91706e7fe",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyFeatureModel.java": "9927f4c79756c336928262607687de8550147898572a96c8bd1dc74e21709e79",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyModelException.java": "46fb5f95555ef884e4761161ba8cf96a76c889d19d2263019e087ceae5922131",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyOptimizationRequest.java": "78122e87089cdb6d98800ea8b23e0009a68dfbd4ef3e5a542e488af5673827c0",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyOptimizer.java": "b32f0232dea9547881b428cc44b7b36298cd88862b98018546a82e242a6da50c",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyProfile.java": "4f6217daa79e7ee6e99a7e5d61dee9c40c43c00e1a8bf8663adf243a6d7cf9a7",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyRunWorker.java": "e51a26297f2f0850bd7758128ed6220c71c5fb3587d9b5ea8e4aaa6b599475d7",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergySimulation.java": "57a7543d33b0542d3bddf306f60284eac0e8dc1de402231f4436839ffe5505be",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/EnergyValidation.java": "6ac6609a20c8c6c75f9ec313a75efa4a974a754a3d089b64301763f8dcc943c8",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/ai/ExplanationModel.java": "481540346d240a1d0b56a82304c6ea6123ab87b99a8b9b59550d2ac4b19c2efd",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/energy/ai/ProposalModel.java": "184ae326afdc12611ed676c004be3e4fe457a7d6a5eeaf30c9a70286ebf496ac",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/http/EnergyAiExplanationResource.java": "75424e2f06ec99b79d16c3c84e552df8a17d8be5d782cdb7334c9f574fe09ef1",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/http/EnergyAiProposalResource.java": "c47a54422d497adf5a84734610c93a880179856610a8f5fa14ad269beade1de0",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/http/EnergyEvidenceService.java": "d56ef258cd0681d28d8dcd78c44565e90741e376959a635d254e81f77aeb6133",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/http/EnergyOptimizationResource.java": "6d36cf3e8069f55a7452160da5e64f747aa39edf450e82135979e8f30056c554",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/http/ExplanationService.java": "ce4f2adcb6a8ea8aea6927dfeec25d40280ff530fcce393e6198387799cf206a",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/http/FoodServiceAnalysisResource.java": "9a58007ccef87d5d6813ace750f949b87eb153b2739696f0fbec64448026fa77",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/http/FoodServicePopulationStore.java": "d0644f87917bcc015239bd11869697d9d62ee82067487d1724efe31d6657f02c",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/http/ProposalService.java": "3558d17c96f514d1c7f65ae6d17a911ea09370b11a110e78d914906c68b6cbfb",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/persistence/EnergyRetention.java": "a18284ee9509ad662dfb72eef11c631afc9afe16411f5787c6de49dc2829828f",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/persistence/JdbcEnergyPublicationRepository.java": "3f33d3e0ba247124071befc7f00ab79f09d1aa4fa04381efb036b6dc6f0db49f",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/persistence/JdbcEnergyRunRepository.java": "b203df320a83cea7ebf8a267504e5bdd360a9daf8a9df24bd9081132c291b195",
+    "vef/apps/prototype/api/src/main/java/de/eseidinger/variabilityengineering/persistence/JdbcPopulationRepository.java": "da841ad4181c80de6da978ed08f40086d75a05627c16aa2ee69a16734570eb87",
+    "vef/apps/prototype/api/src/main/resources/application.properties": "95f2c7e09d250830b56fddcb1c054332a52226eea788ba03d9ccd613f6e44084",
+    "vef/apps/prototype/api/src/main/resources/db/migration/V1__food_service_population.sql": "3cf12fcd1b7d137be0b349a53f5415191a30a8cbb05dee4f0335f601377cb941",
+    "vef/apps/prototype/api/src/main/resources/db/migration/V2__verified_energy_publication.sql": "085fab26462e24b1ec8d76162ca639b3391112c8a9424330ad21c754a8c15704",
+    "vef/apps/prototype/api/src/main/resources/db/migration/V3__energy_optimization_runs.sql": "44ce7757d6c95f9b42b3becc5257d07f0fd0e7e9543b1333414974c294b68cbf",
+    "vef/apps/prototype/api/src/main/resources/db/migration/V4__energy_retention_and_audit.sql": "8ea76cbc3fdcc59f6229e7b971782d653c9fb323d6c8beff80ba78417b8e3593",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/LICENSE": "f8edc23c15b617a09de3f1652dd94ec59f458a81cf0b7d54a8e006667cb0f01b",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/LICENSES/Apache-2.0.txt": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/LICENSES/CC-BY-4.0.txt": "9e5f1b3c610b9c2da5c313bf81d577a7d1acec686bdb0384edefa6df0f90cd94",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/NOTICE": "e0f3bdb2182914a8b16f8518fb39e561d5226053dd709f900a61c2f9025a9e18",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/common-v1.schema.json": "c79d7b76798a1781977ff6c1ba9a109bd7fbcf1d3df5fda8d2a6131bb155b49e",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/dataset-publication-v1.schema.json": "2e1861c8e89c3fbcaa818ae4cc4445ed5e8442052f4baa6981606a8882cdd3c1",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-ai-explanation-v1.schema.json": "86d27f35060117d59d21f2269f8fff12f63a60ec28e5ffb540b012f6f2833e08",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-ai-request-proposal-v1.schema.json": "514fdec47bb13c4c8935889e1af0bb6d3a15c672488ed6acb2f2e9dfa9c770d2",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-candidate-v1.schema.json": "7cc4665ee059c1a289f2e429e68290fe04147efcdc00734f1fac3a7884790140",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-component-catalog-v1.schema.json": "94d74755e1e8069bc4a1381bc1843d7cb1975aa8cbbdb1462a40b356d05b4d37",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-export-tariff-v1.schema.json": "7d76a8573f783a4bb477fcf19c768ff18c3e0336ba272ba66a7f39a8a4873492",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-import-tariff-v1.schema.json": "f4a66f2d7baadd3e9de2678c15526336ff68f795e32e90a80e5c85a7e2d90d06",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-optimization-request-v1.schema.json": "51698488fddf7feb6e5a40d72d2e9d3c3a76ea791018c53645ff570bcb6e38eb",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-optimization-result-v1.schema.json": "4a52cbd2b5a4471785c6c17b8928daa69381663ea0634175f68441edb02480da",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-pv-yield-v1.schema.json": "7c6cf169657702648578391e28f99d106ceb7aafcf33185f70c523f803ec53c6",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/energy-reference-load-shape-v1.schema.json": "6ca681b3b515f24b2599a2b732da663718f9c97f5af51eeb93f1e960f52d3320",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/error-v1.schema.json": "fda60df5192909257734c7099e100590f13973ebf2bc4e6e798b365a7c497f45",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/index.json": "f0792548ed7923de86eba487f80279ca19300f28e5a994e0b4e60439d6faa008",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/platform-access-error-v1.schema.json": "a976ac666e19aeffe82a291750a66551a2e1ca59720f36cb57c6acb37614c95e",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/platform-operational-envelope-v1.schema.json": "f812a70699b0f826a581863693f78b0947c51dc4b9fdfb4a1dcbbc6ce29915f9",
+    "vef/apps/prototype/api/src/main/resources/energy-contract/platform-principal-headers-v1.schema.json": "faa02a381301fa4254ab3b0d722a5ef3ceb03977820031d7f740a3bbd15f240d",
+    "vef/contracts/energy/contract-kit.lock.json": "7abea7ecebd9f9c11ad657575f2cbbc85ac2b25bf867cbbfa00cc04075d0a69b"
+  },
+  "limitations": [
+    "No deployment or hosted period-negative case executed in this capture.",
+    "Deployed test and optional runtime benchmark skipped in the full API run.",
+    "Prior live AI and browser results are retained separately, not re-dated."
+  ]
+}

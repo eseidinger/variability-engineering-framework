@@ -45,6 +45,16 @@ shared oracle supplies no quantity, mixed-ownership, or identity examples for
 that case. Shared acceptance examples must precede support. This slice does
 not claim to fulfill the entire energy contract.
 
+## October 27 release-scope amendment
+
+The maintainer approved new installations only for the current release in shared
+[DEC-07](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-07-new-equipment-release-scope.md). This supersedes the original unresolved release-scope gap above: the explicit
+non-empty-list rejection is the required behavior for this release. Existing
+equipment remains a later version requiring shared quantities, ownership,
+compatibility, costing and identity examples. The v1 wire shape, immutable kit
+0.5.0 pin and numerical oracle remain unchanged; release packaging must carry
+the scope decision before final acceptance.
+
 ## Alternatives and consequences
 
 Changing binary `Variant` equality would break the accepted observed contract.

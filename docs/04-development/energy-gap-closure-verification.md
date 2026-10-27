@@ -6,6 +6,16 @@ It follows the initial documentation audit on the same date. Gate 5 and the
 October 19 ODIP handoff remain accepted; Gate 6 and AI-05/06/08/10/11 remain
 incomplete. No deployment, release or new owner acceptance occurred.
 
+## Subsequent release-scope decision
+
+After these technical checks, the maintainer selected new installations for
+the current release in [DEC-07](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-07-new-equipment-release-scope.md). GAP-06 is therefore closed by explicit scope reduction. Existing-equipment
+support is deferred; this is not an implementation claim. The subsequent
+[DEC-08](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-08-complete-calendar-year.md) resolves the annual-period decision to complete UTC calendar years. See the
+[scope verification](energy-release-scope-verification.md) for enforcement tests.
+Hosted acceptance remains open. The evidence snapshot below
+retains the state at its collection time.
+
 ## Implemented changes
 
 | Shared gap | Change and local evidence | Remaining boundary |
@@ -132,4 +142,4 @@ the tested ODIP jar is
 The bundle lives in ignored build storage and must be copied to controlled
 release storage before cleaning `target/`. Its tracked summary is durable in the
 source change; neither is a deployed release approval. Final owner review,
-hosted evidence and agreed existing-equipment/annual-profile semantics remain open.
+hosted evidence remain open. DEC-07/08 now resolve the release scope to new installations and complete UTC calendar years; the scope-verification record supersedes the earlier open semantic questions.

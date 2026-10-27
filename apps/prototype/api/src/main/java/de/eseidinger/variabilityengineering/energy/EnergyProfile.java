@@ -1,12 +1,14 @@
 package de.eseidinger.variabilityengineering.energy;
 
 import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-/** Aligned, normalized hourly publication data, independent of its transport. */
+/** One complete UTC calendar year of aligned, normalized publication data. */
 public record EnergyProfile(String datasetId, String version, Instant start, Instant endExclusive,
                             List<Hour> hours) {
     private static final double LOAD_SHAPE_TOLERANCE = 1e-6;
@@ -27,9 +29,10 @@ public record EnergyProfile(String datasetId, String version, Instant start, Ins
         EnergyValidation.version(version, "dataset version");
         Objects.requireNonNull(start, "period start must not be null");
         Objects.requireNonNull(endExclusive, "period end must not be null");
+        int expectedHours = calendarYearHours(start, endExclusive);
         hours = List.copyOf(hours);
-        if (hours.isEmpty() || !endExclusive.equals(start.plus(hours.size(), ChronoUnit.HOURS))) {
-            throw new IllegalArgumentException("profile period must match whole UTC hours");
+        if (hours.size() != expectedHours) {
+            throw new IllegalArgumentException("profile must contain every hour of the declared UTC calendar year");
         }
         double[] fractions = new double[hours.size()];
         for (int i = 0; i < hours.size(); i++) {
@@ -41,6 +44,17 @@ public record EnergyProfile(String datasetId, String version, Instant start, Ins
         if (Math.abs(compensatedSum(fractions) - 1) > LOAD_SHAPE_TOLERANCE) {
             throw new IllegalArgumentException("reference load shape must sum to one");
         }
+    }
+
+    public static int calendarYearHours(Instant start, Instant endExclusive) {
+        Objects.requireNonNull(start, "period start must not be null");
+        Objects.requireNonNull(endExclusive, "period end must not be null");
+        var utcStart = start.atOffset(ZoneOffset.UTC);
+        if (utcStart.getDayOfYear() != 1 || !utcStart.toLocalTime().equals(LocalTime.MIDNIGHT)
+                || !endExclusive.equals(utcStart.plusYears(1).toInstant())) {
+            throw new IllegalArgumentException("energy profiles require one complete UTC calendar year");
+        }
+        return Math.toIntExact(ChronoUnit.HOURS.between(start, endExclusive));
     }
 
     public List<EnergySimulation.HourInput> simulationHours(double annualDemandKWh) {

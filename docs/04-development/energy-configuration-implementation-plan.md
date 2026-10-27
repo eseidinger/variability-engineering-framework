@@ -56,6 +56,18 @@ released archives during implementation and CI. Gate 5 is accepted by maintainer
 authority; 0.5.0 publication does not close Gate 6 or authorize a 1.0.0 acceptance
 claim. Adopt the recorded demonstration assumptions and decisions.
 
+## Accepted current-release scope
+
+On October 27 the maintainer selected new installations for this release in
+[DEC-07](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-07-new-equipment-release-scope.md). Requests retain `existingComponentIds: []`; non-empty inputs are rejected
+before a run is created. GAP-06 is closed by that explicit scope decision.
+Historical work-package checkboxes below retain the original broader scope;
+existing-equipment implementation and its shared examples are deferred to a
+later release. Record this amendment in the next immutable kit release before
+final acceptance. The maintainer also accepted [DEC-08](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-08-complete-calendar-year.md): complete UTC calendar years only. EnergyProfile and publication import now
+enforce that rule; the [scope verification](energy-release-scope-verification.md)
+records local evidence. Other hosted Gate 6 evidence remains open.
+
 ## Current implementation and gaps
 
 Current as of October 27, 2026, including the [local gap-closure checks](energy-gap-closure-verification.md). Implementation status and remaining acceptance
@@ -65,7 +77,7 @@ these features are absent.
 | Area | Current implementation and evidence | Remaining work or evidence |
 | --- | --- | --- |
 | Analysis and calculation | `core/AnalysisEngine.java` retains observed-population semantics; `energy/` implements bounded generation, simulation, feasibility, and exhaustive ranking against the released oracle | General-purpose generative-model evaluation and portfolio optimization. |
-| Structural identity | Binary `core/Variant.java` identity is unchanged; quantitative energy IDs include models and quantities | Non-empty existing-equipment semantics and shared acceptance examples. |
+| Structural identity | Binary `core/Variant.java` identity is unchanged; quantitative energy IDs include models and quantities | DEC-07 limits this release to new equipment. Existing-equipment semantics and shared examples are deferred. |
 | Data import | Exact-version HTTPS ODIP client, managed credentials, bounded byte/semantic verification, and V2 cache; owner-confirmed ODIP-backed runs, hosted verified-cache outage fallback, and dataset-scope denial | Offline complete schema validation and restored corrected-version import now pass locally. Hosted corrected-version/negative regression and ODIP observability remain open. |
 | Persistence and execution | V1 populations, V2 publication bytes, V3 owned requests/results/candidates, principal-scoped idempotency, atomic worker claims, 300-second deadline, startup requeue, hosted replay/conflict checks, and completed-run retrieval after workload restart | V4 retention/audit, concurrent reservation/claim tests, stale-claim recovery and source snapshot collection now pass locally. Upgrade replay and integrated deployed backup restoration remain open. |
 | Authorization | HTTP validates normalized principal context and scopes energy runs to stable principal IDs; browser policy bootstrap covers food, energy, and AI routes; three hosted cross-user route checks passed | Remaining AI-08 evidence-tampering checks, revocation/direct-backend checks, and complete deployed boundary evidence. |
@@ -400,7 +412,7 @@ energy within `1e-6 kWh`, and dimensionless calculations within `1e-9`.
 | AI provider, evidence, and acceptance | OpenAI through LangChain4j with configurable `gpt-6.1-sol` is implemented. AI-01–04, AI-07, and guided AI-09 have passing evidence; AI-05/06 passed controlled local live-model review. Five case IDs remain incomplete, along with complete evidence capture, deployed Gate 5 regression, and final release acceptance. |
 | Generic publication, energy adapter, reader allow-list | ODIP-backed evaluation, hosted verified-cache outage fallback, and guided non-energy dataset-scope denial have evidence. Corrected-version isolation, remaining negative cases, ODIP restart/observability, and actual backup restore remain open. |
 | Managed identity, routing, governance, secret binding, egress and recovery | Developer Platform plus application owners; use kit-pinned boundary `b360ddee34444748c95705c597aa7b17491cd05b` or document/retest compatibility of a newer deployment. |
-| Non-empty existing equipment | Shared-kit owner and VEF; approved quantity, compatibility, and canonical-ID examples precede this path's implementation acceptance. |
+| Non-empty existing equipment | Deferred by maintainer-approved DEC-07. Current-release acceptance requires empty inputs and explicit rejection of non-empty inputs; future support requires shared quantity, compatibility, costing and identity examples. |
 | Idempotent replay of a terminal run | Shared-kit owner and VEF; the prose returns the original run, while `RunAccepted` currently fixes status to `QUEUED`. Clarify whether POST returns the original acceptance envelope or amend the schema before claiming conformance. |
 | Ordering infeasible candidates in candidate pages | VEF and shared-kit owner; the oracle ranks the feasible subset and lists all evaluated candidates separately. Document a stable diagnostic ordering without changing feasible ranking, or publish a shared clarification. |
 | Worker concurrency/resource bounds | VEF; measure the reference year and largest supported catalog within the 300-second deadline, then set conservative deployment limits. |
