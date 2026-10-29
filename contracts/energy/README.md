@@ -57,7 +57,8 @@ direction on October 17, 2026. Historical 0.5.0 adoption evidence is recorded in
 and [implementation plan](../../docs/04-development/energy-configuration-implementation-plan.md).
 The VEF AI implementation is present, and owner-confirmed checks are recorded
 in the verification record. DEC-13 accepts bounded Gate 6 with the explicit
-DEC-10/11/12 evidence limits; production deployment remains separate.
+DEC-10/11/12 evidence limits. The maintainer separately authorized production
+deployment on October 29.
 
 ## Attribution and updates
 

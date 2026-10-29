@@ -4,12 +4,12 @@ A domain-independent framework for modeling, analyzing, configuring, and optimiz
 
 ## Status
 
-The food-service analysis MVP and combined container image have been validated locally against PostgreSQL. The energy workflow passes local API/PostgreSQL and UI tests. [GitHub Actions run 38439829738](https://github.com/eseidinger/variability-engineering-framework/actions/runs/38439829738) passed all build, test, publication, and deployment jobs for the energy workflow. On October 19, 2026, the owner confirmed the production ODIP-backed energy workflow, including live AI proposals and explanations. Guided evidence through October 26 includes the full deployed reference-oracle comparison, cross-user denial, provider recovery, cache fallback, restart and idempotency. Five AI case IDs remain incomplete: AI-05/06/08/10/11. The [acceptance record](docs/04-development/energy-contract-kit-verification.md), [cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) and [gap analysis](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md) distinguish implementation and prior maintainer acceptance from remaining Gate 6 evidence and release work.
+The food-service analysis MVP and combined container image have been validated locally against PostgreSQL. The energy workflow passes API/PostgreSQL, UI and packaged integration tests. On October 29, 2026, [CI run 40881986516](https://github.com/eseidinger/variability-engineering-framework/actions/runs/40881986516) passed against published contract kit 1.0.0 and deployed `vareng-test` revision 56. Bounded Gate 6 was accepted under DEC-13 with DEC-10/11/12 limits. The maintainer subsequently authorized production deployment; the versioned release is tracked in the [energy implementation plan](docs/04-development/energy-configuration-implementation-plan.md). Earlier production walkthroughs and the [acceptance record](docs/04-development/energy-contract-kit-verification.md) remain historical evidence.
 
 The API contains a domain-independent analysis core for versioned observed populations, a verified food-service fixture adapter, an HTTP analysis contract, and PostgreSQL-backed population storage. The Angular Material dashboard exposes summary metrics, filtering, reorderable grouping, ingredient leverage, and ingredient-unavailability impact.
 
 The API also includes an energy workflow against contract kit
-0.5.0: typed new-equipment generation, checked publication bytes, hourly
+1.0.0: typed new-equipment generation, checked publication bytes, hourly
 simulation, exhaustive ranking, durable owned runs, and paged candidates. The
 lazy-loaded `/energy` UI supports natural-language proposals, requires explicit
 confirmation of the current structured request, and displays recommendations,
