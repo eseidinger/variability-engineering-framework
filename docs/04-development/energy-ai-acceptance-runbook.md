@@ -9,11 +9,11 @@ Controlled local live-model AI-05/06 checks passed again on October 27, but do
 not close their hosted cases. See the [verification record](energy-contract-kit-verification.md) and
 [shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md).
 
-Current acceptance scope: under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 now pass within their recorded evidence limits. Only AI-10 remains acceptance work; final Gate 6 is open. This later status supersedes older non-AI release-check prerequisites and chronological case counts below.
+Current acceptance scope (October 29): under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 pass within their recorded evidence limits. The maintainer approved [DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md), classifying AI-10 as ACCEPTED_WITH_LIMITATIONS for this release. Final Gate 6 remains OPEN. This current status supersedes older chronological case counts and OPEN statements below.
 
-## Open AI consumer cases — October 27, 2026
+## AI consumer cases — current release
 
-**One of the eleven AI case IDs remains incomplete: AI-10.**
+**All eleven AI case IDs have a recorded disposition; AI-10 is accepted with limits.**
 AI-05/06 passed hosted rendered-response citation and semantic reviews; AI-08/11
 passed the private hosted validation boundary probe. This counts case IDs rather than individual assertions;
 AI-10 contains multiple deployed Gate 5 regression scenarios. The
@@ -25,14 +25,14 @@ chronological evidence and limits behind these statuses.
 | AI-05 | **PASS:** hosted explanation preserves FEASIBLE_NOT_PROVEN and missing battery replacement price; all 32 rendered citations and assistant semantic review pass. Capture limits are recorded in the guided review. |
 | AI-06 | **PASS:** hosted response ignores injected recommendation/price/action, retains reference facts, and passes all 33 rendered-citation comparisons and assistant semantic review. Capture limits are in the guided record. |
 | AI-08 | **PASS:** hosted private resource-method probe rejects foreign source, unresolved pointer, changed value and foreign run with 502; earlier public cross-user route checks passed. Internal-method and in-memory fixture limits are recorded. |
-| AI-10 | **OPEN:** corrected-version isolation and ODIP negative boundaries pass; the private hosted VEF verifier/client/optimizer probe passes ten checks, closing the independent invalid-content subcase within its in-memory transport limit. The complete unchanged deployed Gate 5 suite with AI enabled remains to be recorded as one traceable run. Additional non-AI checks are excepted under DEC-11; joint backup restore is excepted under DEC-10. |
+| AI-10 | **ACCEPTED_WITH_LIMITATIONS (DEC-12):** a new single source-to-consumer invocation passed on AI-enabled VEF, together with the separate private invalid-content probe. The historical unchanged Gate 5 suite was not captured as executable evidence; the new source publication used an isolated dataset and the private probe used in-memory ODIP transport. DEC-10/11 exceptions retain their stated limits. |
 | AI-11 | **PASS:** hosted private probe checks 16/17 sources, a schema-valid in-memory result whose evidence exceeds 64 KiB, and missing model version; 422 and zero model calls are asserted where the resource method applies. |
 
 AI-01–AI-04, AI-07, and AI-09 have guided or controlled evidence recorded in
 the verification record. Final cross-project release acceptance is a separate
-decision after the remaining tests.
+decision after the case dispositions.
 
-The maintainer accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). This is ACCEPTED_EXCEPTION, not a demonstrated recovery. No recovery VM is required. DEC-11 subsequently excepts the other listed non-AI points; AI-10 remains open after the hosted AI-05/06/08/11 passes.
+The maintainer accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). This is ACCEPTED_EXCEPTION, not a demonstrated recovery. No recovery VM is required. DEC-11 subsequently excepts the other listed non-AI points; DEC-12 accepts AI-10 with its recorded limits.
 
 ## AI-05 and AI-06: controlled live-model run
 
@@ -313,19 +313,18 @@ all eleven artifact bytes, two new full 252-candidate VEF oracles, idempotency,
 three 422 denials, zero-budget infeasibility and stored-result stability. The
 [sanitized source-to-consumer report](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-29-deployed-source-to-consumer-regression.json)
 pins the source, manifests, images, runs and independent grant-cleanup readback.
-The [proposed DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md)
+The [approved DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md)
 addresses the fact that historical Gate 5 acceptance did not retain an
 executable suite: this is a new equivalent suite using an isolated source
 version, and the private invalid-content probe used in-memory ODIP transport.
-Until explicit owner acceptance, AI-10 and Gate 6 remain OPEN.
+AI-10 is ACCEPTED_WITH_LIMITATIONS; Gate 6 remains OPEN.
 
 ## Remaining release gate
 
-The integration contract maintainer must decide whether to accept AI-10 with
-the limits in proposed DEC-12 or require a new clean-baseline execution of the
-historical Gate 5 assertions. DEC-10 covers the actual backup-restore portion;
-DEC-11 records the other accepted non-AI exceptions. Then record the final
-Gate 6 decision with immutable kit, implementation, image and deployment pins.
+The integration contract maintainer approved AI-10 with the limits in DEC-12.
+DEC-10 covers the actual backup-restore portion; DEC-11 records the other
+accepted non-AI exceptions. Record the separate final Gate 6 decision with
+immutable kit, implementation, image and deployment pins.
 A CI deployment or protected public probe alone does not pass an AI case.
 
 ## October 27 local implementation follow-up

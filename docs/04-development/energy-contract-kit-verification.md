@@ -1084,5 +1084,8 @@ The [sanitized report](https://github.com/eseidinger/energy-system-configuration
 retains the exact pins and limits. A literal unchanged historical Gate 5 suite
 cannot be rerun because the October 17 owner acceptance did not record one;
 the source capture used an isolated dataset and live ODIP reads were not
-corrupted. [Proposed DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md)
-requires explicit owner acceptance before AI-10 changes from OPEN.
+corrupted. The maintainer approved
+[DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md)
+on October 29. AI-10 is ACCEPTED_WITH_LIMITATIONS for the current release;
+Gate 6 remains OPEN. Earlier AI-10 OPEN statements above are dated evidence
+checkpoints, not the current case disposition.
