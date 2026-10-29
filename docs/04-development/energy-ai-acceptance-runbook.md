@@ -9,7 +9,7 @@ Controlled local live-model AI-05/06 checks passed again on October 27, but do
 not close their hosted cases. See the [verification record](energy-contract-kit-verification.md) and
 [shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md).
 
-Current acceptance scope (October 29): under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 pass within their recorded evidence limits. The maintainer approved [DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md), classifying AI-10 as ACCEPTED_WITH_LIMITATIONS for this release. Final Gate 6 remains OPEN. This current status supersedes older chronological case counts and OPEN statements below.
+Current acceptance scope (October 29): under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 pass within their recorded evidence limits. [DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md) classifies AI-10 as ACCEPTED_WITH_LIMITATIONS. The later [DEC-13](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-13-bounded-gate-6-acceptance.md) accepts Gate 6/`VEF-05` for the bounded test release with DEC-10/11/12 limits. Kit 1.0.0 publication and production deployment remain unauthorized. This status supersedes older chronological OPEN statements below.
 
 ## AI consumer cases — current release
 
@@ -317,14 +317,16 @@ The [approved DEC-12](https://github.com/eseidinger/energy-system-configuration/
 addresses the fact that historical Gate 5 acceptance did not retain an
 executable suite: this is a new equivalent suite using an isolated source
 version, and the private invalid-content probe used in-memory ODIP transport.
-AI-10 is ACCEPTED_WITH_LIMITATIONS; Gate 6 remains OPEN.
+AI-10 is ACCEPTED_WITH_LIMITATIONS; DEC-13 subsequently accepted bounded Gate 6.
 
 ## Remaining release gate
 
-The integration contract maintainer approved AI-10 with the limits in DEC-12.
-DEC-10 covers the actual backup-restore portion; DEC-11 records the other
-accepted non-AI exceptions. Record the separate final Gate 6 decision with
-immutable kit, implementation, image and deployment pins.
+The integration contract maintainer approved AI-10 with the limits in DEC-12
+and then accepted bounded Gate 6 in DEC-13. DEC-10 covers the actual
+backup-restore portion; DEC-11 records the other accepted non-AI exceptions.
+The [release inventory](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-29-gate-6-release-candidate-review.md)
+pins the test deployments and evidence. Kit 1.0.0 publication and production
+deployment require separate authorization.
 A CI deployment or protected public probe alone does not pass an AI case.
 
 ## October 27 local implementation follow-up

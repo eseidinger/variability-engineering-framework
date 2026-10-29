@@ -1089,3 +1089,8 @@ corrupted. The maintainer approved
 on October 29. AI-10 is ACCEPTED_WITH_LIMITATIONS for the current release;
 Gate 6 remains OPEN. Earlier AI-10 OPEN statements above are dated evidence
 checkpoints, not the current case disposition.
+
+The maintainer subsequently approved
+[DEC-13](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-13-bounded-gate-6-acceptance.md)
+for bounded Gate 6 with DEC-10/11/12 limits. The merged kit 1.0.0 candidate
+has not been tagged or published; deployed consumers still pin released 0.5.0.
