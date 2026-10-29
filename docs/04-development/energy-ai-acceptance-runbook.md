@@ -290,6 +290,20 @@ not prove a live ODIP read mutation. The
 pins both new runs, hashes, private job and cleanup. AI-10 remains OPEN for the
 complete unchanged deployed cross-project Gate 5 suite.
 
+The shared contract repository now contains a
+[single deployed consumer regression](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-29-deployed-consumer-regression.json)
+and its [runner](https://github.com/eseidinger/energy-system-configuration/blob/main/scripts/run-deployed-energy-consumer-regression.py).
+On AI-enabled VEF revision 50 and ODIP revision 10, one protected execution
+verified three published manifests and all eleven ODIP artifact bytes, then
+created two VEF runs that passed the complete 252-candidate oracles. It also
+passed idempotent replay, changed-body conflict, three 422 denials, a
+zero-budget infeasible result and unchanged stored success. The ODIP human
+session used protected operator draft routes; the VEF runs used the configured
+service binding. The runner did not ingest or publish a new source in that
+invocation, mutate live ODIP read bytes or execute the excepted recovery and
+operational cases. This consumer regression is PASS; AI-10's complete Gate 5
+assertion and final Gate 6 remain OPEN.
+
 ## Remaining release gate
 
 Run the unchanged deployed Gate 5 regression for AI-10,

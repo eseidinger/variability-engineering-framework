@@ -1054,3 +1054,17 @@ private verifier/client boundary. The
 [shared evidence](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-29-ai10-current-image-regression.json)
 contains the run IDs, hashes, test markers and cleanup. The complete unchanged
 deployed cross-project Gate 5 regression and Gate 6 remain OPEN.
+
+### Single deployed ODIP-to-VEF consumer regression
+
+The new [shared runner](https://github.com/eseidinger/energy-system-configuration/blob/main/scripts/run-deployed-energy-consumer-regression.py)
+passed in one protected execution against VEF revision 50, AI-enabled image
+`43af99e4107af05a657cf0864555ac466f1003a73fd7e3e21b4d76b997320bfa`,
+and ODIP revision 10. It checked original, corrected and non-energy published
+manifests with all eleven artifact bytes, then independently verified two new
+VEF 252-candidate results. Idempotent replay, changed-body 409, three 422
+denials, budget-zero infeasibility and unchanged stored success passed. The
+[sanitized report](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-29-deployed-consumer-regression.json)
+pins both deployments, run IDs and limits. Source ingestion and a live ODIP
+read mutation were outside this invocation; DEC-10/11 retain their stated
+exceptions. AI-10 and Gate 6 remain OPEN for the complete Gate 5 regression.
