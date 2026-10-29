@@ -270,6 +270,26 @@ keeps this PASS separate from the immutable reference versions and the failed
 catalog URL download. No VEF run on this isolated dataset or complete Gate 5
 suite is inferred; AI-10 stays OPEN.
 
+On October 29, VEF revision 47 ran new protected `1.0.0` and `1.0.1` requests
+with AI enabled on image
+`3187cc48a5f04fdfb2485194c58f2b12ac69703a15ee585f486b7418359aba89`.
+The result and all 252 candidates of each run passed its pinned oracle. The
+maintainer also observed the expected existing-equipment, unknown-version and
+failed-publication 422 errors. A budget-zero run returned `INFEASIBLE`, 0/252,
+null recommendation and `NOT_APPLICABLE` optimality. The successful result
+remained semantically unchanged after those tests and a rendered AI explanation.
+That explanation reported the recommendation, cost, count, optimality and
+synthetic-profile warning correctly in the maintainer's browser review.
+
+The same image passed the ten-check private `EnergyAi10AcceptanceProbe` in
+revision 48. All markers appeared in eleven untruncated job log lines; revision
+49 removed the job and retained one ready web component on the same image.
+The probe has no network access and uses in-memory ODIP transport, so it does
+not prove a live ODIP read mutation. The
+[sanitized October 29 evidence](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-29-ai10-current-image-regression.json)
+pins both new runs, hashes, private job and cleanup. AI-10 remains OPEN for the
+complete unchanged deployed cross-project Gate 5 suite.
+
 ## Remaining release gate
 
 Run the unchanged deployed Gate 5 regression for AI-10,

@@ -1033,3 +1033,24 @@ artifacts. The [sanitized evidence](https://github.com/eseidinger/energy-system-
 pins draft, manifest, raw artifact, capture run and cleanup facts. The
 catalog-source scheduled download failure remains separate; published reference
 versions are unchanged. AI-10's one-run cross-project regression remains OPEN.
+
+### October 29 AI-10 regression on the current test image
+
+VEF revision 47 used AI-enabled image
+`3187cc48a5f04fdfb2485194c58f2b12ac69703a15ee585f486b7418359aba89`.
+New protected `1.0.0` and `1.0.1` runs each passed the full 252-candidate
+oracle and their own ranking. The correction changed annualized costs and some
+ranking positions while preserving candidate identities, components,
+feasibility, constraints and all non-cost metrics. The recorded browser
+boundaries rejected existing equipment, unknown version and failed publication.
+A protected budget-zero result was `INFEASIBLE` with no recommendation and
+0/252 feasible candidates. The successful corrected result JSON remained
+semantically identical after those checks and a rendered AI explanation.
+
+The private ten-check verifier/client/optimizer probe then succeeded on the
+same image in revision 48. Revision 49 removed it and retained a ready web
+service on that image. Its in-memory ODIP transport limits the claim to the
+private verifier/client boundary. The
+[shared evidence](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-29-ai10-current-image-regression.json)
+contains the run IDs, hashes, test markers and cleanup. The complete unchanged
+deployed cross-project Gate 5 regression and Gate 6 remain OPEN.
