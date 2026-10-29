@@ -19,9 +19,10 @@ The listed website pages were reviewed and aligned with repository evidence on O
 The October 17, 2026 energy-plan update uses the [released kit 0.5.0](https://github.com/eseidinger/energy-system-configuration/releases/tag/contract-kit-v0.5.0), [normative AI profile](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/contract-kit/ai/README.md), and [AI acceptance cases](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/contract-kit/ai/acceptance-cases.json). The downloaded archive passed `SHA256SUMS` verification: `ae4edaf6799d4b57510d14d2004c5b65ff6b05f3b225e96bbd5971b30ce8832b`. The [Gate 5 record](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/reviews/2026-10-17-gate-5-acceptance.md) establishes maintainer acceptance for progression to Gate 6 without new execution reports. This planning review does not establish 0.5.0 consumer adoption or AI implementation acceptance.
 
 
-The [October 27 cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) supersedes the planning-only
-status above for current adoption and implementation: both consumers pin 0.5.0,
-AI is implemented, and acceptance observations extend through October 26.
+The [October 27 cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) superseded the planning-only
+status above at that checkpoint. The current [bounded Gate 6 closure](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-29-gate-6-closure.md)
+records kit 1.0.0 consumer pins, production application v1.0.0, and the retained
+DEC-10/11/12 evidence limits.
 The [consumer verification record](04-development/energy-contract-kit-verification.md)
 retains dated evidence and the [gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md) tracks remaining scope,
 implementation and release work. Earlier source-review entries remain historical.

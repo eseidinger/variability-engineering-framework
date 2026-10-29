@@ -3,19 +3,15 @@
 Status: proposed sequence without confirmed dates.
 
 The [energy configuration implementation plan](energy-configuration-implementation-plan.md)
-tracks the accepted deterministic energy workflow and the additive released
-contract kit 0.5.0 AI handoff. Upstream Gate 5 was accepted by maintainer direction
-on October 17, 2026; Gate 6 / VEF-05 is next. The plan now specifies confirmed
-natural-language proposals, bounded approved evidence, validated citations,
-eleven AI consumer acceptance cases, and unchanged deployed Gate 5 regression.
-VEF's consumer lock pins 0.5.0 and passed local kit and API tests. AI proposals,
-confirmation, and validated explanations are implemented. The owner confirmed
-the production energy journey and several guided AI acceptance cases on
-October 19, 2026. Guided checks through October 26 add numerical regression,
-cross-user denial, provider recovery, cache fallback, restart and idempotency.
-The [verification record](energy-contract-kit-verification.md) and
-[AI runbook](energy-ai-acceptance-runbook.md) track the five incomplete AI case
-IDs (AI-05/06/08/10/11), remaining regression/recovery and release evidence.
+tracks the accepted deterministic energy workflow and the AI assistance in
+published contract kit 1.0.0. Gate 5 was accepted on October 17, 2026; the
+bounded Gate 6 / VEF-05 is now [closed with limitations](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-29-gate-6-closure.md).
+VEF's consumer lock pins kit 1.0.0, and application v1.0.0 is ready in
+production. AI proposals, confirmation and validated explanations are
+implemented. The [verification record](energy-contract-kit-verification.md)
+and [AI runbook](energy-ai-acceptance-runbook.md) retain the chronological AI
+case evidence and the DEC-10/11/12 limits. The owner-reported production
+optimization matches every supplied reference-oracle field.
 The food-service analysis contract and energy numerical baseline are unchanged.
 
 ```mermaid

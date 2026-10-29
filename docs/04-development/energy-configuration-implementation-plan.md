@@ -8,7 +8,7 @@ the reference oracle; its full API JSON and candidate export remain uncaptured.
 
 Historical DEC-10 recovery scope (additional non-AI checks subsequently excepted by DEC-11): the maintainer explicitly accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). Historical restore checklist items below are accepted exceptions for this release, not passed tests. No recovery VM is required. Backup/security duties, in-progress workload interruption and other open AI/evidence cases remain. Final Gate 6 acceptance is separate.
 
-Status: reconciled October 27, 2026 for released contract kit 0.5.0. The
+Historical status (October 27, 2026) for released contract kit 0.5.0. The
 [cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) and [gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md) are the shared status
 and follow-up baseline; hosted observations now include the October 27 guided checks. Upstream
 [Gate 5 acceptance](https://github.com/eseidinger/energy-system-configuration/blob/contract-kit-v0.5.0/reviews/2026-10-17-gate-5-acceptance.md)
@@ -29,7 +29,8 @@ classification. At that checkpoint, AI-10 remained incomplete. Hosted AI-05/06 p
 rendered-citation and semantic review; AI-08/11 pass the private hosted
 validation boundary checks. See the [AI acceptance runbook](energy-ai-acceptance-runbook.md) for
 the current open-case list and the [verification record](energy-contract-kit-verification.md)
-for observations and limitations. Final release acceptance remains open.
+for observations and limitations. Final release acceptance was open at that
+checkpoint; DEC-13 and the later closure record supersede that status.
 No dates or estimates are committed.
 
 ## Outcome and authoritative baseline

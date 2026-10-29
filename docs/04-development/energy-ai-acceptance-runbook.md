@@ -9,7 +9,7 @@ Controlled local live-model AI-05/06 checks passed again on October 27, but do
 not close their hosted cases. See the [verification record](energy-contract-kit-verification.md) and
 [shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md).
 
-Current acceptance scope (October 29): under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 pass within their recorded evidence limits. [DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md) classifies AI-10 as ACCEPTED_WITH_LIMITATIONS. [DEC-13](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-13-bounded-gate-6-acceptance.md) accepts Gate 6/`VEF-05` for the bounded test release with DEC-10/11/12 limits. Kit 1.0.0 is published and checksum-pinned by this consumer; production deployment remains unauthorized. This status supersedes older chronological OPEN statements below.
+Current acceptance scope (October 29): under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 pass within their recorded evidence limits. [DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md) classifies AI-10 as ACCEPTED_WITH_LIMITATIONS. [DEC-13](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-13-bounded-gate-6-acceptance.md) accepted Gate 6/`VEF-05` with DEC-10/11/12 limits. Kit 1.0.0 is published and checksum-pinned; VEF v1.0.0 is ready in production. The bounded [Gate 6 is closed with limitations](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-29-gate-6-closure.md). This status supersedes older chronological OPEN statements below.
 
 ## AI consumer cases — current release
 
@@ -29,8 +29,8 @@ chronological evidence and limits behind these statuses.
 | AI-11 | **PASS:** hosted private probe checks 16/17 sources, a schema-valid in-memory result whose evidence exceeds 64 KiB, and missing model version; 422 and zero model calls are asserted where the resource method applies. |
 
 AI-01–AI-04, AI-07, and AI-09 have guided or controlled evidence recorded in
-the verification record. Final cross-project release acceptance is a separate
-decision after the case dispositions.
+the verification record. The later cross-project release acceptance is recorded
+in DEC-13 and the Gate 6 closure record above.
 
 The maintainer accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). This is ACCEPTED_EXCEPTION, not a demonstrated recovery. No recovery VM is required. DEC-11 subsequently excepts the other listed non-AI points; DEC-12 accepts AI-10 with its recorded limits.
 
