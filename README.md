@@ -8,6 +8,11 @@ The food-service analysis MVP and combined container image have been validated l
 
 The API contains a domain-independent analysis core for versioned observed populations, a verified food-service fixture adapter, an HTTP analysis contract, and PostgreSQL-backed population storage. The Angular Material dashboard exposes summary metrics, filtering, reorderable grouping, ingredient leverage, and ingredient-unavailability impact.
 
+The bounded energy release's [Gate 6 closure](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-29-gate-6-closure.md)
+is `CLOSED_WITH_LIMITATIONS`. A maintainer-reported production optimization on
+dataset 1.0.0 matches the immutable reference oracle; the full live API export
+was not captured.
+
 The API also includes an energy workflow against contract kit
 1.0.0: typed new-equipment generation, checked publication bytes, hourly
 simulation, exhaustive ranking, durable owned runs, and paged candidates. The

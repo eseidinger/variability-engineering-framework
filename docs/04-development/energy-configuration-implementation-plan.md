@@ -2,6 +2,10 @@
 
 Current acceptance scope (October 29): under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 pass within their recorded limits; [DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md) accepts AI-10 with explicit limits. [DEC-13](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-13-bounded-gate-6-acceptance.md) subsequently accepts bounded Gate 6 with DEC-10/11/12 limits. Kit 1.0.0 is published and this repository pins its exact archive checksum. The maintainer separately authorized production deployment on October 29; [VEF v1.0.0](https://github.com/eseidinger/variability-engineering-framework/releases/tag/v1.0.0) passed tagged CI and is ready on `vareng` revision 17. This supersedes older chronological status statements below.
 
+Current gate disposition: [CLOSED_WITH_LIMITATIONS](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-29-gate-6-closure.md)
+for the bounded 1.0.0 release. The maintainer-reported production run matches
+the reference oracle; its full API JSON and candidate export remain uncaptured.
+
 Historical DEC-10 recovery scope (additional non-AI checks subsequently excepted by DEC-11): the maintainer explicitly accepts this release without an isolated joint database/S3 restore test under [DEC-10](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-10-current-release-recovery-test-exception.md). Historical restore checklist items below are accepted exceptions for this release, not passed tests. No recovery VM is required. Backup/security duties, in-progress workload interruption and other open AI/evidence cases remain. Final Gate 6 acceptance is separate.
 
 Status: reconciled October 27, 2026 for released contract kit 0.5.0. The
