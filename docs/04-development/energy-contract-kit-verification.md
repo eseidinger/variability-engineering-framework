@@ -1068,3 +1068,21 @@ denials, budget-zero infeasibility and unchanged stored success passed. The
 pins both deployments, run IDs and limits. Source ingestion and a live ODIP
 read mutation were outside this invocation; DEC-10/11 retain their stated
 exceptions. AI-10 and Gate 6 remain OPEN for the complete Gate 5 regression.
+
+### Isolated source-to-consumer suite on October 29
+
+The extended shared runner passed a new single invocation on AI-enabled VEF
+revision 51, image
+`eeb22d874e2a0912a939a8a0e7b5a47a115699b12afbf05544838f9ba0c0c1d6`,
+and ODIP revision 10. ODIP captured the pinned PVGIS raw JSON and published
+isolated `energy-ai10-lineage-20261027/1.0.1`; raw-byte, manifest and all five
+artifact readbacks passed. The runner revoked its scoped worker grants and a
+separate protected readback found none remaining. The same invocation then
+checked the three standard publications, both full 252-candidate VEF oracles,
+idempotency, selected denials, infeasibility and unchanged stored success.
+The [sanitized report](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-29-deployed-source-to-consumer-regression.json)
+retains the exact pins and limits. A literal unchanged historical Gate 5 suite
+cannot be rerun because the October 17 owner acceptance did not record one;
+the source capture used an isolated dataset and live ODIP reads were not
+corrupted. [Proposed DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md)
+requires explicit owner acceptance before AI-10 changes from OPEN.

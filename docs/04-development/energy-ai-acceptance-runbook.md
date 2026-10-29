@@ -304,15 +304,29 @@ invocation, mutate live ODIP read bytes or execute the excepted recovery and
 operational cases. This consumer regression is PASS; AI-10's complete Gate 5
 assertion and final Gate 6 remain OPEN.
 
+The extended runner then passed a second single invocation on AI-enabled VEF
+revision 51 and ODIP revision 10. It first captured pinned PVGIS raw bytes,
+published isolated `energy-ai10-lineage-20261027/1.0.1`, read back the linked
+raw artifact and five artifact bytes, and revoked its three temporary worker
+grants. In that same run it checked the three standard published fixtures and
+all eleven artifact bytes, two new full 252-candidate VEF oracles, idempotency,
+three 422 denials, zero-budget infeasibility and stored-result stability. The
+[sanitized source-to-consumer report](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/evidence/2026-10-29-deployed-source-to-consumer-regression.json)
+pins the source, manifests, images, runs and independent grant-cleanup readback.
+The [proposed DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md)
+addresses the fact that historical Gate 5 acceptance did not retain an
+executable suite: this is a new equivalent suite using an isolated source
+version, and the private invalid-content probe used in-memory ODIP transport.
+Until explicit owner acceptance, AI-10 and Gate 6 remain OPEN.
+
 ## Remaining release gate
 
-Run the unchanged deployed Gate 5 regression for AI-10,
-including ODIP publication, exact reference result, negative cases, outage,
-restart and retained-state checks, applying DEC-10 to the actual backup-restore
-portion. Record image, kit, policy and deployment
-digests needed for the open AI cases, then record their outstanding acceptance
-decisions. The other listed non-AI points already have maintainer acceptance
-under DEC-11. A CI deployment or protected public probe does not pass an AI case.
+The integration contract maintainer must decide whether to accept AI-10 with
+the limits in proposed DEC-12 or require a new clean-baseline execution of the
+historical Gate 5 assertions. DEC-10 covers the actual backup-restore portion;
+DEC-11 records the other accepted non-AI exceptions. Then record the final
+Gate 6 decision with immutable kit, implementation, image and deployment pins.
+A CI deployment or protected public probe alone does not pass an AI case.
 
 ## October 27 local implementation follow-up
 
