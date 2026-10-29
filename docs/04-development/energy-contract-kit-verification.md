@@ -5,7 +5,9 @@ source locks pin its exact archive SHA-256
 `ab101a9d5588283ce30c78149084ba145c4c0a6ce3e678c4defff58749951cb0`.
 Gate 5 and the ODIP handoff retain their maintainer acceptance; DEC-13 accepts
 bounded Gate 6 with DEC-10/11/12 limits. The maintainer separately authorized
-production deployment on October 29; versioned release evidence follows.
+production deployment on October 29. VEF v1.0.0 passed tagged CI and is ready
+on `vareng` revision 17; the cross-project [production record](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-29-production-deployment.md)
+pins its image digest and the retained evidence limits.
 See the [cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) for
 the reconciled status and fresh local checks, and the [gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md)
 for follow-up. The entries below are chronological evidence snapshots; later
