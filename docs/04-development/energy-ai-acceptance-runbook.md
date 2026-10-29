@@ -9,7 +9,7 @@ Controlled local live-model AI-05/06 checks passed again on October 27, but do
 not close their hosted cases. See the [verification record](energy-contract-kit-verification.md) and
 [shared gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md).
 
-Current acceptance scope (October 29): under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 pass within their recorded evidence limits. [DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md) classifies AI-10 as ACCEPTED_WITH_LIMITATIONS. The later [DEC-13](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-13-bounded-gate-6-acceptance.md) accepts Gate 6/`VEF-05` for the bounded test release with DEC-10/11/12 limits. Kit 1.0.0 publication and production deployment remain unauthorized. This status supersedes older chronological OPEN statements below.
+Current acceptance scope (October 29): under [DEC-11](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-11-current-release-non-ai-acceptance-exceptions.md), the maintainer accepts the other listed non-AI points without further testing. They are ACCEPTED_EXCEPTION, not PASS. Hosted AI-05/06 and AI-08/11 pass within their recorded evidence limits. [DEC-12](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-12-proposed-ai10-equivalent-regression.md) classifies AI-10 as ACCEPTED_WITH_LIMITATIONS. [DEC-13](https://github.com/eseidinger/energy-system-configuration/blob/main/decisions/DEC-13-bounded-gate-6-acceptance.md) accepts Gate 6/`VEF-05` for the bounded test release with DEC-10/11/12 limits. Kit 1.0.0 is published and checksum-pinned by this consumer; production deployment remains unauthorized. This status supersedes older chronological OPEN statements below.
 
 ## AI consumer cases — current release
 
@@ -43,7 +43,7 @@ never prints the key. Docker must be reachable for the isolated PostgreSQL
 test container. Set `ENERGY_AI_MODEL`
 only when the target differs from the configured default `gpt-6.1-sol`.
 
-The script verifies and extracts the checksum-pinned contract kit 0.5.0, then
+The script verifies and extracts the checksum-pinned contract kit 1.0.0, then
 runs only `EnergyAiLiveAcceptanceIT`. It temporarily moves the API's local
 `.env` aside because its fixed `localhost:5432` URL overrides Quarkus Dev
 Services, and restores it on exit. No live model call occurs in ordinary CI or

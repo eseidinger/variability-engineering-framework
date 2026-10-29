@@ -21,7 +21,7 @@ Run the core and API tests with:
 
 ```shell
 python3 ../../../scripts/validate-energy-contract-kit.py --prepare-only --output-dir /tmp/vef-energy-api-kit
-export ENERGY_CONTRACT_KIT_DIRECTORY=/tmp/vef-energy-api-kit/contract-kit-v0.5.0/contract-kit
+export ENERGY_CONTRACT_KIT_DIRECTORY=/tmp/vef-energy-api-kit/contract-kit-v1.0.0/contract-kit
 ./mvnw test
 ```
 
@@ -66,12 +66,12 @@ address changes.
 
 For a local optimization run without the managed ODIP reader binding, the
 Quarkus `dev` profile has an explicit fixture importer. First verify/extract the
-pinned 0.5.0 kit as described above. Start the API with
+pinned 1.0.0 kit as described above. Start the API with
 `ENERGY_CONTRACT_KIT_DIRECTORY` pointing to its `contract-kit` directory and
 `ENERGY_ODIP_LOCAL_FIXTURE=true`:
 
 ```shell
-export ENERGY_CONTRACT_KIT_DIRECTORY=/tmp/vef-energy-kit-050-verified/contract-kit-v0.5.0/contract-kit
+export ENERGY_CONTRACT_KIT_DIRECTORY=/tmp/vef-energy-kit-100-verified/contract-kit-v1.0.0/contract-kit
 export ENERGY_ODIP_LOCAL_FIXTURE=true
 ./mvnw quarkus:dev
 ```

@@ -1,14 +1,19 @@
 # Energy Contract Kit Consumer Verification
 
-Current summary (October 27, 2026): both consumers pin kit 0.5.0; Gate 5 and the
-ODIP handoff retain their maintainer acceptance. Hosted AI-05/06/08/11 pass
-within recorded limits. The private hosted AI-10 probe passes ten checks, but
-the complete unchanged deployed Gate 5 suite and final release acceptance
-remain open.
+Current summary (October 29, 2026): kit 1.0.0 is published and both consumer
+source locks pin its exact archive SHA-256
+`ab101a9d5588283ce30c78149084ba145c4c0a6ce3e678c4defff58749951cb0`.
+Gate 5 and the ODIP handoff retain their maintainer acceptance; DEC-13 accepts
+bounded Gate 6 with DEC-10/11/12 limits. Production deployment is separate.
 See the [cross-project review](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-implementation-and-acceptance-review.md) for
 the reconciled status and fresh local checks, and the [gap register](https://github.com/eseidinger/energy-system-configuration/blob/main/reviews/2026-10-27-gap-analysis.md)
 for follow-up. The entries below are chronological evidence snapshots; later
 observations supersede earlier pending/deferred statements.
+
+For the 1.0.0 adoption, the VEF validator verified the downloaded release
+archive against the new lock, compared every packaged schema byte with the
+released kit and ran all 82 upstream tests successfully. The published archive
+retains the 0.5.0 schemas, fixtures and numerical oracle bytes.
 
 Date: October 12, 2026. Status: locally verified VEF portion of `SHARED-01`.
 Hosted CI, ODIP's consumer pin, Java energy conformance, and cross-project Gate 1

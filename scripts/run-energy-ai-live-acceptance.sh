@@ -42,7 +42,7 @@ trap vef_restore EXIT
 
 python3 "$vef_root/scripts/validate-energy-contract-kit.py" \
     --prepare-only --output-dir "$vef_hold/kit"
-export ENERGY_CONTRACT_KIT_DIRECTORY="$vef_hold/kit/contract-kit-v0.5.0/contract-kit"
+export ENERGY_CONTRACT_KIT_DIRECTORY="$vef_hold/kit/contract-kit-v1.0.0/contract-kit"
 export ENERGY_AI_LIVE_ACCEPTANCE=true
 export ENERGY_AI_ENABLED=true
 
